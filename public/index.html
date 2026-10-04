@@ -1,0 +1,1443 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0A101B">
+<meta name="description" content="Apprendre League of Legends par la récupération en mémoire.">
+<title>Rift Rappel</title>
+<style>body{margin:0}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --bg:#0A101B; --bg2:#0E1624; --panel:#131C2E; --panel2:#19243B; --line:#26344F; --line2:#33445F;
+  --text:#E8EDF6; --muted:#8F9CB6; --faint:#5E6C86;
+  --gold:#D9B45B; --gold-ink:#1A1306; --teal:#43C6B4; --blue:#4DA3F0; --violet:#A08CF2;
+  --red:#E4665F; --good:#4CC38A; --warn:#E3A948;
+  --map:#0D1822; --map2:#12222E; --river:#1D4A62; --lane:#3B4B60;
+  --tier:var(--teal);
+  --r:10px;
+  --display:"Chakra Petch", "Rajdhani", "Arial Narrow", system-ui, sans-serif;
+  --body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+*{box-sizing:border-box}
+html,body{background:var(--bg);color:var(--text)}
+body{font-family:var(--body);font-size:15px;line-height:1.5;
+  background:
+    radial-gradient(1200px 500px at 85% -10%, rgba(67,198,180,.08), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(217,180,91,.06), transparent 60%),
+    var(--bg);
+  min-height:100vh}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:.01em;text-wrap:balance;margin:0;line-height:1.15}
+p{margin:0}
+.wrap{max-width:780px;margin:0 auto;padding-inline:16px;padding-block:0 64px}
+
+/* ---------- barre du haut ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(10,16,27,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:780px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:.04em;text-transform:uppercase}
+.brand svg{flex:none}
+.nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+.nav button{padding:6px 11px;border-radius:7px;color:var(--muted);font-weight:600;font-size:14px}
+.nav button[aria-current="true"]{color:var(--text);background:var(--panel2)}
+.nav button:hover{color:var(--text)}
+
+/* ---------- éléments communs ---------- */
+.eyebrow{font-family:var(--display);font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.stack{display:flex;flex-direction:column;gap:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.section{display:flex;flex-direction:column;gap:12px;margin-top:30px}
+.section-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.section-h h2{font-size:19px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 18px;border-radius:9px;font-weight:700;font-family:var(--display);letter-spacing:.05em;text-transform:uppercase;font-size:14px;background:var(--gold);color:var(--gold-ink);transition:transform .12s, filter .12s}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line2)}
+.btn.ghost:hover{border-color:var(--muted)}
+.btn.small{padding:7px 12px;font-size:12px}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.link{color:var(--gold);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:700;font-family:var(--display);letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--line2);color:var(--muted)}
+.pill.tier{color:var(--tier);border-color:color-mix(in srgb,var(--tier) 45%,transparent);background:color-mix(in srgb,var(--tier) 10%,transparent)}
+.code{font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.1em;padding:3px 6px;border-radius:5px;background:var(--panel2);color:var(--muted)}
+.bar{height:6px;border-radius:99px;background:var(--panel2);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--tier);border-radius:99px;transition:width .4s}
+.num{font-variant-numeric:tabular-nums}
+.pips{display:inline-flex;gap:3px}
+.pips i{width:7px;height:7px;border-radius:2px;background:var(--line2)}
+.pips i.on{background:var(--gold)}
+
+/* ---------- onboarding ---------- */
+.ob{min-height:100vh;display:flex;flex-direction:column}
+.ob-in{max-width:620px;width:100%;margin:0 auto;padding-inline:16px;padding-block:28px 60px;display:flex;flex-direction:column;gap:22px;flex:1}
+.ob-steps{display:flex;gap:5px}
+.ob-steps i{flex:1;height:3px;border-radius:3px;background:var(--line)}
+.ob-steps i.on{background:var(--gold)}
+.ob h1{font-size:clamp(28px,6vw,40px)}
+.ob .lead{font-size:17px;color:var(--muted);max-width:56ch}
+.choices{display:grid;gap:10px}
+.choices.two{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
+.choice{display:flex;flex-direction:column;gap:3px;text-align:left;padding:14px 16px;border-radius:var(--r);background:var(--panel);border:1px solid var(--line);transition:border-color .12s, background .12s}
+.choice:hover{border-color:var(--line2);background:var(--panel2)}
+.choice[aria-pressed="true"]{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 9%,var(--panel))}
+.choice b{font-weight:700;font-size:16px}
+.choice span{color:var(--muted);font-size:14px}
+.ranks{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.rank{padding:12px;border-radius:9px;background:var(--panel);border:1px solid var(--line);font-weight:700;font-family:var(--display);letter-spacing:.04em;text-transform:uppercase;font-size:14px;display:flex;align-items:center;gap:9px}
+.rank i{width:10px;height:10px;border-radius:3px;transform:rotate(45deg);flex:none}
+.rank[aria-pressed="true"]{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 9%,var(--panel))}
+.input{width:100%;padding:13px 14px;border-radius:9px;background:var(--panel);border:1px solid var(--line2);color:var(--text);font:inherit;font-size:17px}
+.ob-foot{display:flex;justify-content:space-between;gap:10px;margin-top:auto;padding-top:10px}
+.loop{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.loop div{padding:14px;border-radius:var(--r);background:var(--panel);border:1px solid var(--line)}
+.loop div b{display:block;font-family:var(--display);text-transform:uppercase;letter-spacing:.08em;font-size:13px;margin-bottom:4px}
+.loop div:nth-child(3){border-color:color-mix(in srgb,var(--gold) 55%,transparent)}
+.loop div:nth-child(3) b{color:var(--gold)}
+.loop p{font-size:14px;color:var(--muted)}
+@media (max-width:560px){.loop{grid-template-columns:1fr}}
+.tiercard{border-radius:14px;padding:22px;border:1px solid color-mix(in srgb,var(--tier) 50%,transparent);background:linear-gradient(160deg,color-mix(in srgb,var(--tier) 14%,var(--panel)),var(--panel) 60%)}
+.tiercard h2{font-size:30px;color:var(--tier)}
+.checks{list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:9px}
+.checks li{display:flex;gap:10px;align-items:flex-start}
+.checks li::before{content:"";flex:none;width:8px;height:8px;margin-top:7px;transform:rotate(45deg);background:var(--tier)}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:520px){.compare{grid-template-columns:1fr}}
+
+/* ---------- accueil ---------- */
+.hello{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;padding-top:26px}
+.hello h1{font-size:clamp(24px,5vw,32px)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.stat{padding:12px 14px;border-radius:var(--r);background:var(--panel);border:1px solid var(--line)}
+.stat b{display:block;font-family:var(--display);font-size:24px;font-weight:700;font-variant-numeric:tabular-nums}
+.stat span{font-size:12.5px;color:var(--muted)}
+.hero{margin-top:14px;border-radius:14px;padding:20px;border:1px solid color-mix(in srgb,var(--gold) 40%,transparent);background:linear-gradient(135deg,color-mix(in srgb,var(--gold) 12%,var(--panel)),var(--panel) 65%);display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}
+.hero h2{font-size:22px}
+.hero p{color:var(--muted);margin-top:4px;max-width:46ch}
+.path{display:flex;flex-direction:column;gap:0;position:relative}
+.step{display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:center;padding:10px 0;position:relative}
+.step .dot{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:14px;background:var(--panel2);border:1px solid var(--line2);color:var(--muted);position:relative;z-index:1}
+.step.done .dot{background:var(--tier);color:#07131a;border-color:var(--tier)}
+.step.cur .dot{border-color:var(--gold);color:var(--gold);box-shadow:0 0 0 4px color-mix(in srgb,var(--gold) 18%,transparent)}
+.step.lock{opacity:.5}
+.step:not(:last-child)::after{content:"";position:absolute;left:16.5px;top:44px;bottom:-10px;width:1px;background:var(--line2)}
+.step h3{font-size:16px}
+.step p{font-size:13px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.tile{text-align:left;padding:14px;border-radius:var(--r);background:var(--panel);border:1px solid var(--line);display:flex;flex-direction:column;gap:8px;transition:border-color .12s,background .12s}
+.tile:hover{border-color:var(--line2);background:var(--panel2)}
+.tile .row{justify-content:space-between}
+.tile h3{font-size:16px}
+.tile p{font-size:13px;color:var(--muted)}
+.why{margin-top:30px;padding:16px 18px;border-radius:var(--r);border:1px dashed var(--line2);color:var(--muted);font-size:14px}
+.why b{color:var(--text)}
+
+/* ---------- quiz ---------- */
+.qhead{display:flex;align-items:center;gap:12px;padding-top:22px}
+.qhead .bar{flex:1}
+.qx{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;color:var(--muted);border:1px solid var(--line)}
+.qx:hover{color:var(--text)}
+.qcard{margin-top:20px;display:flex;flex-direction:column;gap:18px}
+.qmeta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.qtext{font-family:var(--display);font-size:clamp(20px,4.2vw,26px);font-weight:600;line-height:1.25;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:center;text-align:left;padding:13px 14px;border-radius:var(--r);background:var(--panel);border:1px solid var(--line);font-size:15.5px;transition:border-color .12s,background .12s}
+.opt:hover:not([disabled]){border-color:var(--line2);background:var(--panel2)}
+.opt .k{width:28px;height:28px;border-radius:7px;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:13px;background:var(--panel2);color:var(--muted)}
+.opt.sel{border-color:var(--gold)}
+.opt.sel .k{background:var(--gold);color:var(--gold-ink)}
+.opt.ok{border-color:var(--good);background:color-mix(in srgb,var(--good) 12%,var(--panel))}
+.opt.ok .k{background:var(--good);color:#06150d}
+.opt.ko{border-color:var(--red);background:color-mix(in srgb,var(--red) 11%,var(--panel))}
+.opt.ko .k{background:var(--red);color:#1d0605}
+.opt[disabled]{cursor:default}
+.conf{display:flex;flex-direction:column;gap:8px}
+.conf .row button{flex:1;min-width:110px}
+.hint{padding:12px 14px;border-radius:9px;background:color-mix(in srgb,var(--teal) 10%,var(--panel));border:1px solid color-mix(in srgb,var(--teal) 35%,transparent);font-size:14px}
+.fb{padding:16px;border-radius:var(--r);border:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;gap:8px}
+.fb h3{font-size:18px}
+.fb.good h3{color:var(--good)} .fb.bad h3{color:var(--red)}
+.fb .meta{font-size:13.5px;color:var(--warn)}
+.timer{height:4px;border-radius:4px;background:var(--panel2);overflow:hidden}
+.timer i{display:block;height:100%;background:var(--gold);transition:width .25s linear}
+.timer.low i{background:var(--red)}
+.qfoot{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+
+/* ---------- fiche ---------- */
+.lesson{margin-top:22px}
+.lesson ul{list-style:none;padding:0;margin:16px 0 0;display:flex;flex-direction:column;gap:12px}
+.lesson li{padding:14px 16px;border-radius:var(--r);background:var(--panel);border:1px solid var(--line);font-size:16px}
+.stage{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:22px}
+.stage span{padding:5px 10px;border-radius:7px;font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--panel2);color:var(--faint)}
+.stage span.on{color:var(--gold-ink);background:var(--gold)}
+
+/* ---------- résultats ---------- */
+.score{font-family:var(--display);font-size:64px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.recap{display:flex;flex-direction:column;gap:6px}
+.recap div{display:grid;grid-template-columns:14px 1fr;gap:10px;align-items:start;font-size:14px;padding:8px 0;border-bottom:1px solid var(--line)}
+.recap i{width:10px;height:10px;border-radius:50%;margin-top:5px}
+
+/* ---------- mises en situation ---------- */
+.scn{display:grid;grid-template-columns:minmax(0,300px) 1fr;gap:18px;margin-top:18px;align-items:start}
+@media (max-width:640px){.scn{grid-template-columns:1fr}}
+.mapbox{border-radius:12px;overflow:hidden;border:1px solid var(--line2);background:var(--map);max-width:100%}
+.mapbox svg{display:block;width:100%;height:auto}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted);padding:8px 10px;border-top:1px solid var(--line)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:9px;height:9px;border-radius:50%}
+.look{padding:12px 14px;border-radius:9px;border:1px solid color-mix(in srgb,var(--teal) 35%,transparent);background:color-mix(in srgb,var(--teal) 8%,var(--panel));font-size:14px}
+.look ul{margin:6px 0 0;padding-left:18px}
+.verdict{font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:5px}
+.v2{background:color-mix(in srgb,var(--good) 22%,transparent);color:var(--good)}
+.v1{background:color-mix(in srgb,var(--warn) 22%,transparent);color:var(--warn)}
+.v0{background:color-mix(in srgb,var(--red) 22%,transparent);color:var(--red)}
+.optx{font-size:14px;color:var(--muted);margin-top:6px}
+.opt.long{grid-template-columns:28px 1fr}
+
+/* ---------- lexique & profil ---------- */
+.gloss{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.gloss div{padding:12px 14px;border-radius:9px;background:var(--panel);border:1px solid var(--line)}
+.gloss b{font-family:var(--display);letter-spacing:.03em;display:block}
+.gloss span{font-size:14px;color:var(--muted)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.danger{color:var(--red);border-color:color-mix(in srgb,var(--red) 50%,transparent)!important}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--panel2);border:1px solid var(--gold);padding:10px 16px;border-radius:9px;font-weight:600;z-index:20;max-width:calc(100% - 32px)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@keyframes rise{from{transform:translateY(6px);opacity:.4}to{transform:none;opacity:1}}
+.rise{animation:rise .25s ease-out}
+@media (max-width:480px){.stats{grid-template-columns:repeat(3,1fr)}.stat b{font-size:20px}.nav button{padding:6px 8px;font-size:13px}}
+.emb{flex:none;display:block}
+.tile-rank{display:flex;gap:12px;align-items:center}
+.rk{font-family:var(--display);font-size:12.5px;font-weight:600;letter-spacing:.04em;color:var(--muted)}
+.step h3 .rk{margin-left:6px;font-size:12px}
+.lpline{display:flex;gap:10px;align-items:center;font-size:14px;padding-top:6px;border-top:1px solid var(--line)}
+.up{color:var(--good)} .down{color:var(--red)}
+.lpres{display:flex;flex-direction:column;gap:10px}
+.lpres>div{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center}
+.lpres span{display:block;font-size:13.5px}
+.rankgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:8px}
+.rankcell{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;padding:14px 8px;border-radius:var(--r);background:var(--panel);border:1px solid var(--line)}
+.rankcell:hover{border-color:var(--line2)}
+.rankcell b{font-size:14px}
+.rankcell span{font-size:12.5px;color:var(--muted);font-family:var(--display)}
+.rankcell .faint{color:var(--faint);font-size:11.5px}
+.acct{display:flex;flex-direction:column;gap:10px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:4px 9px;border-radius:7px;background:var(--panel2);font-size:13px;font-weight:600}
+.insights{display:flex;flex-direction:column;gap:10px}
+.ins{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start}
+.ins .tag{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:5px;white-space:nowrap;margin-top:2px}
+.ins.weak .tag{background:color-mix(in srgb,var(--red) 20%,transparent);color:var(--red)}
+.ins.strong .tag{background:color-mix(in srgb,var(--good) 20%,transparent);color:var(--good)}
+.ins b{font-size:15px}
+.ins p{font-size:13.5px;color:var(--muted)}
+.faint{color:var(--faint)}
+.err{color:var(--red);font-size:14px}
+select.input{appearance:auto}
+.spin{width:18px;height:18px;border-radius:50%;border:2px solid var(--line2);border-top-color:var(--gold);animation:sp .8s linear infinite;flex:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (max-width:420px){.ins{grid-template-columns:1fr;gap:4px}.ins .tag{justify-self:start}}
+.acctstrip{margin-top:16px;padding:14px 16px;border-radius:12px;border:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column;gap:10px}
+.acct-id{display:flex;gap:12px;align-items:center}
+.acct-id b{display:block;font-size:17px}
+.acct-id span{font-size:13.5px}
+.rankdot{width:14px;height:14px;border-radius:3px;transform:rotate(45deg);flex:none}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.mtile{display:flex;flex-direction:column;gap:4px;text-align:left;padding:13px 14px;border-radius:var(--r);background:var(--panel);border:1px solid var(--line);position:relative;overflow:hidden;transition:border-color .12s,background .12s}
+button.mtile:hover{border-color:var(--line2);background:var(--panel2)}
+.mtile::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--line2)}
+.mtile.weak::before{background:var(--red)} .mtile.strong::before{background:var(--good)} .mtile.ok::before{background:var(--muted)}
+.mlabel{font-size:12.5px;color:var(--muted);font-weight:600}
+.mval{font-family:var(--display);font-size:26px;font-weight:700;line-height:1.1}
+.mref{font-size:12px;color:var(--faint)}
+.mfoot{display:flex;justify-content:space-between;gap:6px;align-items:center;margin-top:6px;font-size:12px}
+.mstate{font-family:var(--display);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:11px}
+.mtile.weak .mstate{color:var(--red)} .mtile.strong .mstate{color:var(--good)} .mtile.ok .mstate{color:var(--muted)}
+.mtile.na{opacity:.6}
+.prio{margin-left:auto;align-self:flex-start;font-family:var(--display);font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:5px;background:color-mix(in srgb,var(--red) 20%,transparent);color:var(--red)}
+.tile-rank{width:100%}
+.tile.locked{opacity:.5}
+@media (max-width:420px){.mgrid{grid-template-columns:1fr 1fr}.mval{font-size:22px}}
+.legal{margin-top:24px;font-size:11.5px;line-height:1.5;color:var(--faint);max-width:70ch}
+</style>
+<div id="app"></div>
+
+<script>
+/* ============================================================
+   CONTENU — Rift Rappel
+   Format question : Q(catégorie, difficulté 1-4, énoncé,
+     [bonne réponse, faux1, faux2, faux3], explication, indice)
+   La bonne réponse est toujours écrite en premier ; l'ordre est
+   mélangé à l'affichage. Difficulté : 1 découverte, 2 bases,
+   3 confirmé, 4 expert.
+   ============================================================ */
+const CATS = [
+  { id:"voc",  name:"Vocabulaire",        code:"VOC", blurb:"Le jargon qu’on entend en partie et dans le chat." },
+  { id:"map",  name:"La carte",           code:"MAP", blurb:"Lanes, jungle, buissons, tourelles, vision." },
+  { id:"lane", name:"Lanes & rôles",      code:"LAN", blurb:"Top, jungle, mid, ADC, support : qui fait quoi." },
+  { id:"champ",name:"Champions & sorts",  code:"CHP", blurb:"Passifs, sorts, ultimes qui changent un combat." },
+  { id:"item", name:"Objets",             code:"OBJ", blurb:"Bottes, objets de support, anti-soin, défense." },
+  { id:"eco",  name:"Économie",           code:"ECO", blurb:"Or, last hit, primes, plaques." },
+  { id:"obj",  name:"Objectifs",          code:"OBJ", blurb:"Dragons, Nashor, Héraut, larves." },
+  { id:"rune", name:"Runes",              code:"RUN", blurb:"Arbres, runes clés, pages adaptées." },
+  { id:"mu",   name:"Matchups",           code:"MUP", blurb:"Lire un affrontement et jouer autour." },
+  { id:"macro",name:"Macro",              code:"MAC", blurb:"Rotations, gestion des vagues, décisions d’équipe." }
+];
+CATS.find(c=>c.id==="obj").code="OBT";
+
+/* Ordre du parcours guidé pour les nouveaux joueurs */
+const PATH = ["voc","map","lane","champ","item","eco","obj","rune","mu","macro"];
+
+const QS = [];
+let _qid = 0;
+function Q(c,d,q,o,x,h){ QS.push({id:c+"-"+(++_qid), c, d, q, o, x, h:h||""}); }
+
+/* ---------- VOCABULAIRE ---------- */
+Q("voc",1,"Dans le tableau des scores, le « CS » compte…",["Les sbires et monstres que tu as achevés","Les sbires et monstres que tu as touchés","Tes kills et assistances cumulés","Les balises que tu as posées et détruites"],"Seul le coup fatal compte. Toucher un sbire sans l’achever ne rapporte rien, ni en CS ni en or.","Seul le dernier coup compte.");
+Q("voc",1,"Quelle est la différence entre « gank » et « roam » ?",["Roamer, c’est quitter sa lane ; ganker, c’est attaquer une lane par surprise","Le gank est réservé au jungler, le roam au support","Le gank vise un champion, le roam vise une tourelle","Aucune, ce sont deux synonymes selon les régions"],"Un mid qui roam peut ganker le bot. Le jungler gank sans « roamer » puisqu’il n’a pas de lane.","L’un décrit un déplacement, l’autre une attaque.");
+Q("voc",2,"Ton support « peel ». Concrètement, il…",["Utilise ses contrôles sur ceux qui attaquent ses carries","Utilise ses contrôles pour lancer le combat","Pose de la vision autour de son équipe","Se place devant pour prendre les tirs de tourelle"],"Peel est défensif : on retire la menace de son carry. Lancer le combat, c’est « engage ».","Défensif ou offensif ?");
+Q("voc",2,"« Kiter » un champion de mêlée, c’est…",["Glisser des déplacements entre tes attaques pour rester hors de portée","Reculer sans attaquer jusqu’à ce qu’il abandonne","Attaquer sans bouger pour maximiser tes dégâts","Garder ton Flash pour le moment où il te rattrape"],"On attaque, on bouge, on attaque. Reculer sans frapper, c’est simplement fuir.","Attaquer ET bouger.");
+Q("voc",2,"« Zoner » un adversaire signifie…",["L’empêcher d’approcher d’une zone par la menace que tu représentes","Le repousser hors de sa lane avec des projections","Poser des balises dans sa moitié de jungle","Le suivre sur la carte pour connaître sa position"],"Un ADC zoné ne peut pas approcher de ses sbires : il perd de l’or sans même se battre.","Pas besoin de le toucher.");
+Q("voc",3,"Quelle description correspond à un « slow push » ?",["Tu tues surtout les sbires à distance adverses et ta vague grossit peu à peu","Tu nettoies toute la vague au plus vite avec tes sorts de zone","Tu ne donnes que les derniers coups pour garder la vague devant ta tourelle","Tu laisses la vague ennemie détruire la tienne pour qu’elle revienne"],"En enlevant d’abord les sbires à distance ennemis, ta vague survit et accumule les renforts : elle arrive énorme sur la tourelle.","Ta vague doit survivre.");
+Q("voc",3,"Après un crash, on dit que la vague « rebondit ». Pourquoi ?",["La tourelle détruit ta vague, puis la vague ennemie suivante revient pousser vers toi","Tes sbires survivants font demi-tour vers ta tourelle","La vague ennemie change de lane après le crash","Les sbires ennemis deviennent plus forts à chaque crash"],"C’est ce rebond qui rend le cheater recall rentable : pendant ton absence, la vague revient vers ta tourelle au lieu de mourir.","Qui reste sur la lane après le crash ?");
+Q("voc",3,"Avoir la « prio » en mid signifie…",["Pouvoir quitter ta lane en premier sans perdre de sbires","Avoir plus de kills que ton adversaire direct","Avoir atteint le niveau 6 avant lui","Avoir plus d’or que ton adversaire direct"],"La prio dépend de l’état de la vague, pas du score. On peut être derrière en kills et avoir la prio.","Pense à la vague, pas au score.");
+Q("voc",3,"Un « pick » (ou « catch ») désigne…",["Tuer un ennemi isolé avant un combat ou un objectif","Choisir son champion en premier lors de la draft","Voler un objectif au Châtiment","Récupérer le buff d’un allié qui vient de mourir"],"Un pick crée un 5 contre 4 : la fenêtre idéale pour prendre un objectif.","Avant l’objectif…");
+Q("voc",4,"Pourquoi le « cheater recall » coûte-t-il si peu ?",["Ta vague crashée occupe la tourelle ennemie pendant que tu achètes","Le rappel est plus court après avoir poussé une vague","Tu reçois l’or des sbires tués par ta vague pendant ton absence","L’ennemi ne peut pas savoir que tu es parti"],"Ton adversaire doit rester last-hit sous sa tourelle pendant que tu achètes. Tu reviens à temps pour la vague qui rebondit.","Qui est occupé pendant ton absence ?");
+Q("voc",4,"« Flip » un objectif, c’est…",["Gagner le combat lancé par l’ennemi sur son objectif pour le prendre","Échanger un dragon contre une tourelle ailleurs sur la carte","Voler l’objectif au Châtiment sans engager de combat","Abandonner l’objectif pour éviter un combat perdu"],"L’équipe qui fait l’objectif perd des PV sur le monstre : c’est une fenêtre pour la retourner.","L’objectif change de camp.");
+Q("voc",4,"Le « setup » d’un objectif consiste à…",["Pousser les vagues proches et prendre la vision 45 à 60 s avant son apparition","Désigner qui utilisera le Châtiment","Attendre que l’ennemi commence l’objectif pour le punir","Placer toute l’équipe dans la fosse au moment de l’apparition"],"Le combat pour un objectif se gagne souvent avant l’apparition : vagues, vision, position.","Avant l’apparition.");
+
+/* ---------- LA CARTE ---------- */
+Q("map",1,"Tu es dans un buisson. Qui peut te voir ?",["Les ennemis qui ont de la vision dans ce buisson","Tous les ennemis proches : le buisson ne cache qu’à distance","Seulement les tourelles ennemies","Personne, même si une balise ennemie y est posée"],"Il faut une présence ou une balise dans le buisson pour voir à l’intérieur. D’où les balises de contrôle dans les buissons clés.","La vision, pas la distance.");
+Q("map",2,"Combien de balises de contrôle un joueur peut-il avoir posées en même temps ?",["1","2","3","Aucune limite"],"Si tu en poses une deuxième, la première disparaît. Tu peux en porter plusieurs dans ton inventaire.","Très peu.");
+Q("map",2,"La lentille d’oracle (trinket rouge)…",["Révèle et désactive les balises et pièges invisibles autour de toi","Révèle les champions ennemis cachés dans les buissons","Donne une vision lointaine en un point de la carte","Pose une balise invisible pendant un temps limité"],"Elle ne révèle pas les champions. La vision lointaine, c’est la longue-vue (bleue).","Elle nettoie.");
+Q("map",2,"Tu attaques un champion ennemi au milieu de ses sbires. Que font-ils ?",["Ils te ciblent en priorité","Ils continuent de frapper tes sbires","Ils te ciblent seulement si tu utilises un sort","Ils ciblent ton sbire le plus proche de toi"],"C’est l’aggro des sbires : échanger au milieu de la vague ennemie te coûte des PV cachés.","Ils protègent leur champion.");
+Q("map",2,"Une tourelle tire plusieurs fois de suite sur le même champion. Ses dégâts…",["Augmentent à chaque tir consécutif","Restent identiques à chaque tir","Diminuent pour laisser le temps de fuir","Doublent seulement après 14 minutes"],"C’est pourquoi un dive doit être court, ou partagé entre plusieurs champions.","Elle « chauffe ».");
+Q("map",2,"Un inhibiteur détruit réapparaît après…",["5 minutes","3 minutes","8 minutes","Il ne réapparaît jamais"],"Pendant ce temps, les super-sbires de l’équipe adverse poussent cette lane.","Quelques minutes.");
+Q("map",2,"Tu tues un jungler ennemi qui porte le buff rouge. Le buff…",["Est transféré à celui qui l’a tué","Disparaît définitivement","Retourne à son camp d’origine","Est partagé entre les ennemis proches"],"Voler un buff sur un champion est un double gain : tu l’obtiens, il le perd.","Il change de propriétaire.");
+Q("map",3,"Au minimum, combien de tourelles faut-il détruire avant de pouvoir attaquer le Nexus ?",["5","3","7","11"],"Une lane entière (3 tourelles), puis l’inhibiteur, puis les 2 tourelles du Nexus.","Une lane + le Nexus.");
+Q("map",3,"Après avoir été tué, un buff rouge ou bleu réapparaît au bout de…",["5 minutes","2 minutes 30","3 minutes","7 minutes"],"Noter l’heure des buffs adverses permet d’anticiper le trajet du jungler.","Comme l’inhibiteur.");
+Q("map",3,"En plein dive, la tourelle te cible. Comment la faire changer de cible ?",["Un allié frappe un champion ennemi à portée de cette tourelle","Tu arrêtes d’attaquer pendant deux secondes","Tu utilises un sort plutôt qu’une attaque de base","Un sbire allié entre dans la portée de la tourelle"],"La tourelle bascule sur le champion qui agresse un de ses champions. Ne plus attaquer ne suffit pas : elle garde sa cible.","Qui agresse sous la tourelle ?");
+Q("map",3,"Pourquoi une balise de contrôle dans un buisson de rivière plutôt qu’une balise invisible ?",["Elle reste en place et refuse durablement la vision ennemie ici","Elle offre un rayon de vision bien plus large","Elle est invisible pour l’ennemi","Elle rapporte de l’or à chaque ennemi repéré"],"La balise invisible expire. La balise de contrôle reste et désactive les balises invisibles adverses dans la zone.","Durée et refus de vision.");
+Q("map",4,"Le jungler ennemi a commencé par son buff rouge (côté bot) et fait un full clear. Où finit-il probablement ?",["Côté top, à la fin de son chemin de camps","Côté bot, en train de refaire son buff rouge","Dans ta jungle, en train de voler ton buff bleu","En base, juste après son dernier camp"],"Un full clear traverse sa jungle d’un côté à l’autre. Le buff rouge ne réapparaîtra pas avant 5 minutes : le côté top est la zone à surveiller.","Il traverse sa jungle.");
+
+/* ---------- LANES & RÔLES ---------- */
+Q("lane",1,"Qui prend les sbires en bot lane ?",["L’ADC ; le support seulement si un sbire va être perdu","Le support et l’ADC, à parts égales","Le support, pour faire évoluer son objet plus vite","Celui des deux qui a le plus de PV"],"Chaque sbire pris par le support retarde les objets de l’ADC, qui dépend de l’or bien plus que lui.","Qui dépend le plus des objets ?");
+Q("lane",1,"Pourquoi les joueurs top prennent-ils souvent Téléportation ?",["Pour rejoindre vite l’action depuis une lane longue et isolée","Parce que le rappel est plus long en top","Pour se téléporter sur un sbire et esquiver les ganks","Parce qu’Embrasement est peu utile au corps à corps"],"Le top est loin des dragons et de la plupart des combats. La Téléportation compense cet isolement.","Distance.");
+Q("lane",2,"Le jungler ennemi est vu en haut de la carte à 3:20. Tu es bot. Qu’est-ce que ça change ?",["Tu peux jouer plus agressif : aucun gank bot n’est possible dans l’immédiat","Rien, cette information ne concerne que ton top","Tu peux pousser sous la tourelle ennemie sans limite de temps","Tu dois aller aider ton top à deux"],"Une info sur le jungler a une durée de vie : elle vaut une trentaine de secondes, pas plus.","Où ne peut-il PAS être ?");
+Q("lane",2,"Pourquoi le mid est-il la lane qui roam le plus ?",["Lane courte, avec un accès direct aux deux moitiés de rivière","Le mid reçoit plus de sbires par vague","Le mid n’a pas de tourelle intérieure","Le mid gagne l’or passif plus vite"],"Proximité avec les deux rivières et les deux objectifs : le mid influence toute la carte.","Géographie.");
+Q("lane",3,"Pour qu’un freeze devant ta tourelle tienne, la vague ennemie doit…",["Compter quelques sbires de plus que la tienne","Compter autant de sbires que la tienne","Compter moins de sbires que la tienne","Être composée uniquement de sbires de mêlée"],"Une vague ennemie légèrement plus grosse pousse naturellement vers toi et reste stable devant ta tourelle.","Qui pousse vers qui ?");
+Q("lane",3,"Last hit sous ta tourelle en début de partie : quelle séquence pour un sbire de mêlée ?",["2 tirs de tourelle, puis ton attaque","1 attaque, 1 tir de tourelle, 1 attaque","1 tir de tourelle, puis 2 attaques","3 tirs de tourelle, puis ton attaque"],"Les sbires à distance, eux : une attaque, un tir de tourelle, puis ton attaque.","La tourelle frappe fort les mêlées.");
+Q("lane",3,"Et pour un sbire à distance sous ta tourelle ?",["Une attaque, un tir de tourelle, puis ton attaque","2 tirs de tourelle, puis ton attaque","1 tir de tourelle, puis 2 attaques","Laisser la tourelle le tuer seule"],"Un tir de tourelle sur un sbire à distance le laisse trop bas pour une attaque… sauf si tu l’as entamé avant.","Il faut le préparer.");
+Q("lane",3,"Quand un support peut-il quitter la bot lane pour roam en mid ?",["Quand la vague bot vient d’être crashée et que l’ADC peut rester en sécurité","Dès le niveau 2, pour accompagner le jungler","Quand l’ADC est bas en PV et doit rappeler","Quand la vague ennemie arrive sur la tourelle alliée"],"Roamer pendant que la vague pousse vers ton ADC le laisse seul en 2 contre 1.","L’état de la vague d’abord.");
+Q("lane",4,"En bot lane (duo), à quel moment atteint-on le niveau 2 ?",["1re vague entière + les 3 mêlées de la 2e","1re vague entière seulement","Les 3 mêlées de la 1re vague","Deux vagues complètes"],"Le duo partage l’XP. Savoir qui l’atteint en premier permet de lancer (ou d’éviter) un échange niveau 2.","Plus qu’une vague.");
+Q("lane",4,"Et en solo lane (top ou mid) ?",["1re vague entière + 1 mêlée de la 2e","1re vague entière seulement","Les 3 mêlées de la 1re vague","1re vague entière + les 3 mêlées de la 2e"],"Le premier à atteindre le niveau 2 a un sort de plus : c’est le moment d’un échange rentable.","Un sbire de plus que la vague.");
+Q("lane",4,"Pourquoi un jungler préfère-t-il ganker une lane dont la vague pousse vers sa propre tourelle ?",["L’adversaire est avancé, loin de sa tourelle, avec un long chemin de fuite","Les sbires alliés l’aident à infliger plus de dégâts","L’adversaire a moins de sbires à last-hit, donc plus d’attention","La tourelle alliée peut participer au kill"],"Plus l’ennemi est loin de sa tourelle, plus il est exposé.","Où est l’ennemi ?");
+
+/* ---------- CHAMPIONS & SORTS ---------- */
+Q("champ",1,"Pour la plupart des champions, à quels niveaux améliore-t-on l’ultime après le 6 ?",["11 et 16","9 et 13","10 et 15","12 et 18"],"Les niveaux 6, 11 et 16 sont des paliers de puissance à surveiller chez l’adversaire.","Tous les 5 niveaux.");
+Q("champ",2,"Lequel de ces sorts n’est PAS bloqué par le Mur de vent de Yasuo ?",["L’ultime de Lux (laser)","L’ultime de Jinx (roquette)","Le grappin de Blitzcrank","L’ultime d’Ezreal"],"Le Mur de vent arrête les projectiles. Un laser n’en est pas un.","Projectile ou pas ?");
+Q("champ",2,"La cage (E) de Veigar étourdit…",["Les ennemis qui traversent son bord","Tous les ennemis présents à l’intérieur quand elle apparaît","Les ennemis restés à l’intérieur plus d’une seconde","Uniquement le premier ennemi touché"],"Rester au centre de la cage évite l’étourdissement : seul le bord est dangereux.","Le mur, pas l’intérieur.");
+Q("champ",2,"Le Bouclier noir (E) de Morgana protège…",["Des dégâts magiques et des contrôles","De tous les dégâts, physiques compris","Des contrôles seulement, pas des dégâts","Des dégâts de tourelle"],"Tant que le bouclier tient, la cible est immunisée aux contrôles. Des dégâts physiques ne le cassent pas.","Magique.");
+Q("champ",2,"L’ultime de Master Yi le rend immunisé…",["Aux ralentissements","Aux étourdissements","À tous les contrôles","Aux dégâts magiques"],"Un étourdissement l’arrête toujours. Garde-le pour son engage.","Il court.");
+Q("champ",2,"Qui peut utiliser la lanterne (W) de Thresh ?",["Un allié qui clique dessus","Thresh seul, pour se déplacer","N’importe quel champion, ennemi compris","Les sbires alliés proches"],"L’allié est tiré vers Thresh : sauvetage ou engage surprise d’un jungler.","Un allié.");
+Q("champ",3,"Le passif de Katarina réduit ses délais quand…",["Un champion ennemi qu’elle a touché récemment meurt","Elle achève un sbire","Elle lance son ultime jusqu’au bout","Elle reste plusieurs secondes hors de vue"],"Kill ou assistance récente = reset. Un contrôle au bon moment casse la chaîne.","Kill ou assistance.");
+Q("champ",3,"L’ultime de Darius se réinitialise quand…",["Il tue la cible avec","Il atteint 5 charges d’hémorragie","Il touche au moins deux ennemis","Il est sous la moitié de ses PV"],"Dans un combat où plusieurs ennemis sont bas, il peut enchaîner les exécutions.","Une élimination.");
+Q("champ",3,"Anivia se transforme en œuf. Comment l’empêcher de renaître ?",["Détruire l’œuf avant la fin de sa durée","Lui appliquer des blessures graves","L’étourdir pendant la transformation","Impossible, elle renaît toujours"],"L’œuf a peu de résistances : il faut le focus immédiatement.","Frapper l’œuf.");
+Q("champ",3,"Pourquoi rester derrière ses sbires protège-t-il du grappin de Blitzcrank ?",["Le grappin s’arrête sur la première unité touchée","Le grappin ne peut pas cibler un champion caché par des sbires","Les sbires rendent les champions invisibles","Le grappin ne fait des dégâts qu’aux sbires"],"C’est un projectile en ligne droite : le premier sbire l’intercepte.","Projectile.");
+Q("champ",3,"Le Bouclier magique (E) de Sivir bloque…",["La prochaine compétence ennemie","Tous les dégâts pendant deux secondes","Les attaques de base uniquement","Tous les projectiles pendant sa durée"],"Un seul sort, au bon moment. Même principe que le W de Nocturne.","Une seule chose.");
+Q("champ",3,"Kindred lance son ultime au milieu d’un combat. Quel est le risque ?",["Il empêche aussi les ennemis dans la zone de mourir","Kindred ne peut plus attaquer pendant sa durée","Il ne protège que Kindred","Il empêche les alliés de lancer leurs sorts"],"Mal placé, il offre un sursis à l’ennemi que ton équipe allait tuer.","Qui est dans la zone ?");
+Q("champ",4,"Tu subis l’ultime de Malzahar (suppression). Qu’est-ce qui te libère ?",["Le Ceinturon de vif-argent ou son évolution","Le sort d’invocateur Purge","La ténacité des sandales de mercure","La Bénédiction de Mikael d’un allié"],"La suppression résiste à Purge et à la ténacité. Seul l’actif vif-argent la retire.","Un objet précis.");
+Q("champ",4,"Quelle affirmation sur la ténacité est vraie ?",["Elle ne réduit pas la durée des projections en l’air","Elle réduit aussi les dégâts des sorts ennemis","Elle réduit les projections mais pas les étourdissements","Elle rend immunisé aux ralentissements au-delà de 50 %"],"Les projections en l’air ignorent la ténacité : c’est ce qui rend les ultimes comme celui de Malphite si fiables.","En l’air…");
+Q("champ",4,"Zed t’a posé son ultime. Tu as un Sablier de Zhonya. Quand l’activer ?",["Juste avant l’explosion de la marque","Dès que la marque est posée","Juste après l’explosion de la marque","Dès que tu passes sous 50 % de PV"],"En stase pendant l’explosion, tu annules les dégâts accumulés. Trop tôt, la marque éclate après ta stase.","Le moment critique.");
+
+/* ---------- OBJETS ---------- */
+Q("item",1,"Les bottes d’acier renforcées sont faites contre…",["Les attaques de base","Les sorts magiques","Les contrôles","Les dégâts de tourelle"],"Elles réduisent les dégâts des attaques de base. Contre la magie et les contrôles : sandales de mercure.","Pense aux ADC.");
+Q("item",2,"Les sandales de mercure apportent…",["Résistance magique et ténacité","Armure et ténacité","Résistance magique et vitesse d’attaque","Ténacité et accélération de compétence"],"Utiles contre une équipe qui a beaucoup de magie ET de contrôles.","Magie + contrôles.");
+Q("item",2,"Quel composant d’anti-soin achète un champion AD ?",["Appel de l’exécuteur","Orbe de l’oubli","Gilet épineux","Épée longue"],"L’Orbe de l’oubli est l’équivalent mage, le Gilet épineux l’équivalent tank.","Physique.");
+Q("item",2,"Et quel composant d’anti-soin achète un mage ?",["Orbe de l’oubli","Appel de l’exécuteur","Gilet épineux","Tome d’amplification"],"Il évolue en Morellonomicon.","Magique.");
+Q("item",2,"Pendant la stase du Sablier de Zhonya, tu…",["Es invulnérable et ne peux rien faire","Es invulnérable et peux te déplacer","Te soignes rapidement","Es invisible mais vulnérable aux sorts"],"Tu gagnes du temps, pas de la position : les ennemis peuvent t’attendre à la sortie.","Figé.");
+Q("item",2,"L’objet de support termine sa quête. Que se passe-t-il ?",["Il s’améliore et donne des charges de balises","Il se revend automatiquement contre de l’or","Il transfère son or à l’ADC","Il augmente l’or que le support gagne sur les sbires"],"C’est ce qui permet au support de tenir la vision de l’équipe.","Vision.");
+Q("item",3,"Contre des ennemis avec PEU de résistance magique, quelle pénétration rapporte le plus ?",["La pénétration fixe","La pénétration en pourcentage","Les deux se valent toujours","Aucune, mieux vaut de la puissance pure"],"La pénétration fixe retire la même valeur à tous : énorme sur une cible fragile. Le pourcentage devient meilleur contre les tanks.","Fixe vs %.");
+Q("item",3,"Pourquoi une réduction d’armure (Couperet noir) aide plus l’équipe qu’une pénétration ?",["Elle profite à tous les alliés qui frappent la cible","Elle retire aussi la résistance magique","Elle reste active toute la partie","Elle s’applique aussi aux tourelles"],"La pénétration ne sert qu’à toi. La réduction modifie la cible pour tout le monde.","Qui en profite ?");
+Q("item",3,"Tu es ADC, deux tanks ennemis empilent l’armure. Quel objet en priorité ?",["Salutations de Lord Dominik","Lame d’infini","Soif-de-sang","Canon ultrarapide"],"Pénétration d’armure en pourcentage : ce qui compte contre des cibles très résistantes.","Pénétration.");
+Q("item",3,"Que fait le passif du Voile de la banshee ?",["Un bouclier qui bloque la prochaine compétence ennemie","Un bouclier contre la magie quand tu passes bas","Une réduction de durée des contrôles","Une résistance magique qui grandit en combat"],"Le bouclier « quand tu passes bas », c’est la Gueule de Malmortius.","Un sort bloqué.");
+Q("item",3,"Le Visage spirituel augmente…",["Les soins et boucliers que tu reçois","Les soins que tu donnes à tes alliés","Ta résistance magique selon tes PV manquants","Ta régénération de mana en combat"],"Excellent sur les champions qui se soignent eux-mêmes, ou avec un support enchanteur.","Reçus.");
+Q("item",3,"L’Armure de ronces applique des blessures graves quand…",["Un ennemi te frappe d’une attaque de base, ou quand tu l’immobilises","Tu frappes un ennemi avec une attaque de base","Un ennemi te touche avec un sort","Tu passes sous la moitié de tes PV"],"Elle punit surtout les champions qui se soignent en frappant.","Quand on te frappe.");
+Q("item",4,"Tu es mage face à Zed et Talon. Premier objet défensif le plus rentable ?",["Sablier de Zhonya","Voile de la banshee","Morellonomicon","Cœur gelé"],"Deux assassins AD : armure et stase. La banshee protège surtout contre la magie.","Leurs dégâts sont physiques.");
+Q("item",4,"Pourquoi acheter la Larme de la déesse tôt quand on la prend ?",["Elle se charge avec le temps et les sorts : plus tôt, plus vite complète","Son prix augmente après 10 minutes","Elle donne un bouclier dès l’achat","Elle réduit le coût en mana de tes sorts"],"Les objets à charges récompensent l’achat précoce.","Elle se remplit.");
+
+/* ---------- ÉCONOMIE ---------- */
+Q("eco",1,"Quelle source d’or est la plus régulière en lane ?",["Les sbires","Les kills","Les assistances","Les plaques"],"Une vague complète vaut à peu près un kill, et elle revient toutes les 30 secondes.","Elle revient sans cesse.");
+Q("eco",2,"Combien d’or rapporte le premier sang ?",["400","300","500","150"],"300 or de base + 100 de bonus.","Un bonus sur un kill normal.");
+Q("eco",2,"Un joueur qui meurt plusieurs fois de suite…",["Rapporte moins d’or à chaque nouvelle mort","Rapporte plus d’or à chaque mort","Rapporte toujours 300 or","Ne rapporte plus rien après 3 morts"],"Le jeu limite l’effet boule de neige. Tuer un joueur en série (prime) rapporte au contraire plus.","Le jeu freine l’avalanche.");
+Q("eco",2,"En début de partie, les sbires canons arrivent…",["Toutes les 3 vagues, puis plus souvent","À chaque vague dès le début","Seulement après 15 minutes","Toutes les 2 vagues toute la partie"],"Toutes les 3 vagues au début, toutes les 2 ensuite, puis à chaque vague en fin de partie.","Pas à chaque vague.");
+Q("eco",2,"Combien de plaques porte une tourelle extérieure ?",["5","3","4","6"],"Chaque plaque donne de l’or. Elles tombent à 14:00.","Une main.");
+Q("eco",2,"Les plaques des tourelles extérieures tombent à…",["14:00","10:00","15:00","20:00"],"Après, la tourelle n’est plus qu’un seul bloc de PV.","Juste avant le quart d’heure.");
+Q("eco",3,"Un sbire est achevé par ta tourelle, près de toi. Tu reçois…",["L’XP, mais pas l’or","L’or et l’XP","La moitié de l’or et l’XP","Ni or ni XP"],"L’XP se partage entre les champions proches. L’or, lui, exige le dernier coup.","L’XP ne demande pas le dernier coup.");
+Q("eco",3,"À 10 minutes, quel total de CS correspond à une lane très bien farmée ?",["80 à 90","50 à 60","30 à 40","Plus de 150"],"Le maximum théorique se situe un peu au-dessus de 100. 80-90 est un farm solide.","Proche du maximum.");
+Q("eco",3,"Comment l’or d’un kill est-il partagé avec les assistants ?",["Une part est répartie entre les assistants","Chaque assistant reçoit 300 or","Seul le tueur reçoit de l’or","L’or va à celui qui a fait le plus de dégâts"],"Le tueur garde la plus grosse part. Laisser le kill au carry est donc un choix.","Répartition.");
+Q("eco",4,"Quand les « primes d’objectif » apparaissent-elles ?",["Quand une équipe est nettement en retard : ses objectifs rapportent plus","Quand une équipe prend trois objectifs d’affilée","Quand un joueur est en série de kills","Après 25 minutes, sur tous les objectifs"],"Un mécanisme de rattrapage : l’équipe en avance doit rester prudente.","Rattrapage.");
+Q("eco",4,"Tu as 1 250 or, ton composant clé coûte 1 300. Une vague ennemie de 7 sbires arrive sur ta tourelle, sans danger. Meilleur choix ?",["Nettoyer la vague sous ta tourelle, puis rappeler","Rappeler tout de suite et acheter un composant moins cher","Rester en lane jusqu’à 2 500 or","Laisser la vague à la tourelle et rappeler"],"La vague te donne l’or manquant. Rappeler avant, c’est perdre 7 sbires et ton composant.","Il te manque 50 or.");
+
+/* ---------- OBJECTIFS ---------- */
+Q("obj",1,"Combien de dragons élémentaires une équipe doit-elle tuer pour l’âme ?",["4","3","5","2"],"Le 4e dragon d’une même équipe donne l’âme ; le Dragon ancestral apparaît ensuite.","Un de plus que 3.");
+Q("obj",2,"Après quel dragon la Faille se transforme-t-elle ?",["Le 2e","Le 1er","Le 3e","Le 4e"],"L’élément révélé à ce moment est celui de tous les dragons suivants, et donc de l’âme.","Tôt.");
+Q("obj",2,"Quel dragon donne de la ténacité et renforce les soins et boucliers ?",["Chimtech","Océan","Montagne","Hextech"],"Océan régénère, Montagne donne des résistances, Hextech de l’accélération et de la vitesse d’attaque.","Le plus « chimique ».");
+Q("obj",2,"Quel dragon donne de l’armure et de la résistance magique ?",["Montagne","Océan","Infernal","Nuages"],"Infernal donne des dégâts, Nuages de la vitesse, Océan de la régénération.","Solide comme…");
+Q("obj",2,"Combien de temps dure le buff du Nashor ?",["3 minutes","2 minutes","5 minutes","90 secondes"],"Trois minutes pour convertir : chaque seconde de buff non utilisée est perdue.","Pas longtemps.");
+Q("obj",2,"Avec le buff du Nashor, le rappel dure…",["4 secondes","8 secondes","2 secondes","6 secondes"],"Rappel rapide = retour rapide sur la carte pour assiéger.","Moitié moins.");
+Q("obj",3,"Qui reçoit le buff du Nashor ?",["Tous les membres vivants de l’équipe","Seulement celui qui l’a achevé","Toute l’équipe, morts compris","Seulement les joueurs proches de la fosse"],"Un allié mort au moment du kill ne l’a pas : d’où l’intérêt de ne pas perdre de joueur juste avant.","Il faut être en vie.");
+Q("obj",3,"Le Dragon ancestral apparaît…",["Quand une équipe a obtenu l’âme du dragon","Après 35 minutes, quoi qu’il arrive","Après le 6e dragon de la partie","Après le deuxième Nashor"],"Il remplace les dragons élémentaires une fois l’âme prise.","Après l’âme.");
+Q("obj",3,"Qu’apporte le buff du Dragon ancestral ?",["Brûlure et exécution des ennemis bas en PV","Des PV bonus et de la régénération","Il double l’effet de l’âme du dragon","Des sbires renforcés dans toutes les lanes"],"Des sbires renforcés, c’est le Nashor.","Exécution.");
+Q("obj",3,"L’ennemi fait le Nashor avec sa vision. Tu es jungler. Quand tenter un vol au Châtiment ?",["Quand les PV du Nashor passent à portée de ton Châtiment","Dès l’entrée de l’équipe ennemie dans la fosse","Quand l’équipe ennemie passe sous 50 % de PV","Juste après le Châtiment du jungler ennemi, quels que soient les PV"],"Châtiment inflige des dégâts fixes : il ne sert qu’à la fin.","Des dégâts fixes.");
+Q("obj",4,"Vous venez de tuer le jungler adverse et le Nashor est disponible. Pourquoi c’est le moment ?",["Sans Châtiment ennemi, le risque de vol est très faible","Le Nashor est plus faible quand un jungler est mort","Le jungler mort perd son or de prime","Les tourelles adverses sont désactivées pendant sa mort"],"Pick sur le jungler = fenêtre d’objectif. Convertis ton avantage.","Qui peut le voler ?");
+Q("obj",4,"Point d’âme adverse, dragon dans 1 minute. Qu’est-ce qui compte le plus maintenant ?",["Pousser les vagues proches et installer la vision","Farmer ta jungle pour prendre un niveau","Rester groupés en base pour réapparaître ensemble","Prendre le Héraut de l’autre côté"],"Le combat se prépare avant l’apparition : l’équipe qui arrive en premier avec la vision a l’avantage.","Avant l’apparition.");
+
+/* ---------- RUNES ---------- */
+Q("rune",1,"Lequel de ces arbres de runes n’existe pas ?",["Agilité","Précision","Sorcellerie","Inspiration"],"Les cinq arbres : Précision, Domination, Sorcellerie, Volonté, Inspiration.","Il y en a cinq.");
+Q("rune",2,"Arbre secondaire : quelle règle ?",["2 runes de deux lignes différentes, sans rune clé","2 runes, qui peuvent être de la même ligne","1 rune clé et 1 rune","3 runes au choix"],"On ne peut pas prendre deux runes de la même ligne, ni une rune clé en secondaire.","Deux lignes différentes.");
+Q("rune",2,"Électrocution se déclenche avec…",["3 attaques ou sorts distincts sur un champion en peu de temps","3 attaques de base sur n’importe quelle unité","Le premier sort qui touche un champion","Un contrôle posé sur un champion"],"Un combo rapide de trois éléments différents : la rune des assassins.","Trois éléments différents.");
+Q("rune",2,"Conquérant à charges maximales…",["Convertit une partie de tes dégâts en soins","Te donne un bouclier","Te donne de la vitesse de déplacement","Rend ton prochain sort gratuit"],"C’est ce soin qui rend les combattants si durs à tuer dans les longs combats.","Longs combats.");
+Q("rune",3,"Répercussion s’active quand…",["Tu immobilises un champion ennemi","Tu passes sous 30 % de PV","Tu subis trois attaques","Tu touches un champion avec ton ultime"],"Tu gagnes des résistances, puis une explosion : parfait pour les tanks qui engagent.","Un contrôle.");
+Q("rune",3,"Pourquoi Poigne du mort-vivant est-elle moins forte sur un champion à distance ?",["Ses effets sont réduits pour les champions à distance","Elle ne se déclenche qu’au corps à corps","Elle exige d’abord de subir des dégâts","Elle ne fonctionne que sur les sbires"],"Elle reste jouable à distance, mais rapporte moins.","Réduite.");
+Q("rune",3,"Plaque osseuse…",["Réduit les dégâts des prochains coups d’un champion après avoir été touché","Donne de l’armure qui grandit avec le temps","Renvoie une partie des dégâts subis","Réduit la durée des contrôles"],"Idéale contre les combos courts : elle amortit la suite de l’échange.","Après le premier coup.");
+Q("rune",3,"Rush de phase convient surtout à…",["Un mage qui veut frapper puis s’éloigner d’un combattant","Un tank qui veut rester au contact","Un jungler qui veut sécuriser les objectifs","Un support qui veut protéger son ADC"],"Après 3 touches, un gros bonus de vitesse : frapper et partir.","Mobilité.");
+Q("rune",4,"Comment se déclenche le bouclier de Gardien ?",["Un allié proche subit des dégâts d’un champion","Tu lances un sort de soin","Tu immobilises un ennemi","Tu passes sous 30 % de PV"],"Il suffit d’être proche de l’allié ciblé : le placement fait tout.","Proximité.");
+Q("rune",4,"Contre un mage de poke en mid, quelle rune secondaire de Volonté aide le plus à tenir ?",["Second souffle","Démolition","Surcroissance","Inébranlable"],"Démolition vise les tourelles, Surcroissance le long terme, Inébranlable les contrôles.","Régénérer.");
+Q("rune",4,"Premier coup (First Strike)…",["Donne de l’or et des dégâts bonus si tu infliges les premiers dégâts à un champion","Double les dégâts de ta toute première attaque de la partie","Donne de l’or pour chaque premier kill de la partie","Rend ton premier sort de chaque combat gratuit"],"Elle récompense ceux qui initient les échanges.","Qui frappe en premier ?");
+
+/* ---------- MATCHUPS ---------- */
+Q("mu",1,"Contre un duo bot avec Blitzcrank, ta priorité ?",["Rester derrière tes sbires","Rester dans les buissons de ta lane","Rester loin de ton support","Rester collé à ta tourelle toute la phase de lane"],"Coller sa tourelle coûte trop de sbires. Les sbires suffisent comme bouclier.","Un bouclier.");
+Q("mu",2,"Tu es un mêlée contre un tireur en top. Quand chercher un échange ?",["Quand il s’avance pour achever un sbire","Dès qu’il t’attaque en premier","Quand tu es plus bas que lui en PV","Quand ses sbires sont plus nombreux que les tiens"],"Pour last-hit, il doit entrer dans ta portée. C’est ta fenêtre.","Il doit s’approcher.");
+Q("mu",2,"Pourquoi un Malphite niveau 6 change-t-il la lane ?",["Son ultime est un engage imparable avec projection","Il devient insensible aux dégâts physiques","Son ultime le soigne entièrement","Il gagne une portée d’attaque supérieure"],"Une projection ne se purge pas et ignore la ténacité : il faut respecter sa portée.","L’ultime.");
+Q("mu",2,"Quel champion stoppe les ruées adverses avec un sort ?",["Poppy","Garen","Nasus","Annie"],"Son W arrête les dash : un contre direct à Yasuo, Irelia, Lee Sin…","Une gardienne.");
+Q("mu",3,"Contre Soraka et Aatrox, qui achète l’anti-soin ?",["Au moins un joueur par type de dégâts utile, tôt dans la partie","Uniquement le support, qui a peu d’objets","Personne avant 25 minutes","Toute l’équipe, en premier objet"],"Un anti-soin appliqué en continu suffit : pas besoin que tout le monde l’achète.","Suffisamment, pas trop.");
+Q("mu",3,"Contre Darius, quel type d’échange éviter ?",["Les échanges longs au corps à corps","Les échanges courts où tu recules vite","Les échanges sous ta tourelle","Les échanges où tu frappes en premier"],"À 5 charges d’hémorragie, il devient très fort. Frappe et recule.","Il accumule.");
+Q("mu",3,"Contre Yasuo, tu es un mage à projectiles. Meilleur ordre ?",["Lui faire utiliser son Mur de vent, puis lancer tes sorts clés","Lancer ton sort clé en premier pour le forcer à esquiver","Toujours lancer tous tes sorts ensemble","Ne jouer que tes sorts non bloquables même s’ils sont faibles"],"Son Mur de vent a un long délai : une fois utilisé, ta fenêtre s’ouvre.","Attendre.");
+Q("mu",3,"Tryndamere lance son ultime. Que fais-tu ?",["Tu le kites jusqu’à la fin de l’ultime, puis tu punis","Tu lances tout immédiatement pendant l’ultime","Tu lui appliques Embrasement pour l’annuler","Tu le laisses te suivre sous ta tourelle quoi qu’il arrive"],"Il ne peut pas mourir pendant quelques secondes : les dégâts sont gâchés.","Il ne meurt pas encore.");
+Q("mu",4,"Tu joues Kayle contre Darius, niveaux 1 à 6. Objectif principal ?",["Perdre le moins de sbires possible en restant près de ta tourelle","Chercher à égaliser les kills","Échanger dès que ton E est prêt","Laisser la lane pour farmer la jungle"],"Kayle gagne la partie plus tard. Survivre et farmer, c’est gagner la lane.","Scaling.");
+Q("mu",4,"Tu joues un champion faible tôt mais fort tard, contre une composition agressive. Plan de partie ?",["Éviter les combats inutiles, céder certains objectifs, atteindre tes objets clés","Surprendre l’ennemi en forçant les combats dès le début","Délaisser le farm pour roam","Forcer le Nashor tôt"],"Céder un dragon coûte moins que perdre un combat que tu ne peux pas gagner.","Gagner du temps.");
+Q("mu",4,"Face à un mid qui roam beaucoup (Talon), meilleure réponse ?",["Pinguer et pousser ta vague pour punir chaque roam","Le suivre à chaque fois, même sans prio","Rester sous ta tourelle pour ne rien risquer","Ignorer ses déplacements et farmer"],"Chaque roam doit lui coûter des sbires ou des plaques. Le suivre sans prio te fait perdre ta vague.","Qu’est-ce que son roam lui coûte ?");
+
+/* ---------- MACRO ---------- */
+Q("macro",2,"Ton ADC est mort, vous êtes 4 contre 5 au dragon. Que faire ?",["Céder le dragon et prendre autre chose si possible","Contester en espérant un vol au Châtiment","Engager vite avant la réapparition de l’ADC","Rester groupés dans la fosse pour défendre"],"Un combat en infériorité se perd souvent. Céder un dragon coûte moins qu’un ace.","Compte les joueurs.");
+Q("macro",2,"Tu as poussé ta vague, tu as tous tes PV, ton jungler va au crabe. Que faire ?",["Aller l’aider à prendre le crabe","Rester en lane pour la vague suivante","Rentrer acheter une potion","Frapper la tourelle ennemie sans sbires"],"Ta vague travaille pour toi : c’est le moment le plus gratuit pour agir ailleurs.","Tu es libre.");
+Q("macro",3,"Le jungler ennemi est vu en bot. Ton jungler devrait…",["Jouer du côté opposé : envahir ou objectif côté top","Aller en bot pour l’affronter","Rentrer en base","Rester au mid en attendant"],"Chaque apparition du jungler adverse dit où il n’est PAS.","Le côté opposé.");
+Q("macro",3,"Après la chute de la tourelle extérieure bot, le duo bot…",["Déplace souvent la pression vers le mid ou les objectifs","Reste en bot pour attaquer la tourelle intérieure seul","Part en top à deux","Retourne farmer la jungle alliée"],"Une tourelle tombée libère du temps : ce temps s’utilise ailleurs.","Rotation.");
+Q("macro",3,"Vous ne pouvez pas contester un objectif ennemi. Que faire ?",["Prendre un objectif ailleurs en échange","Rester en base pour ne rien donner","Contester quand même en infériorité","Poser des balises autour de l’objectif perdu"],"Tour contre dragon, larves contre dragon… On compare les valeurs.","Un échange.");
+Q("macro",3,"Vous avez gagné un combat à 24:00, 3 ennemis morts pour 35 s. Nashor en vie. Choix ?",["Prendre le Nashor si c’est rapide et sûr, sinon la tourelle mid","Rentrer en base pour acheter","Chasser les 2 survivants dans leur jungle","Se séparer pour pousser les 3 lanes"],"Transformer un combat gagné en objectif. La poursuite peut tout rendre.","Convertir.");
+Q("macro",4,"Avant le Nashor, pourquoi pousser les lanes latérales ?",["Pour obliger l’ennemi à défendre ses vagues ou à les perdre","Pour gagner de l’XP avant le combat","Pour empêcher le Nashor de se déplacer","Pour attirer les sbires dans la fosse"],"Des vagues qui arrivent sur l’ennemi le forcent à choisir.","Des problèmes pour l’ennemi.");
+Q("macro",4,"La formation « 1-3-1 », c’est…",["Un joueur sur chaque lane latérale, trois au centre","Un joueur top, trois bot, un en jungle","Un tank devant, trois au milieu, un carry derrière","Une rotation : un objectif, trois tourelles, un Nashor"],"Elle étire l’adversaire : s’il se regroupe, les côtés tombent ; s’il se divise, le mid attaque.","Top, mid, bot.");
+Q("macro",4,"Quelles conditions rendent un dive sous tourelle raisonnable ?",["Vague alliée sous la tourelle, surnombre, et quelqu’un pour prendre l’aggro","Être seul avec beaucoup de PV et Flash disponible","Avoir l’ultime prêt, peu importe la vague","Que la tourelle ait perdu au moins trois plaques"],"Les sbires alliés et un tank qui prend les tirs rendent le dive propre.","Préparer la tourelle.");
+Q("macro",4,"Vous menez largement. Quelle erreur éviter ?",["Engager des combats sans objectif ni vision","Prendre des tourelles en groupe","Poser des balises profondes","Forcer le Nashor après un pick"],"Chaque combat inutile donne une chance de retour, et des primes, à l’adversaire.","Convertir.");
+Q("macro",4,"Qui doit défendre un split push adverse ?",["Un joueur capable de le tenir seul, pendant que les 4 autres jouent ailleurs","Toute l’équipe, pour le tuer à coup sûr","Personne, les tourelles suffisent","Le support, qui a le moins d’objets"],"Envoyer deux joueurs, c’est lui donner ce qu’il cherche.","Un seul, le bon.");
+
+/* ============================================================
+   FICHES — l’étape d’encodage avant la récupération
+   ============================================================ */
+const LESSONS = {
+  voc:["Le CS est le nombre de sbires et monstres achevés : ta source d’or principale.","Un gank, c’est un joueur qui arrive par surprise dans une lane pour créer un 2 contre 1.","Le poke inflige des dégâts à distance ; le peel protège un allié ; le kiting consiste à bouger entre les attaques.","Le « back » (touche B) te ramène en base en 8 secondes."],
+  map:["3 lanes (top, mid, bot), une jungle entre elles, coupée par une rivière.","Un buisson cache ceux qui sont dedans : sans vision, tu ne vois pas qui s’y trouve.","Chaque équipe a 11 tourelles et 3 inhibiteurs. Une tourelle tire sur un champion qui attaque un de ses alliés.","Buff bleu : mana et accélération de compétence. Buff rouge : attaques qui brûlent et ralentissent."],
+  lane:["Top : lane isolée, beaucoup de 1v1. Mid : lane courte, beaucoup de roams.","Bot : ADC (farm) + support (protection, vision). Le support laisse les sbires à l’ADC.","Le jungler parcourt la jungle et aide les lanes (gank).","Près de ta tourelle, tu es à l’abri. Loin d’elle, tu es une cible de gank."],
+  champ:["Q, W, E : sorts de base. R : ultime, disponible au niveau 6.","Beaucoup de champions ont un passif qui change leur façon de jouer (accumuler, se réinitialiser…).","Certains sorts sont des contres directs : le Mur de vent de Yasuo bloque les projectiles.","Les projections en l’air ne peuvent pas être purgées : ce sont les contrôles les plus sûrs."],
+  item:["Les bottes augmentent la vitesse, puis ajoutent un effet selon ta paire (armure, résistance magique…).","Contre des soins, achète de l’anti-soin : Morellonomicon (mage), Appel de l’exécuteur (AD), Armure de ronces (tank).","Le Sablier de Zhonya te met en stase : invulnérable, mais immobile.","L’objet de support génère de l’or et, amélioré, des balises."],
+  eco:["Seul le dernier coup sur un sbire donne son or.","Un kill vaut 300 or de base ; tuer un joueur en série donne une prime.","Les plaques des tourelles extérieures donnent de l’or jusqu’à 14 minutes.","Mourir coûte aussi du temps : sbires, XP et objectifs perdus."],
+  obj:["Pour gagner : détruire le Nexus adverse.","4 dragons pour une même équipe = âme du dragon. Le Dragon ancestral exécute les ennemis bas.","Nashor : sbires renforcés et rappel accéléré pour assiéger.","Héraut et larves : outils pour détruire les tourelles. Le jungler sécurise avec Châtiment."],
+  rune:["5 arbres : Précision, Domination, Sorcellerie, Volonté, Inspiration.","Arbre principal : 1 rune clé + 3 runes. Arbre secondaire : 2 runes. Plus 3 fragments de stats.","Conquérant : combats longs. Électrocution : burst. Comète : poke. Poigne : échanges courts.","Gardien protège un allié ; Répercussion récompense les tanks qui engagent."],
+  mu:["Un matchup, c’est ton champion contre celui d’en face : qui est plus fort, et quand.","Contre les grappins, reste derrière tes sbires.","Respecte les paliers adverses : niveau 6, premier objet.","Contre les soins : anti-soin. Contre le burst : objets défensifs."],
+  macro:["Pousse ta vague avant de bouger : elle travaille pendant ton absence.","Chaque apparition du jungler ennemi dit où il n’est pas.","Compte les joueurs avant un combat : à 4 contre 5, on recule.","Transforme un avantage (kill, pick) en objectif, pas en poursuite."]
+};
+
+/* ============================================================
+   MISES EN SITUATION — markers : k = me | ally | enemy | unk | ward
+   coordonnées 0-100 : base bleue (toi) en bas à gauche
+   options : [texte, verdict 2 optimal / 1 jouable / 0 à éviter, explication]
+   ============================================================ */
+const SCENARIOS = [
+ { id:"s1", t:"Le mid a disparu", tier:1, role:"Mid", time:"6:10",
+   ctx:"Ta vague pousse vers la tourelle adverse. Pas de balise dans la rivière. Le jungler ennemi n’a pas été vu depuis 1 minute et le mid adverse vient de disparaître de ta vision.",
+   look:["Où est la dernière vision de la rivière ?","Combien d’ennemis ne sont pas visibles ?"],
+   m:[{k:"me",x:57,y:43,l:"Toi"},{k:"unk",x:42,y:30,l:"Mid ?"},{k:"unk",x:66,y:52,l:"Jungler ?"},{k:"ally",x:12,y:40,l:"Top"}],
+   q:"Que fais-tu ?",
+   o:[["Tu recules vers ta tourelle, tu pings le mid manquant et tu poses une balise en rentrant",2,"Deux menaces invisibles : configuration classique d’un gank à deux. Reculer protège ta vie et le ping protège tes alliés si le mid est parti roam."],
+      ["Tu finis la vague sous la tourelle ennemie, puis tu recules par le côté opposé à la rivière",1,"Tu gagnes quelques sbires, mais ces secondes suffisent à un gank à deux. Et tes alliés ne sont pas prévenus du roam possible."],
+      ["Tu poses ta balise dans le buisson de rivière le plus proche pour vérifier",0,"Pour poser cette balise, tu dois t’approcher du buisson où les deux ennemis peuvent t’attendre : c’est un facecheck déguisé."]] },
+ { id:"s2", t:"Des sbires sous la tourelle", tier:1, role:"ADC", time:"4:30",
+   ctx:"Tu as 1 350 or et 60 % de PV. Une grosse vague ennemie arrive sur toi ; la tienne vient de mourir. Ton support a peu de mana.",
+   look:["Où sont les vagues ?","Que coûte un retour maintenant ?"],
+   m:[{k:"me",x:66,y:86,l:"Toi"},{k:"ally",x:60,y:84,l:"Sup"},{k:"enemy",x:80,y:86,l:"ADC"},{k:"enemy",x:82,y:80,l:"Sup"}],
+   q:"Tu veux acheter. Quelle option ?",
+   o:[["Tu farmes la vague sous ta tourelle, puis tu rentres une fois qu’elle est nettoyée",2,"Tu récupères l’or et l’XP de la vague, puis tu rentres sans rien laisser mourir sous ta tourelle. Ton support peut rentrer en même temps."],
+      ["Tu rappelles immédiatement pour revenir le plus vite possible",1,"Jouable à 60 % de PV, mais toute la vague meurt sous ta tourelle pendant ton absence : or et XP perdus."],
+      ["Tu restes jusqu’à avoir l’or de ton objet complet",0,"Tu retardes un composant déjà disponible, et ton support à court de mana ne peut plus te protéger."]] },
+ { id:"s3", t:"Dragon dans une minute", tier:2, role:"Jungle", time:"8:55",
+   ctx:"Dragon disponible à 9:00. Ton mid et ton bot ont la prio. Le jungler ennemi vient d’être vu en train de ganker le top. Ton top est à 40 % de PV sous sa tourelle.",
+   look:["Où est le jungler ennemi ?","Qui peut bouger en premier vers la fosse ?"],
+   m:[{k:"me",x:55,y:68,l:"Toi"},{k:"ally",x:52,y:46,l:"Mid"},{k:"ally",x:74,y:84,l:"ADC"},{k:"ally",x:72,y:88,l:"Sup"},{k:"enemy",x:14,y:22,l:"Jungler"},{k:"ally",x:12,y:60,l:"Top"},{k:"obj",x:68,y:70,l:"Dragon"}],
+   q:"Que fais-tu ?",
+   o:[["Tu démarres le dragon avec ton mid et ton duo bot dès qu’il apparaît",2,"Le jungler ennemi est à l’autre bout de la carte, sans Châtiment à proximité. Avec la prio sur les lanes proches, c’est un dragon presque gratuit."],
+      ["Tu vas contre-ganker le top, puis tu reviens pour le dragon",1,"Tu peux sauver ton top, mais l’aller-retour te coûte la fenêtre : le jungler ennemi reviendra en même temps que toi."],
+      ["Tu finis un camp de ta jungle puis le dragon, pour arriver niveau supérieur",0,"Trente secondes de plus laissent au jungler ennemi le temps de revenir. Le niveau gagné ne compense pas un dragon contesté."]] },
+ { id:"s4", t:"13:30, plaques en jeu", tier:2, role:"Top", time:"13:30",
+   ctx:"Ton adversaire direct vient de rappeler. Ta vague pousse vers sa tourelle, qui a encore 3 plaques. Le jungler ennemi est vu en bot. Tu as 900 or.",
+   look:["Quelle heure est-il ?","Où est le jungler ennemi ?"],
+   m:[{k:"me",x:14,y:22,l:"Toi"},{k:"enemy",x:80,y:84,l:"Jungler"}],
+   q:"Quelle est la meilleure action ?",
+   o:[["Tu pousses la vague et frappes la tourelle pour prendre des plaques avant 14:00",2,"Les plaques tombent à 14:00 : c’est de l’or qui disparaît. Le jungler ennemi est loin, ton adversaire est en base : c’est gratuit."],
+      ["Tu rappelles aussi pour revenir en même temps que lui",1,"Tu évites un désavantage d’objets, mais tu laisses sur la table l’or de plusieurs plaques."],
+      ["Tu pousses la vague puis tu pars aider ton mid",0,"Ton mid n’est pas en danger et la fenêtre de plaques ne revient jamais. Le roam n’a pas de cible."]] },
+ { id:"s5", t:"Tenir le freeze", tier:2, role:"Top", time:"11:00",
+   ctx:"Tu as 2 kills d’avance sur ton adversaire. La vague est gelée juste devant ta tourelle. Ton adversaire est à mi-PV et a besoin d’or. Ton jungler est côté bot.",
+   look:["Où est la vague ?","Qui a besoin de farmer ?"],
+   m:[{k:"me",x:12,y:62,l:"Toi"},{k:"enemy",x:12,y:44,l:"Top"}],
+   q:"Que fais-tu ?",
+   o:[["Tu gardes le freeze en ne donnant que les derniers coups",2,"Pour farmer, il doit s’avancer près de ta tourelle et s’exposer. Tu lui refuses or et XP, et ton avance grandit."],
+      ["Tu pousses la vague pour prendre des plaques",1,"Tu gagnes un peu d’or, mais tu le libères : il farme en sécurité sous sa tourelle et ton avantage de lane s’efface."],
+      ["Tu profites de l’avance pour roam en mid",0,"Tu casses ton freeze et ton adversaire récupère toute la vague. Ton avance vient justement de ce blocage."]] },
+ { id:"s6", t:"Plongée en bot", tier:3, role:"Support", time:"7:40",
+   ctx:"Niveau 6 pour vous deux. L’ADC ennemi est à 30 % de PV sous sa tourelle. Ta vague de 8 sbires vient d’arriver sous la tourelle. Ton jungler (un tank) arrive par la rivière.",
+   look:["Qui peut prendre les tirs de la tourelle ?","Combien de sbires alliés sous la tourelle ?"],
+   m:[{k:"me",x:78,y:84,l:"Toi"},{k:"ally",x:74,y:88,l:"ADC"},{k:"ally",x:70,y:74,l:"Jungler"},{k:"enemy",x:88,y:74,l:"ADC"},{k:"enemy",x:86,y:80,l:"Sup"}],
+   q:"Comment joues-tu ?",
+   o:[["Le jungler tank entre en premier et prend l’aggro, l’ADC et toi suivez pour achever",2,"Sbires sous la tourelle + surnombre + un tank pour prendre les tirs : c’est un dive propre."],
+      ["Tu engages toi-même avec ton contrôle, le jungler suit derrière",1,"Ça peut marcher, mais c’est toi qui prends les premiers tirs de la tourelle, qui montent à chaque coup."],
+      ["Tu attends que ton jungler se place dans le buisson, puis l’ADC ouvre avec un sort à distance",0,"Le sort de ton ADC sur un champion ennemi sous la tourelle attire l’aggro sur ton carry, et la fenêtre se referme pendant l’attente."]] },
+ { id:"s7", t:"Peel ou engage ?", tier:2, role:"Support", time:"22:00",
+   ctx:"Teamfight au mid. Tu joues un support protecteur. Un assassin ennemi vient de sauter sur ton ADC, qui est le plus riche de ton équipe. L’ADC ennemi est à portée de ton sort principal.",
+   look:["Qui est la cible ?","Qui porte les dégâts de ton équipe ?"],
+   m:[{k:"me",x:44,y:62,l:"Toi"},{k:"ally",x:40,y:64,l:"ADC"},{k:"enemy",x:42,y:60,l:"Assassin"},{k:"enemy",x:58,y:42,l:"ADC"},{k:"ally",x:52,y:52,l:"Top"}],
+   q:"Que fais-tu ?",
+   o:[["Tu gardes tes contrôles et boucliers pour l’assassin sur ton ADC",2,"Si ton ADC survit, il gagne le combat. Ton rôle ici est de retirer la menace sur lui."],
+      ["Tu mets ton bouclier sur ton ADC et ton contrôle sur l’ADC ennemi",1,"Le bouclier aide, mais l’assassin reste libre de finir ton ADC. Ton contrôle était plus utile sur lui."],
+      ["Tu utilises tout sur l’ADC ennemi : il est à portée et c’est leur carry",0,"Échange de carries défavorable : l’ADC ennemi est loin et protégé, le tien est déjà attaqué."]] },
+ { id:"s8", t:"Pick sur le jungler", tier:3, role:"Mid", time:"25:10",
+   ctx:"Vous venez de tuer le jungler adverse (réapparition dans 40 s). Le Nashor est disponible, vous avez de la vision dans la zone et vos 5 joueurs ont 70 % de PV. La tourelle bot extérieure ennemie est encore debout.",
+   look:["Qui peut voler un objectif ?","Combien de temps a-t-on ?"],
+   m:[{k:"me",x:40,y:36,l:"Toi"},{k:"ally",x:36,y:40,l:"Jng"},{k:"ally",x:44,y:40,l:"ADC"},{k:"ally",x:34,y:34,l:"Sup"},{k:"ally",x:28,y:26,l:"Top"},{k:"obj",x:32,y:30,l:"Nashor"},{k:"ward",x:40,y:22,l:""},{k:"ward",x:24,y:36,l:""}],
+   q:"Quelle décision ?",
+   o:[["Nashor immédiatement, à cinq",2,"Pas de Châtiment ennemi, un joueur de plus, de la vision : c’est la fenêtre idéale. Le buff servira à assiéger."],
+      ["Nashor à quatre pendant que le top pousse la lane bot",1,"Le top attire du monde, mais le Nashor prend plus de temps à quatre et un 4 contre 4 devient possible si l’ennemi conteste."],
+      ["Prendre d’abord la tourelle bot, puis le Nashor au retour",0,"Le jungler adverse aura réapparu : tu échanges un Nashor sûr contre une tourelle."]] },
+ { id:"s9", t:"Nashor adverse", tier:3, role:"Top", time:"29:00",
+   ctx:"Les 4 ennemis visibles commencent le Nashor, avec de la vision tout autour. Votre équipe est en retard de 3 000 or. Toi, tu es en split en bot près de leur tourelle d’inhibiteur, avec la Téléportation disponible.",
+   look:["Peut-on gagner le combat au Nashor ?","Que peut-on prendre ailleurs ?"],
+   m:[{k:"me",x:88,y:40,l:"Toi"},{k:"enemy",x:34,y:28,l:""},{k:"enemy",x:30,y:32,l:""},{k:"enemy",x:36,y:32,l:""},{k:"enemy",x:32,y:26,l:""},{k:"obj",x:32,y:30,l:"Nashor"},{k:"ally",x:40,y:62,l:"Équipe"}],
+   q:"Quelle est la meilleure réponse ?",
+   o:[["Tu prends la tourelle et l’inhibiteur bot pendant que ton équipe sécurise le dragon ou la vision",2,"Contester à 4 contre 4 en retard d’or et sans vision est perdant. L’échange cross-map limite les dégâts."],
+      ["Tu te téléportes derrière la fosse pour un 5 contre 4 avec ton équipe",1,"Tentant, mais tu arrives dans une zone contrôlée par l’ennemi, en retard d’or. Si le combat tourne mal, c’est un ace."],
+      ["Ton équipe poke l’entrée de la fosse pour forcer l’ennemi à arrêter",0,"Sans vision, s’approcher de la fosse expose ton équipe à un engage. Et le Nashor tombe vite à quatre."]] },
+ { id:"s10", t:"Point d’âme adverse", tier:4, role:"Jungle", time:"24:00",
+   ctx:"L’équipe adverse a 3 dragons (point d’âme). Le prochain dragon apparaît dans 1 minute. Vous êtes à 2 000 or de retard. Les vagues bot et mid arrivent vers vos tourelles.",
+   look:["Peut-on laisser cette âme ?","Que faut-il faire des 60 prochaines secondes ?"],
+   m:[{k:"me",x:48,y:62,l:"Toi"},{k:"ally",x:44,y:52,l:"Mid"},{k:"ally",x:64,y:86,l:"ADC"},{k:"ally",x:60,y:88,l:"Sup"},{k:"obj",x:68,y:70,l:"Dragon"},{k:"unk",x:74,y:60,l:"?"}],
+   q:"Quel plan ?",
+   o:[["Nettoyer les vagues bot et mid, puis poser et nettoyer la vision autour de la fosse 45 s avant, groupés",2,"L’âme peut décider la partie : il faut la contester. Ça se joue avant l’apparition, par les vagues et la vision, pour arriver en premier et chercher un pick."],
+      ["Aller tout de suite poser la vision autour de la fosse, sans toucher aux vagues",1,"La vision est bonne, mais les vagues ennemies vont frapper vos tourelles pendant le combat : vous arriverez sans prio."],
+      ["Prendre les larves et la tourelle top pendant qu’ils font le dragon",0,"Céder l’âme en retard d’or, c’est donner un bonus définitif qui ferme la partie. Les larves ne compensent pas."]] },
+ { id:"s11", t:"Formation 1-3-1", tier:4, role:"Top", time:"32:00",
+   ctx:"Ton équipe joue 1-3-1 : toi en top, votre ADC en bot, 3 au mid. L’ennemi envoie 2 joueurs sur toi et 3 au mid. Pas d’information sur le bot.",
+   look:["Combien d’ennemis viennent sur toi ?","Que devient le bot ?"],
+   m:[{k:"me",x:30,y:12,l:"Toi"},{k:"enemy",x:22,y:18,l:""},{k:"enemy",x:26,y:22,l:""},{k:"ally",x:46,y:54,l:"×3"},{k:"enemy",x:58,y:44,l:"×3"},{k:"ally",x:88,y:40,l:"ADC"}],
+   q:"Que fais-tu ?",
+   o:[["Tu recules sans mourir en gardant ces 2 ennemis occupés, et tu pings le mid pour jouer le 4 contre 3",2,"Tu as réussi le travail du split : attirer plus d’un joueur. Ton équipe joue en surnombre ailleurs. Ne pas mourir est la clé."],
+      ["Tu te téléportes au mid pour un 4 contre 3 immédiat",1,"Possible si le combat démarre, mais tu libères les 2 ennemis qui rejoignent le mid en quelques secondes."],
+      ["Tu tiens la vague sous ta tourelle en combattant les 2 ennemis",0,"À 1 contre 2, même sous tourelle, tu risques de mourir, ce qui annule tout l’intérêt de la formation."]] }
+];
+
+/* ============================================================
+   LEXIQUE — pour les joueurs guidés
+   ============================================================ */
+const GLOSSARY = [
+ ["ADC","Tireur de la bot lane, qui fait des dégâts avec ses attaques de base."],
+ ["Aggro","Quand une tourelle ou un monstre te cible."],
+ ["All-in","Engager avec tous ses sorts pour tuer."],
+ ["Back / Recall","Retour à la base (touche B, 8 s)."],
+ ["Bush","Buisson qui cache ceux qui sont dedans."],
+ ["CC","Contrôle : étourdissement, ralentissement, projection…"],
+ ["CS","Nombre de sbires et monstres achevés."],
+ ["Dive","Attaquer un ennemi sous sa propre tourelle."],
+ ["Facecheck","Entrer dans un buisson sans vision."],
+ ["Farm","Accumuler de l’or en tuant des sbires et monstres."],
+ ["Freeze","Garder la vague près de sa tourelle."],
+ ["Gank","Attaque surprise sur une lane, souvent par le jungler."],
+ ["Kite","Bouger entre ses attaques pour garder la distance."],
+ ["Last hit","Porter le coup fatal à un sbire pour gagner son or."],
+ ["Peel","Protéger un allié de ceux qui l’attaquent."],
+ ["Poke","Dégâts à distance sans engagement."],
+ ["Prio","Pouvoir quitter sa lane en premier sans perte."],
+ ["Roam","Quitter sa lane pour aider ailleurs."],
+ ["Scaling","Capacité d’un champion à devenir fort en fin de partie."],
+ ["Shutdown","Prime pour avoir tué un joueur en série."],
+ ["Smite","Châtiment : sort du jungler pour les monstres."],
+ ["Split push","Pousser seul une lane latérale."],
+ ["Tank","Champion résistant qui encaisse et engage."],
+ ["Ward","Balise qui donne de la vision."]
+];
+</script>
+
+<script>
+/* ============================================================
+   PROFILS DE GUIDAGE
+   ============================================================ */
+const TIERS = {
+  1:{name:"Recrue",   range:"Nouveau joueur",       color:"var(--teal)",   opts:3, hint:true,  lesson:"auto",  timer:0,  conf:true,  retry:true,  len:6,  dmin:1, dmax:2, scenMax:2, look:true,  full:true, path:true,
+     does:["Un parcours pas à pas : les thèmes se débloquent un par un, du vocabulaire à la macro","Une fiche à lire avant chaque nouveau thème, puis des questions pour ancrer","3 choix de réponse et un indice à chaque question","Tes erreurs reviennent en fin de séance pour être corrigées tout de suite","Un rang par thème qui démarre en Fer et grimpe avec toi"]},
+  2:{name:"Apprenti", range:"Fer → Or",             color:"var(--blue)",   opts:4, hint:true,  lesson:"first", timer:0,  conf:true,  retry:true,  len:8,  dmin:1, dmax:3, scenMax:3, look:true,  full:true, path:false,
+     does:["Tous les thèmes ouverts, avec un ordre conseillé","Une fiche proposée la première fois que tu ouvres un thème","4 choix de réponse, indice disponible","Explications détaillées et erreurs rejouées en fin de séance","Mises en situation avec des repères de lecture","Un rang par thème, placements lancés depuis Argent"]},
+  3:{name:"Confirmé", range:"Platine → Diamant",    color:"var(--violet)", opts:4, hint:false, lesson:"manual",timer:0,  conf:true,  retry:false, len:10, dmin:2, dmax:4, scenMax:4, look:false, full:false, path:false,
+     does:["Accès libre à tout ; la difficulté suit ton rang dans chaque thème","Pas d’indice : tu récupères l’information seul","Explications courtes, centrées sur l’essentiel","Mises en situation complètes, sans repères de lecture"]},
+  4:{name:"Élite",    range:"Maître → Challenger",  color:"var(--gold)",   opts:4, hint:false, lesson:"manual",timer:20, conf:false, retry:false, len:12, dmin:3, dmax:4, scenMax:4, look:false, full:false, path:false, scenTimer:40,
+     does:["Placements lancés depuis Diamant : questions pointues d’emblée","Chrono de 20 secondes par question, 40 s par mise en situation","Aucun indice, aucune fiche imposée","Explications en une phrase : tu vérifies et tu enchaînes"]}
+};
+const RANKS = [["Fer","#8a7f78"],["Bronze","#a8744f"],["Argent","#9fb0c0"],["Or","#d9b45b"],["Platine","#4fb5a8"],["Émeraude","#3fbf7a"],["Diamant","#6d8df2"],["Maître","#b06ae0"],["Grand Maître","#e0605a"],["Challenger","#f2d27a"]];
+function rankTier(r){ const i = RANKS.findIndex(x=>x[0]===r); if(i<0) return 2; if(i<=3) return 2; if(i<=6) return 3; return 4; }
+const ROLES = [["Top","Combattants et tanks, souvent en 1v1"],["Jungle","Monstres, objectifs et ganks"],["Mid","Mages et assassins, beaucoup de roams"],["ADC","Tireur de la bot lane"],["Support","Protection, vision, engage"],["Je ne sais pas encore","On t’aidera à découvrir"]];
+const PACES = [["5","Léger","5 questions par jour"],["10","Régulier","10 questions par jour"],["20","Intensif","20 questions par jour"]];
+const INTERVALS = [0,1,2,4,8,16]; // jours par boîte (Leitner)
+const DAY = 864e5;
+
+/* ============================================================
+   STOCKAGE LOCAL (dans ce navigateur uniquement)
+   ============================================================ */
+const KEY = "rift-rappel-v1";
+function blank(){ return {profile:null, cards:{}, best:{}, lessons:{}, scen:{}, rank:{}, xp:0, streak:0, lastDay:null, daily:{day:null,count:0}}; }
+let S = blank();
+try{ const raw = localStorage.getItem(KEY); if(raw) S = Object.assign(blank(), JSON.parse(raw)); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+const today = () => new Date().toISOString().slice(0,10);
+
+/* ============================================================
+   OUTILS
+   ============================================================ */
+const $app = document.getElementById("app");
+const esc = s => String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const catOf = id => CATS.find(c=>c.id===id);
+const qById = id => QS.find(q=>q.id===id);
+const T = () => TIERS[S.profile ? S.profile.tier : 1];
+const pips = d => `<span class="pips" title="Difficulté ${d}/4" aria-label="Difficulté ${d} sur 4">${[1,2,3,4].map(i=>`<i class="${i<=d?"on":""}"></i>`).join("")}</span>`;
+const firstSentence = s => (s.match(/^.*?[.!?](\s|$)/)||[s])[0].trim();
+/* ---------- CLASSEMENT PAR THÈME (Fer → Challenger) ----------
+   Une note par thème, façon MMR. Chaque question a sa propre cote selon
+   sa difficulté. Réussir une question au-dessus de ton niveau rapporte
+   beaucoup de LP ; rater une question facile en coûte beaucoup.
+   Les 5 premières réponses d’un thème sont des matchs de placement. */
+const LADDER = [["Fer","#8a7f78"],["Bronze","#b07a52"],["Argent","#a9b8c6"],["Or","#d9b45b"],["Platine","#4fbfae"],["Émeraude","#3fbf7a"],["Diamant","#7c95f5"],["Maître","#b774e6"],["Grand Maître","#e0605a"],["Challenger","#f4d98a"]];
+const DIVS = ["IV","III","II","I"];
+const PLACEMENTS = 5;
+const Q_RATING = {1:500, 2:1200, 3:1900, 4:2700};
+const SCEN_RATING = {1:900, 2:1500, 3:2300, 4:3000};
+const SEED = {1:300, 2:1000, 3:1800, 4:2500};
+function rankOf(r){
+  if(r>=3400) return {i:9, name:"Challenger", div:"", lp:r-3400, apex:true};
+  if(r>=3100) return {i:8, name:"Grand Maître", div:"", lp:r-3100, apex:true};
+  if(r>=2800) return {i:7, name:"Maître", div:"", lp:r-2800, apex:true};
+  const i=Math.floor(r/400); return {i, name:LADDER[i][0], div:DIVS[Math.floor((r%400)/100)], lp:r%100, apex:false};
+}
+const rankLabel = r => { const k=rankOf(r); return k.name+(k.div?" "+k.div:""); };
+function catR(cat){ if(!S.rank) S.rank={}; if(!S.rank[cat]) S.rank[cat]={r:SEED[S.profile?S.profile.tier:1], n:0, peak:0}; return S.rank[cat]; }
+const placed = cat => catR(cat).n>=PLACEMENTS;
+function updateRank(cat, qR, score){
+  const c=catR(cat), before=c.r, K = c.n<PLACEMENTS ? 120 : 50;
+  const E = 1/(1+Math.pow(10,(qR-c.r)/400));
+  let d = Math.round(K*(score-E)); if(score>=1 && d<2) d=2;
+  c.r = Math.max(0, c.r+d); c.n++; if(c.n>=PLACEMENTS) c.peak=Math.max(c.peak||0,c.r);
+  let note="";
+  if(c.n===PLACEMENTS) note=`Placement terminé en ${catOf(cat).name} : ${rankLabel(c.r)}`;
+  else if(c.n>PLACEMENTS && rankLabel(before)!==rankLabel(c.r)) note=(c.r>before?"Promotion en ":"Rétrogradation en ")+`${catOf(cat).name} : ${rankLabel(c.r)}`;
+  return {cat, before, after:c.r, delta:c.r-before, note, placing:c.n<PLACEMENTS, n:c.n};
+}
+function emblem(cat, size){
+  size=size||38; const c=catR(cat);
+  if(c.n<PLACEMENTS) return `<svg class="emb" width="${size}" height="${size}" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2 L36 11 V28 L20 38 L4 28 V11Z" fill="none" stroke="#5E6C86" stroke-width="2" stroke-dasharray="3 2"/><text x="20" y="25" text-anchor="middle" font-size="13" font-weight="700" fill="#8F9CB6" font-family="Chakra Petch, sans-serif">?</text></svg>`;
+  const k=rankOf(c.r), col=LADDER[k.i][1];
+  const wings = k.apex ? `<path d="M4 12 L0 6 L9 9Z M36 12 L40 6 L31 9Z" fill="${col}"/>`+(k.i>=8?`<path d="M20 0 L23 5 L17 5Z" fill="${col}"/>`:"")+(k.i===9?`<path d="M11 3 L14 7 L9 7Z M29 3 L31 7 L26 7Z" fill="${col}"/>`:"") : "";
+  return `<svg class="emb" width="${size}" height="${size}" viewBox="0 0 40 40" aria-hidden="true">${wings}<path d="M20 2 L36 11 V28 L20 38 L4 28 V11Z" fill="${col}" fill-opacity=".18" stroke="${col}" stroke-width="2"/><path d="M20 9 L29 14 V25 L20 31 L11 25 V14Z" fill="${col}"/><text x="20" y="${k.div?24:23.5}" text-anchor="middle" font-size="${k.div?9:7}" font-weight="700" fill="#0A101B" font-family="Chakra Petch, sans-serif">${k.div||"★"}</text></svg>`;
+}
+function rankText(cat){
+  const c=catR(cat); if(c.n<PLACEMENTS) return `Placement ${c.n}/${PLACEMENTS}`;
+  const k=rankOf(c.r); return `${k.name}${k.div?" "+k.div:""} · ${k.lp} LP`;
+}
+function rankBar(cat){ const c=catR(cat); if(c.n<PLACEMENTS) return `<div class="bar"><i style="width:${c.n/PLACEMENTS*100}%;background:#5E6C86"></i></div>`; const k=rankOf(c.r); return `<div class="bar"><i style="width:${k.apex?100:k.lp}%;background:${LADDER[k.i][1]}"></i></div>`; }
+function bandFor(r){ if(r<800) return [1,2]; if(r<1600) return [1,3]; if(r<2400) return [2,4]; return [3,4]; }
+function eligibleCat(cat){ const [a,b]=bandFor(catR(cat).r); let r=QS.filter(q=>q.c===cat && q.d>=a && q.d<=b); if(r.length<5) r=QS.filter(q=>q.c===cat && q.d>=a-1 && q.d<=b+1); return r; }
+function eligible(cat){ return cat ? eligibleCat(cat) : CATS.flatMap(c=>eligibleCat(c.id)); }
+function mastery(cat){ const el = eligible(cat); if(!el.length) return 0; return el.filter(q=>(S.cards[q.id]||{}).box>=3).length/el.length; }
+function seenCount(cat){ return eligible(cat).filter(q=>S.cards[q.id]).length; }
+function dueList(cat){ const now=Date.now(); return eligible(cat).filter(q=>{const c=S.cards[q.id]; return c && c.due<=now;}); }
+function unlocked(cat){
+  if(!T().path) return true;
+  const i = PATH.indexOf(cat); if(i<=0) return true;
+  return (S.best[PATH[i-1]]||0) >= .6;
+}
+function nextPathCat(){ return PATH.find(c=>unlocked(c) && (S.best[c]||0) < .6) || PATH.find(c=>mastery(c)<1) || PATH[0]; }
+let toastTimer;
+function toast(msg){ let t=document.querySelector(".toast"); if(!t){t=document.createElement("div");t.className="toast";t.setAttribute("role","status");document.body.appendChild(t);} t.textContent=msg; clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.remove(),2600); }
+function touchDay(){
+  const d = today();
+  if(S.lastDay!==d){
+    const y = new Date(Date.now()-DAY).toISOString().slice(0,10);
+    S.streak = (S.lastDay===y) ? S.streak+1 : 1;
+    S.lastDay = d;
+  }
+  if(S.daily.day!==d) S.daily={day:d,count:0};
+}
+
+/* ============================================================
+   ÉTAT DE L’INTERFACE
+   ============================================================ */
+let V = { screen: S.profile ? "home" : "ob", ob:{step:0, data:{}}, quiz:null, lesson:null, scen:null, confirmReset:false };
+let tick = null;
+function go(screen, extra){ clearInterval(tick); tick=null; V.screen=screen; Object.assign(V, extra||{}); render(); window.scrollTo(0,0); }
+
+/* ============================================================
+   ONBOARDING
+   ============================================================ */
+function obSteps(){ return ["welcome","account"]; }
+function buildTest(){
+  const out=[];
+  [1,2,3,4].forEach(d=>{ shuffle(QS.filter(q=>q.d===d)).slice(0,2).forEach(q=>out.push(q.id)); });
+  return {items:out, i:0, answers:[], order:null};
+}
+function testTier(){
+  const t = V.ob.data.test; if(!t) return 1;
+  const pts = t.answers.reduce((s,a,i)=>s+(a?qById(t.items[i]).d:0),0); // max 20
+  const hard = t.answers.filter((a,i)=>a && qById(t.items[i]).d===4).length;
+  if(pts>=15 && hard>=1) return 4; if(pts>=10) return 3; if(pts>=4) return 2; return 1;
+}
+function declaredTier(){
+  const d=V.ob.data;
+  if(d.riot){ const r=d.riot.rank; if(!r) return (d.riot.level||0)<30?1:2; return r.tierIndex<=3?2:r.tierIndex<=6?3:4; }
+  if(d.exp==="never"||d.exp==="casual") return 1;
+  if(d.rank==="Non classé") return 2;
+  return rankTier(d.rank);
+}
+function renderOb(){
+  const steps = obSteps(), key = steps[V.ob.step], d = V.ob.data;
+  const bar = `<div class="ob-steps" aria-hidden="true">${steps.map((s,i)=>`<i class="${i<=V.ob.step?"on":""}"></i>`).join("")}</div>`;
+  let body="", canNext=true, nextLabel="Continuer", showBack = V.ob.step>0;
+  if(key==="welcome"){
+    body = `<div class="eyebrow">Apprendre League of Legends par le rappel</div>
+      <h1>Ce que tu retrouves de mémoire, tu le gardes.</h1>
+      <p class="lead">Lire un guide ou regarder une vidéo encode l’information. Pour qu’elle tienne dans le temps, il faut aller la rechercher : c’est l’étape de récupération. Chaque question ici en est une.</p>
+      <div class="loop">
+        <div><b>Encodage</b><p>Tu lis une fiche, tu vois une situation.</p></div>
+        <div><b>Stockage</b><p>L’information est en mémoire, fragile.</p></div>
+        <div><b>Récupération</b><p>Tu la retrouves sans aide. C’est ce qui l’ancre.</p></div>
+      </div>
+      <p class="muted">Quelques questions pour savoir quel contenu te proposer et combien te guider. Deux minutes.</p>`;
+    nextLabel="Commencer";
+  } else if(key==="account"){
+    body = `<div class="eyebrow">Ton compte</div><h1>Quel est ton nom d’invocateur ?</h1>
+      <p class="lead">Ton Riot ID, avec le #TAG si tu le connais. L’app prépare un résumé de tes parties et tes rangs par thème.</p>
+      <input class="input" id="ob-riot" maxlength="30" placeholder="Pseudo#EUW" value="${esc(d.riotId||"")}" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <p class="muted" style="font-size:13.5px">Pour l’instant, les statistiques sont des <b>données d’exemple</b> générées à partir de ton nom : la connexion aux vraies parties viendra ensuite.</p>`;
+    nextLabel="Entrer dans la Faille"; canNext = !!(d.riotId||"").trim();
+  } else if(key==="exp"){
+    const o=[["never","Je découvre le jeu","Jamais joué, ou tout juste le tutoriel"],["casual","Quelques parties","Je joue en normal, pas encore en classé"],["ranked","Je joue en classé","J’ai un rang, de Fer à Diamant"],["pro","Je joue à haut niveau","Maître et au-delà, ou compétitif"]];
+    body = `<div class="eyebrow">Étape ${V.ob.step} · Expérience</div><h1>Où en es-tu avec League ?</h1>
+      <div class="choices">${o.map(x=>`<button class="choice" data-a="ob-set" data-k="exp" data-v="${x[0]}" aria-pressed="${d.exp===x[0]}"><b>${x[1]}</b><span>${x[2]}</span></button>`).join("")}</div>`;
+    canNext=!!d.exp;
+  } else if(key==="rank"){
+    const list = d.exp==="pro" ? RANKS.slice(6) : [["Non classé","#5e6c86"]].concat(RANKS);
+    body = `<div class="eyebrow">Étape ${V.ob.step} · Rang</div><h1>Quel est ton rang actuel en solo/duo ?</h1>
+      <div class="ranks">${list.map(r=>`<button class="rank" data-a="ob-set" data-k="rank" data-v="${r[0]}" aria-pressed="${d.rank===r[0]}"><i style="background:${r[1]}"></i>${r[0]}</button>`).join("")}</div>
+      <p class="muted">Ton rang donne une première idée. Le petit test qui suit l’affine.</p>`;
+    canNext=!!d.rank;
+  } else if(key==="role"){
+    body = `<div class="eyebrow">Étape ${V.ob.step} · Rôle</div><h1>Quel rôle joues-tu le plus ?</h1>
+      <div class="choices two">${ROLES.map(r=>`<button class="choice" data-a="ob-set" data-k="role" data-v="${r[0]}" aria-pressed="${d.role===r[0]}"><b>${r[0]}</b><span>${r[1]}</span></button>`).join("")}</div>`;
+    canNext=!!d.role;
+  } else if(key==="pace"){
+    body = `<div class="eyebrow">Étape ${V.ob.step} · Rythme</div><h1>Combien de temps par jour ?</h1>
+      <p class="lead">Des séances courtes et régulières retiennent mieux qu’une longue séance de temps en temps.</p>
+      <div class="choices">${PACES.map(p=>`<button class="choice" data-a="ob-set" data-k="pace" data-v="${p[0]}" aria-pressed="${d.pace===p[0]}"><b>${p[1]}</b><span>${p[2]}</span></button>`).join("")}</div>`;
+    canNext=!!d.pace;
+  } else if(key==="test"){
+    if(!d.test) d.test = buildTest();
+    const t=d.test;
+    if(t.i < t.items.length){
+      const q = qById(t.items[t.i]);
+      if(!t.order) t.order = shuffle(q.o.map((_,i)=>i));
+      body = `<div class="eyebrow">Test de placement · ${t.i+1} / ${t.items.length}</div>
+        <div class="qmeta"><span class="code">${catOf(q.c).code}</span>${pips(q.d)}</div>
+        <div class="qtext">${esc(q.q)}</div>
+        <div class="opts">${t.order.map((oi,k)=>`<button class="opt" data-a="test-ans" data-v="${oi}"><span class="k">${"ABCD"[k]}</span><span>${esc(q.o[oi])}</span></button>`).join("")}
+        <button class="opt" data-a="test-ans" data-v="-1"><span class="k">?</span><span class="muted">Je ne sais pas</span></button></div>
+        <p class="muted">Pas de correction ici : réponds « je ne sais pas » plutôt que de deviner, le test sera plus juste.</p>`;
+      canNext=false; nextLabel=null;
+    } else {
+      const ok = t.answers.filter(Boolean).length;
+      body = `<div class="eyebrow">Test de placement</div><h1>Test terminé</h1>
+        <p class="lead"><span class="num">${ok}</span> bonnes réponses sur <span class="num">${t.items.length}</span>, sur des questions de difficulté croissante.</p>`;
+      nextLabel="Voir mon profil";
+    }
+  } else if(key==="result"){
+    const dt = declaredTier(), tt = d.riot ? dt : (d.exp==="never" ? 1 : testTier());
+    if(!d.tier) d.tier = d.riot ? dt : (d.exp==="never") ? 1 : tt;
+    const tier = TIERS[d.tier];
+    document.documentElement.style.setProperty("--tier", tier.color);
+    const cmp = (dt!==tt && d.exp!=="never") ? `<div class="stack"><p class="muted">Ton ${d.exp==="casual"?"expérience":"rang"} suggère <b>${TIERS[dt].name}</b>, ton test suggère <b>${TIERS[tt].name}</b>. Choisis ton point de départ :</p>
+        <div class="compare">
+          <button class="choice" data-a="ob-set" data-k="tier" data-v="${tt}" aria-pressed="${d.tier===tt}"><b>${TIERS[tt].name} · d’après le test</b><span>Recommandé : basé sur ce que tu sais aujourd’hui</span></button>
+          <button class="choice" data-a="ob-set" data-k="tier" data-v="${dt}" aria-pressed="${d.tier===dt}"><b>${TIERS[dt].name} · d’après ${d.exp==="casual"?"ton expérience":"ton rang"}</b><span>Tu pourras changer à tout moment</span></button>
+        </div></div>` : "";
+    body = `<div class="eyebrow">Ton profil</div>
+      <div class="tiercard" style="--tier:${tier.color}">
+        <div class="row" style="justify-content:space-between"><span class="pill tier">${tier.range}</span><span class="muted">${esc(d.role||"")}</span></div>
+        <h2 style="margin-top:10px">${tier.name}</h2>
+        <p class="muted" style="margin-top:4px">Voici comment l’app va te guider :</p>
+        <ul class="checks">${tier.does.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+      </div>${cmp}`;
+    nextLabel="Entrer dans la Faille";
+  }
+  $app.innerHTML = `<div class="ob"><div class="ob-in rise">${bar}${body}
+    <div class="ob-foot">${showBack?`<button class="btn ghost" data-a="ob-back">Retour</button>`:"<span></span>"}
+    ${nextLabel?`<button class="btn" data-a="ob-next" ${canNext?"":"disabled"}>${nextLabel}</button>`:""}</div></div></div>`;
+  const ri=document.getElementById("ob-riot"); if(ri){ ri.focus(); ri.addEventListener("input",e=>{ d.riotId=e.target.value; const b=document.querySelector('[data-a="ob-next"]'); if(b) b.disabled=!e.target.value.trim(); }); ri.addEventListener("keydown",e=>{ if(e.key==="Enter" && e.target.value.trim()) act("ob-next"); }); const pl=document.getElementById("ob-platform"); if(pl) pl.addEventListener("change",e=>d.platform=e.target.value); }
+  const inp=document.getElementById("ob-name"); if(inp){ inp.focus(); inp.addEventListener("input",e=>d.name=e.target.value); inp.addEventListener("keydown",e=>{if(e.key==="Enter") act("ob-next");}); }
+}
+function finishOb(){
+  const d=V.ob.data;
+  let id=(d.riotId||"").trim(); if(!id) return;
+  if(!id.includes("#")) id+="#EUW";
+  const data=fakeProfile(id);
+  const r=data.rank, tier = !r ? 2 : r.tierIndex<=3 ? 2 : r.tierIndex<=6 ? 3 : 4;
+  S.profile = {name:data.gameName, exp:"ranked", rank:r?r.tierFr:null, role:data.role, pace:10, tier, since:today()};
+  S.rank = {};
+  linkRiot(data, {riotId:data.riotId, platform:data.platform}, true);
+  save(); go("home");
+}
+
+/* ============================================================
+   SÉANCES DE QUESTIONS
+   ============================================================ */
+function weightedItems(len){
+  const w=S.riot.data.weights||{}, now=Date.now();
+  const cats=CATS.map(c=>c.id), tot=cats.reduce((a,c)=>a+(w[c]||1),0);
+  let alloc=cats.map(c=>{const n=(w[c]||1)/tot*len; return {c, k:Math.floor(n), f:n-Math.floor(n)};});
+  let left=len-alloc.reduce((a,x)=>a+x.k,0);
+  alloc.slice().sort((a,b)=>b.f-a.f).forEach(x=>{ if(left>0){x.k++;left--;} });
+  let out=[];
+  for(const a of alloc){
+    if(!a.k) continue;
+    const pool=eligibleCat(a.c);
+    const due=pool.filter(q=>{const c=S.cards[q.id];return c&&c.due<=now;});
+    const fresh=shuffle(pool.filter(q=>!S.cards[q.id]));
+    const rest=shuffle(pool.filter(q=>S.cards[q.id]&&S.cards[q.id].due>now));
+    out=out.concat(due.concat(fresh,rest).slice(0,a.k));
+  }
+  return shuffle(out);
+}
+function buildSession(cat, mode){
+  const t=T(), pool=eligible(cat), now=Date.now();
+  let items;
+  if(!cat && mode!=="review" && S.riot && S.riot.data){ items = weightedItems(t.len); }
+  else if(mode==="review"){
+    items = pool.filter(q=>{const c=S.cards[q.id];return c&&c.due<=now;}).sort((a,b)=>S.cards[a.id].due-S.cards[b.id].due).slice(0,t.len);
+  } else {
+    const due = pool.filter(q=>{const c=S.cards[q.id];return c&&c.due<=now;}).sort((a,b)=>S.cards[a.id].due-S.cards[b.id].due);
+    let fresh = shuffle(pool.filter(q=>!S.cards[q.id]));
+    if(t.full) fresh.sort((a,b)=>a.d-b.d);
+    const rest = shuffle(pool.filter(q=>S.cards[q.id] && S.cards[q.id].due>now));
+    items = due.slice(0,Math.ceil(t.len/2)).concat(fresh);
+    items = items.concat(rest).slice(0,t.len);
+    items = t.full ? items : shuffle(items);
+  }
+  return { cat, mode, items: items.map(q=>q.id), i:0, results:[], retried:{}, sel:null, phase:"ask", hint:false, order:null, xp:0, t0:0 };
+}
+function startQuiz(cat, mode){
+  const q = buildSession(cat, mode);
+  if(!q.items.length){ toast(mode==="review"?"Aucune révision due pour l’instant.":"Pas de question disponible ici."); return; }
+  const t=T();
+  if(cat && mode!=="review" && !S.lessons[cat] && (t.lesson==="auto"||t.lesson==="first")){ go("lesson",{lesson:{cat, then:q}}); return; }
+  go("quiz",{quiz:q});
+}
+function optionOrder(q){
+  const t=T(); let idx=[0,1,2,3];
+  if(t.opts===3) idx=[0].concat(shuffle([1,2,3]).slice(0,2));
+  return shuffle(idx);
+}
+function grade(qz, chosen, conf){
+  const q = qById(qz.items[qz.i]), ok = chosen===0;
+  const c = S.cards[q.id] || {box:0, n:0, ok:0};
+  c.n++; if(ok) c.ok++;
+  if(ok){
+    if(conf==="sure" && !qz.hint) c.box = Math.min(5, c.box+1);
+    else if(conf==="guess") c.box = 1;
+    else c.box = Math.max(1, c.box);
+  } else c.box = 0;
+  c.due = Date.now() + INTERVALS[c.box]*DAY;
+  S.cards[q.id]=c;
+  const gain = ok ? (conf==="sure"?15:10) : 2;
+  S.xp += gain; qz.xp += gain;
+  touchDay(); S.daily.count++;
+  const isRetry = !!qz.retried[q.id+"#"+qz.i];
+  qz.rk = null;
+  if(!isRetry){
+    let sc = ok ? (conf==="sure"?1:conf==="hesit"?.85:.5) : 0;
+    if(ok && qz.hint) sc=Math.min(sc,.7);
+    const rk = updateRank(q.c, Q_RATING[q.d], sc);
+    qz.rk = rk; qz.lp = qz.lp||{};
+    if(!qz.lp[q.c]) qz.lp[q.c]={from:rk.before, n0:rk.n-1};
+    qz.lp[q.c].to = rk.after; qz.lp[q.c].n = rk.n;
+    if(rk.note) { qz.notes=(qz.notes||[]); qz.notes.push(rk.note); setTimeout(()=>toast(rk.note),50); }
+  }
+  qz.results.push({id:q.id, ok, conf, retry:isRetry});
+  if(!ok && T().retry && !Object.keys(qz.retried).some(k=>k.startsWith(q.id+"#"))){
+    qz.items.push(q.id); qz.retried[q.id+"#"+(qz.items.length-1)] = true;
+  }
+  qz.phase="feedback"; qz.sel=chosen; qz.conf=conf; qz.ok=ok;
+  save();
+}
+function renderQuiz(){
+  const qz=V.quiz, t=T(), q=qById(qz.items[qz.i]);
+  if(!qz.order) qz.order = optionOrder(q);
+  const cat=catOf(q.c), prog=(qz.i)/qz.items.length*100;
+  const isRetry = !!qz.retried[q.id+"#"+qz.i];
+  let opts = qz.order.map((oi,k)=>{
+    let cls="opt";
+    if(qz.phase==="feedback"){ if(oi===0) cls+=" ok"; else if(oi===qz.sel) cls+=" ko"; }
+    else if(qz.pending===oi) cls+=" sel";
+    return `<button class="${cls}" data-a="pick" data-v="${oi}" ${qz.phase==="feedback"?"disabled":""}><span class="k">${"ABCD"[k]}</span><span>${esc(q.o[oi])}</span></button>`;
+  }).join("");
+  let below="";
+  if(qz.phase==="ask"){
+    if(t.hint) below += qz.hint ? `<div class="hint"><b>Indice :</b> ${esc(q.h)}</div>` : `<div><button class="btn ghost small" data-a="hint">Voir un indice</button></div>`;
+    if(t.conf && qz.pending!=null) below += `<div class="conf rise"><div class="eyebrow">Valider ta réponse · à quel point es-tu sûr·e ?</div>
+      <div class="row"><button class="btn" data-a="conf" data-v="sure">Sûr·e</button><button class="btn ghost" data-a="conf" data-v="hesit">Hésitant·e</button><button class="btn ghost" data-a="conf" data-v="guess">Au hasard</button></div></div>`;
+  } else {
+    const r = qz.results[qz.results.length-1];
+    let meta="";
+    if(!qz.ok && qz.conf==="sure") meta="Tu étais sûr·e de toi : corriger une erreur dont on était certain est l’une des façons les plus efficaces de retenir.";
+    else if(qz.ok && qz.conf==="guess") meta="Bonne réponse, mais au hasard : cette question reviendra vite.";
+    else if(qz.ok && qz.hint) meta="Trouvée avec l’indice : elle reviendra pour être retrouvée sans aide.";
+    else if(!qz.ok && t.retry && !isRetry) meta="Elle revient en fin de séance.";
+    if(qz.sel===-1) meta="Temps écoulé. "+meta;
+    const x = t.full ? q.x : firstSentence(q.x);
+    below = `<div class="fb ${qz.ok?"good":"bad"} rise"><h3>${qz.ok?"Bien retrouvé":"Pas tout à fait"}</h3><p>${esc(x)}</p>${meta?`<p class="meta">${esc(meta)}</p>`:""}${qz.rk?`<div class="lpline">${emblem(q.c,26)}<span>${qz.rk.placing?`Placement ${qz.rk.n}/${PLACEMENTS} en ${esc(cat.name)}`:`<b class="${qz.rk.delta>=0?"up":"down"}">${qz.rk.delta>=0?"+":""}${qz.rk.delta} LP</b> · ${esc(cat.name)} · ${esc(rankText(q.c))}`}</span></div>`:""}</div>
+      <div class="qfoot"><button class="btn" data-a="next" id="btn-next">${qz.i+1<qz.items.length?"Question suivante":"Voir le bilan"}</button></div>`;
+  }
+  const timer = (t.timer && qz.phase==="ask") ? `<div class="timer" id="timer"><i style="width:100%"></i></div>` : "";
+  $app.innerHTML = `<div class="wrap">
+    <div class="qhead"><button class="qx" data-a="quit" aria-label="Quitter la séance">✕</button><div class="bar"><i style="width:${prog}%"></i></div><span class="num muted">${qz.i+1}/${qz.items.length}</span></div>
+    <div class="qcard rise">
+      <div class="qmeta"><span class="code">${cat.code}</span><span class="muted" style="font-size:13px">${cat.name}</span>${pips(q.d)}${isRetry?`<span class="pill">Deuxième essai</span>`:""}</div>
+      ${timer}
+      <div class="qtext">${esc(q.q)}</div>
+      <div class="opts">${opts}</div>
+      ${below}
+    </div></div>`;
+  if(t.timer && qz.phase==="ask"){
+    if(!qz.t0) qz.t0=Date.now();
+    clearInterval(tick);
+    tick=setInterval(()=>{
+      const el=document.querySelector("#timer i"); const left = t.timer - (Date.now()-qz.t0)/1000;
+      if(el){ el.style.width = Math.max(0,left/t.timer*100)+"%"; el.parentElement.classList.toggle("low", left<6); }
+      if(left<=0){ clearInterval(tick); grade(qz,-1,"sure"); render(); }
+    },200);
+  }
+  const nb=document.getElementById("btn-next"); if(nb) nb.focus({preventScroll:true});
+}
+function renderResults(){
+  const qz=V.quiz, first=qz.results.filter(r=>!r.retry), ok=first.filter(r=>r.ok).length, pct = first.length? ok/first.length : 0;
+  let unlockMsg="";
+  if(qz.cat && qz.mode!=="review"){
+    const before = PATH.filter(unlocked);
+    S.best[qz.cat] = Math.max(S.best[qz.cat]||0, pct);
+    const after = PATH.filter(unlocked);
+    if(T().path && after.length>before.length){ const nc = catOf(after[after.length-1]); unlockMsg=`<div class="hint rise"><b>Nouvelle étape débloquée :</b> ${esc(nc.name)}</div>`; }
+    save();
+  }
+  const tomorrow = Object.values(S.cards).filter(c=>c.due<=Date.now()+DAY).length;
+  const msg = pct>=.85 ? "Excellent rappel." : pct>=.6 ? "Solide. Les erreurs sont notées pour revenir au bon moment." : "Chaque erreur corrigée aujourd’hui se retient mieux demain.";
+  const need = T().path && qz.cat && pct<.6 ? `<p class="muted">Atteins 60 % sur ce thème pour débloquer l’étape suivante.</p>` : "";
+  $app.innerHTML = `<div class="wrap"><div class="stack rise" style="padding-top:30px">
+    <div class="eyebrow">Bilan de séance${qz.cat?" · "+esc(catOf(qz.cat).name):""}</div>
+    <div class="row" style="align-items:flex-end;gap:16px"><div class="score">${Math.round(pct*100)}<span style="font-size:28px">%</span></div>
+      <p class="muted" style="padding-bottom:8px"><span class="num">${ok}</span> / <span class="num">${first.length}</span> au premier essai · <span class="num">+${qz.xp}</span> XP</p></div>
+    <p style="font-size:17px">${msg}</p>${need}${unlockMsg}
+    ${qz.lp?`<div class="card"><div class="eyebrow" style="margin-bottom:10px">Classement</div><div class="lpres">${Object.entries(qz.lp).map(([c,v])=>{const d=v.to-v.from, pl=v.n<PLACEMENTS, justPlaced=v.n>=PLACEMENTS&&v.n0<PLACEMENTS;
+      return `<div>${emblem(c,40)}<div><b>${esc(catOf(c).name)}</b><span class="muted">${pl?`Placement ${v.n}/${PLACEMENTS}`:justPlaced?`Placé ${rankLabel(v.to)} · ${rankOf(v.to).lp} LP`:`${rankLabel(v.from)!==rankLabel(v.to)?esc(rankLabel(v.from))+" → ":""}${esc(rankLabel(v.to))} · ${rankOf(v.to).lp} LP`}</span></div>${pl||justPlaced?"":`<b class="${d>=0?"up":"down"} num">${d>=0?"+":""}${d} LP</b>`}</div>`;}).join("")}</div></div>`:""}
+    <div class="card"><div class="eyebrow" style="margin-bottom:6px">Détail</div><div class="recap">
+      ${qz.results.map(r=>{const q=qById(r.id);return `<div><i style="background:${r.ok?"var(--good)":"var(--red)"}"></i><span>${esc(q.q)}${r.retry?` <span class="muted">(2e essai)</span>`:""}</span></div>`;}).join("")}
+    </div></div>
+    <p class="muted"><span class="num">${tomorrow}</span> question${tomorrow>1?"s":""} à revoir d’ici demain. Revenir chaque jour, même 5 minutes, fait la différence.</p>
+    <div class="row"><button class="btn" data-a="again">Nouvelle séance</button><button class="btn ghost" data-a="home">Accueil</button></div>
+  </div></div>`;
+}
+
+/* ============================================================
+   FICHES
+   ============================================================ */
+function renderLesson(){
+  const L=V.lesson, cat=catOf(L.cat);
+  $app.innerHTML = `<div class="wrap"><div class="lesson rise">
+    <div class="stage"><span class="${L.then?"on":""}">1 · Encodage</span><span>2 · Récupération</span></div>
+    <h1 style="font-size:30px;margin-top:14px">${esc(cat.name)}</h1>
+    <p class="muted" style="margin-top:6px">Lis attentivement. Juste après, tu devras retrouver ces idées sans les avoir sous les yeux.</p>
+    <ul>${LESSONS[L.cat].map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+    <div class="row" style="margin-top:20px">${L.then?`<button class="btn" data-a="lesson-go">J’ai lu, je m’entraîne</button>`:`<button class="btn" data-a="cat" data-v="${L.cat}">M’entraîner sur ce thème</button>`}<button class="btn ghost" data-a="home">Accueil</button></div>
+  </div></div>`;
+}
+
+/* ============================================================
+   MINI-CARTE
+   ============================================================ */
+const TOWERS=[[12,64],[12,38],[34,66],[42,58],[36,88],[62,88],[16,80],[22,78],[20,84]];
+function miniMap(ms){
+  const C={blue:"#4DA3F0",red:"#E4665F",gold:"#D9B45B",warn:"#E3A948",violet:"#A08CF2",text:"#E8EDF6",map:"#0D1822",map2:"#12222E",river:"#1D4A62",lane:"#3B4B60",faint:"#5E6C86"};
+  const tw = TOWERS.map(([x,y])=>`<rect x="${x-1.4}" y="${y-1.4}" width="2.8" height="2.8" fill="${C["blue"]}" opacity=".85"/><rect x="${100-x-1.4}" y="${100-y-1.4}" width="2.8" height="2.8" fill="${C["red"]}" opacity=".85"/>`).join("");
+  const mk = ms.map(m=>{
+    let s="";
+    if(m.k==="me") s=`<circle cx="${m.x}" cy="${m.y}" r="3.4" fill="${C["gold"]}" stroke="#fff" stroke-width=".8"/>`;
+    else if(m.k==="ally") s=`<circle cx="${m.x}" cy="${m.y}" r="2.8" fill="${C["blue"]}" stroke="#0b1a2a" stroke-width=".6"/>`;
+    else if(m.k==="enemy") s=`<circle cx="${m.x}" cy="${m.y}" r="2.8" fill="${C["red"]}" stroke="#2a0b0b" stroke-width=".6"/>`;
+    else if(m.k==="unk") s=`<circle cx="${m.x}" cy="${m.y}" r="3" fill="none" stroke="${C["red"]}" stroke-width=".7" stroke-dasharray="1.4 1"/><text x="${m.x}" y="${m.y+1.3}" text-anchor="middle" font-size="3.6" font-weight="700" fill="${C["red"]}">?</text>`;
+    else if(m.k==="ward") s=`<rect x="${m.x-1.5}" y="${m.y-1.5}" width="3" height="3" transform="rotate(45 ${m.x} ${m.y})" fill="${C["warn"]}"/>`;
+    else if(m.k==="obj") s=`<circle cx="${m.x}" cy="${m.y}" r="4.2" fill="none" stroke="${C["violet"]}" stroke-width=".9"/>`;
+    const lx = m.x>70 ? m.x-4.5 : m.x+4.5, anchor = m.x>70?"end":"start";
+    const lab = m.l ? `<text x="${lx}" y="${m.y+1.2}" text-anchor="${anchor}" font-size="3.3" font-weight="600" fill="${C["text"]}" stroke="${C["map"]}" stroke-width="1" paint-order="stroke">${esc(m.l)}</text>` : "";
+    return s+lab;
+  }).join("");
+  return `<svg viewBox="0 0 100 100" role="img" aria-label="Mini-carte schématique de la situation">
+    <rect width="100" height="100" fill="${C["map"]}"/>
+    <path d="M22 30 L30 22 L46 40 L40 46Z M54 60 L60 54 L78 70 L70 78Z" fill="${C["map2"]}"/>
+    <path d="M14 14 L86 86" stroke="${C["river"]}" stroke-width="8" stroke-linecap="round" opacity=".7"/>
+    <g stroke="${C["lane"]}" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 86 L12 12 L86 12"/><path d="M16 84 L84 16"/><path d="M14 88 L88 88 L88 14"/>
+    </g>
+    <circle cx="68" cy="70" r="3.4" fill="none" stroke="${C["faint"]}" stroke-width=".6"/>
+    <circle cx="32" cy="30" r="3.4" fill="none" stroke="${C["faint"]}" stroke-width=".6"/>
+    <circle cx="9" cy="91" r="7" fill="${C["blue"]}" opacity=".35"/><circle cx="91" cy="9" r="7" fill="${C["red"]}" opacity=".35"/>
+    ${tw}${mk}
+  </svg>`;
+}
+
+/* ============================================================
+   MISES EN SITUATION
+   ============================================================ */
+function scenList(){ const t=T(); return SCENARIOS.filter(s=>s.tier<=t.scenMax && (t.dmin<3 || s.tier>=2)); }
+function renderScenList(){
+  const list=scenList();
+  $app.innerHTML = nav("scen")+`<div class="wrap"><div class="section" style="margin-top:26px">
+    <div class="section-h"><h2 style="font-size:26px">Mises en situation</h2><span class="muted">${list.length} situations</span></div>
+    <p class="muted" style="max-width:60ch">Une carte, un contexte, une décision. Il n’y a pas toujours une seule bonne réponse : chaque option est expliquée.</p>
+    <div class="grid">${list.map(s=>{const b=S.scen[s.id];return `<button class="tile" data-a="scen" data-v="${s.id}">
+      <div class="row"><span class="code">${esc(s.role).toUpperCase()} · ${s.time}</span>${pips(s.tier)}</div>
+      <h3>${esc(s.t)}</h3><p>${b!=null?(b===2?"Décision optimale trouvée":"Déjà tenté · à retenter"):"Pas encore tenté"}</p></button>`;}).join("")}</div>
+  </div></div>`;
+}
+function renderScen(){
+  const sc=V.scen, s=SCENARIOS.find(x=>x.id===sc.id), t=T();
+  if(!sc.order) sc.order=shuffle([0,1,2]);
+  const done = sc.pick!=null;
+  const opts = sc.order.map((oi,k)=>{
+    const o=s.o[oi]; let cls="opt long";
+    if(done){ cls += o[1]===2?" ok":(oi===sc.pick?" ko":""); }
+    return `<button class="${cls}" data-a="scen-pick" data-v="${oi}" ${done?"disabled":""}><span class="k">${"ABC"[k]}</span><span>${esc(o[0])}${done?`<div class="optx"><span class="verdict v${o[1]}">${["À éviter","Jouable","Optimal"][o[1]]}</span> ${esc(t.full?o[2]:firstSentence(o[2]))}</div>`:""}</span></button>`;
+  }).join("");
+  const timer = (t.scenTimer && !done) ? `<div class="timer" id="timer"><i style="width:100%"></i></div>` : "";
+  $app.innerHTML = nav("scen")+`<div class="wrap">
+    <div class="qhead"><button class="qx" data-a="scenlist" aria-label="Retour aux situations">←</button><span class="eyebrow">${esc(s.role)} · ${s.time}</span></div>
+    <h1 style="font-size:26px;margin-top:12px">${esc(s.t)}</h1>
+    <div class="scn">
+      <div class="mapbox">${miniMap(s.m)}
+        <div class="legend"><span><i style="background:var(--gold)"></i>Toi</span><span><i style="background:var(--blue)"></i>Allié</span><span><i style="background:var(--red)"></i>Ennemi</span><span><i style="border:1px dashed var(--red)"></i>Position supposée</span></div></div>
+      <div class="stack">
+        ${timer}
+        <p style="font-size:16px">${esc(s.ctx)}</p>
+        ${t.look&&!done?`<div class="look"><b>À regarder avant de décider</b><ul>${s.look.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:""}
+        <div class="qtext" style="font-size:20px">${esc(s.q)}</div>
+        <div class="opts">${opts}</div>
+        ${done?`<div class="lpline">${emblem("macro",26)}<span>${sc.rk?(sc.rk.placing?`Placement ${sc.rk.n}/${PLACEMENTS} en Macro`:`<b class="${sc.rk.delta>=0?"up":"down"}">${sc.rk.delta>=0?"+":""}${sc.rk.delta} LP</b> · Macro · ${esc(rankText("macro"))}`):"Situation déjà jouée : pas de LP en jeu cette fois."}</span></div>`:""}
+        ${done?`<div class="row"><button class="btn" data-a="scen-next">Situation suivante</button><button class="btn ghost" data-a="scen-retry">Recommencer</button></div>`:""}
+      </div></div></div>`;
+  if(t.scenTimer && !done){
+    if(!sc.t0) sc.t0=Date.now();
+    clearInterval(tick);
+    tick=setInterval(()=>{ const el=document.querySelector("#timer i"); const left=t.scenTimer-(Date.now()-sc.t0)/1000;
+      if(el){el.style.width=Math.max(0,left/t.scenTimer*100)+"%"; el.parentElement.classList.toggle("low",left<8);}
+      if(left<=0){ clearInterval(tick); const worst=s.o.findIndex(o=>o[1]===0); pickScen(worst); toast("Temps écoulé : en jeu, ne pas décider est aussi une décision."); } },250);
+  }
+}
+function pickScen(oi){
+  const sc=V.scen, s=SCENARIOS.find(x=>x.id===sc.id), v=s.o[oi][1];
+  sc.rk = (S.scen[s.id]==null) ? updateRank("macro", SCEN_RATING[s.tier], [0,.5,1][v]) : null;
+  if(sc.rk && sc.rk.note) setTimeout(()=>toast(sc.rk.note),50);
+  sc.pick=oi; S.scen[s.id]=Math.max(S.scen[s.id]??-1, v); S.xp += v===2?20:v===1?8:3; touchDay(); save(); clearInterval(tick); render();
+}
+
+/* ============================================================
+   ACCUEIL
+   ============================================================ */
+function nav(cur){
+  const t=T();
+  const items=[["home","Accueil"],["scenlist","Situations"],[t.lesson==="manual"?"lessons":"gloss", t.lesson==="manual"?"Fiches":"Lexique"],["profile","Profil"]];
+  return `<header class="top"><div class="top-in">
+    <div class="brand"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 L21 7 V17 L12 22 L3 17 V7 Z" fill="none" stroke="var(--gold)" stroke-width="1.8"/><path d="M12 7 A5 5 0 1 1 7.6 14.4" fill="none" stroke="var(--teal)" stroke-width="1.8" stroke-linecap="round"/><path d="M7 11.5 L7.6 14.6 L10.6 13.8" fill="none" stroke="var(--teal)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Rift Rappel</div>
+    <nav class="nav">${items.map(([k,l])=>`<button data-a="${k}" aria-current="${cur===k}">${l}</button>`).join("")}</nav>
+  </div></header>`;
+}
+function renderHome(){
+  const p=S.profile, t=T();
+  const due = dueList().length, daily = S.daily.day===today()?S.daily.count:0, goal=p.pace;
+  const streak = (S.lastDay===today() || S.lastDay===new Date(Date.now()-DAY).toISOString().slice(0,10)) ? S.streak : 0;
+  const r = S.riot && S.riot.data;
+  const prio = new Set(r ? focusCats() : []);
+  const order = t.path ? PATH : CATS.map(c=>c.id);
+  const themeTile = c => { const cat=catOf(c), u=unlocked(c);
+    return `<button class="tile${u?"":" locked"}" data-a="cat" data-v="${c}">
+      <div class="tile-rank">${emblem(c,42)}<div><h3>${esc(cat.name)}</h3><span class="rk num">${esc(rankText(c))}</span></div>${prio.has(c)?`<span class="prio">Priorité</span>`:""}</div>
+      <p>${u?esc(cat.blurb):"Verrouillé : valide d’abord le thème précédent."}</p>${rankBar(c)}</button>`; };
+  const scen = scenList().slice(0,3);
+  $app.innerHTML = nav("home")+`<div class="wrap">
+    <div class="hello"><div><div class="eyebrow">Salut ${esc(p.name)}</div><h1>Que veux-tu travailler ?</h1></div><span class="pill tier">${t.name} · ${t.range}</span></div>
+    ${r?accountStrip(r):""}
+    ${r?overview(r):""}
+    <div class="section"><div class="section-h"><h2>Tes thèmes</h2>${r?`<button class="btn small" data-a="mix">Séance ciblée</button>`:`<button class="btn small" data-a="mix">Séance mixte</button>`}</div>
+      <p class="muted" style="font-size:13.5px;margin-top:-4px">Choisis un thème. Chacun a son rang, de Fer à Challenger : 5 questions de placement, puis des LP à chaque réponse.${r?" Les thèmes marqués « Priorité » correspondent à tes points faibles.":""}</p>
+      <div class="grid">${order.map(themeTile).join("")}</div></div>
+    <div class="section"><div class="section-h"><h2>Mises en situation</h2><button class="link" data-a="scenlist">Tout voir</button></div>
+      <div class="grid">${scen.map(s=>`<button class="tile" data-a="scen" data-v="${s.id}"><div class="row"><span class="code">${esc(s.role).toUpperCase()} · ${s.time}</span>${pips(s.tier)}</div><h3>${esc(s.t)}</h3><p>${esc(s.ctx.slice(0,90))}…</p></button>`).join("")}</div></div>
+    <div class="section"><div class="section-h"><h2>Ta régularité</h2></div>
+      <div class="stats" style="margin-top:0">
+        <div class="stat"><b class="num">${streak}</b><span>jour${streak>1?"s":""} de suite</span></div>
+        <div class="stat"><b class="num">${Math.min(daily,goal)}/${goal}</b><span>objectif du jour</span></div>
+        <div class="stat"><b class="num">${S.xp}</b><span>XP</span></div>
+      </div>
+      <div class="card row" style="justify-content:space-between"><p>${due?`<b class="num">${due}</b> question${due>1?"s":""} à retrouver aujourd’hui : c’est le bon moment, juste avant l’oubli.`:"Aucune révision due. Les questions reviendront juste avant que tu les oublies."}</p>
+      <button class="btn ${due?"":"ghost"} small" data-a="review" ${due?"":"disabled"}>Réviser</button></div></div>
+    <div class="why"><b>Pourquoi ça marche.</b> Une bonne réponse sûre fait revenir la question 1, 2, 4, 8 puis 16 jours plus tard. Une erreur la remet au début. Répondre « au hasard » compte comme une réponse à revoir.</div>
+    <p class="legal">Rift Rappel n’est pas approuvé par Riot Games et ne reflète pas les opinions de Riot Games ni de quiconque officiellement impliqué dans la production ou la gestion des propriétés de Riot Games. Riot Games et toutes les propriétés associées sont des marques ou des marques déposées de Riot Games, Inc.</p>
+  </div>`;
+}
+
+/* ============================================================
+   LEXIQUE, FICHES, PROFIL
+   ============================================================ */
+function renderGloss(){
+  $app.innerHTML = nav("gloss")+`<div class="wrap"><div class="section" style="margin-top:26px"><h2 style="font-size:26px">Lexique</h2>
+    <p class="muted">Les mots qu’on entend en partie. Garde-les en tête, ils reviennent dans les questions.</p>
+    <div class="gloss">${GLOSSARY.map(g=>`<div><b>${esc(g[0])}</b><span>${esc(g[1])}</span></div>`).join("")}</div>
+    <div class="section-h" style="margin-top:14px"><h2>Fiches par thème</h2></div>
+    <div class="grid">${PATH.map(c=>`<button class="tile" data-a="lesson" data-v="${c}"><div class="row"><span class="code">${catOf(c).code}</span></div><h3>${esc(catOf(c).name)}</h3></button>`).join("")}</div>
+  </div></div>`;
+}
+function renderLessons(){
+  $app.innerHTML = nav("lessons")+`<div class="wrap"><div class="section" style="margin-top:26px"><h2 style="font-size:26px">Fiches</h2>
+    <p class="muted">Des rappels courts, à consulter si tu en ressens le besoin. Le cœur de l’entraînement reste la récupération.</p>
+    <div class="grid">${PATH.map(c=>`<button class="tile" data-a="lesson" data-v="${c}"><div class="row"><span class="code">${catOf(c).code}</span></div><h3>${esc(catOf(c).name)}</h3><p>${esc(catOf(c).blurb)}</p></button>`).join("")}</div>
+    <div class="section-h" style="margin-top:14px"><h2>Lexique</h2></div>
+    <div class="gloss">${GLOSSARY.map(g=>`<div><b>${esc(g[0])}</b><span>${esc(g[1])}</span></div>`).join("")}</div>
+  </div></div>`;
+}
+function overall(){ const pl=PATH.filter(placed); if(pl.length<3) return `<span class="muted">Rang global après 3 thèmes placés (${pl.length}/3)</span>`; const avg=Math.round(pl.reduce((s,c)=>s+catR(c).r,0)/pl.length); return `<span class="pill" style="color:${LADDER[rankOf(avg).i][1]};border-color:currentColor">Global : ${esc(rankLabel(avg))}</span>`; }
+function renderProfile(){
+  const p=S.profile, t=T(), seen=Object.keys(S.cards).length, mastered=Object.values(S.cards).filter(c=>c.box>=3).length;
+  $app.innerHTML = nav("profile")+`<div class="wrap"><div class="section" style="margin-top:26px">
+    <div class="tiercard"><div class="row" style="justify-content:space-between"><span class="pill tier">${t.range}</span><span class="muted">${esc(p.role||"")}${p.rank?" · "+esc(p.rank):""}</span></div>
+      <h2 style="margin-top:10px">${esc(p.name)} · ${t.name}</h2><ul class="checks">${t.does.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+    <div class="section-h" style="margin-top:6px"><h2>Compte League</h2></div>
+    ${S.riot?`<div class="card stack">${riotHead(S.riot.data)}<div class="row">${S.riot.demo?`<button class="btn ghost small" data-a="redo-ob">Changer de nom d’invocateur</button>`:`<button class="btn ghost small" data-a="riot-refresh">Actualiser l’analyse</button>`}<button class="btn ghost small danger" data-a="riot-unlink">Délier le compte</button></div></div>`:`<div class="card row" style="justify-content:space-between"><p>Aucun compte lié.</p><button class="btn small" data-a="link-riot">Connecter mon compte</button></div>`}
+    <div class="section-h" style="margin-top:6px"><h2>Tes rangs</h2>${overall()}</div>
+    <div class="rankgrid">${PATH.map(c=>`<button class="rankcell" data-a="cat" data-v="${c}">${emblem(c,46)}<b>${esc(catOf(c).name)}</b><span class="num">${esc(rankText(c))}</span>${placed(c)&&catR(c).peak>catR(c).r?`<span class="faint">Record : ${esc(rankLabel(catR(c).peak))}</span>`:""}</button>`).join("")}</div>
+    <div class="stats"><div class="stat"><b class="num">${seen}</b><span>questions vues</span></div><div class="stat"><b class="num">${mastered}</b><span>bien ancrées</span></div><div class="stat"><b class="num">${QS.length}</b><span>au total</span></div></div>
+    <div class="section-h" style="margin-top:10px"><h2>Changer de niveau de guidage</h2></div>
+    <div class="tiers">${[1,2,3,4].map(n=>`<button class="choice" data-a="set-tier" data-v="${n}" aria-pressed="${p.tier===n}" style="--tier:${TIERS[n].color}"><b style="color:var(--tier)">${TIERS[n].name}</b><span>${TIERS[n].range}</span></button>`).join("")}</div>
+    <div class="section-h" style="margin-top:10px"><h2>Rythme</h2></div>
+    <div class="tiers">${PACES.map(x=>`<button class="choice" data-a="set-pace" data-v="${x[0]}" aria-pressed="${p.pace===+x[0]}"><b>${x[1]}</b><span>${x[2]}</span></button>`).join("")}</div>
+    <div class="section-h" style="margin-top:10px"><h2>Recommencer</h2></div>
+    <div class="row"><button class="btn ghost" data-a="redo-ob">Refaire l’accueil et le test</button>
+      ${V.confirmReset?`<button class="btn ghost danger" data-a="reset-yes">Confirmer : tout effacer</button><button class="btn ghost" data-a="reset-no">Annuler</button>`:`<button class="btn ghost danger" data-a="reset">Effacer ma progression</button>`}</div>
+    <p class="muted" style="font-size:13px">Ta progression est enregistrée dans ce navigateur. Les valeurs chiffrées du jeu (délais, or, timings) évoluent avec les patchs : le contenu se concentre sur les mécaniques de fond.</p>
+  </div></div>`;
+}
+
+/* ============================================================
+   COMPTE LEAGUE (API Riot via le serveur de l’app)
+   ============================================================ */
+const REGIONS=[["EUW1","Europe Ouest (EUW)"],["EUN1","Europe Nord & Est (EUNE)"],["NA1","Amérique du Nord (NA)"],["KR","Corée (KR)"],["BR1","Brésil (BR)"],["LA1","Amérique latine Nord (LAN)"],["LA2","Amérique latine Sud (LAS)"],["OC1","Océanie (OCE)"],["TR1","Turquie (TR)"],["RU","Russie (RU)"],["JP1","Japon (JP)"],["ME1","Moyen-Orient (ME)"],["SG2","Asie du Sud-Est (SEA)"],["TW2","Taïwan (TW)"],["VN2","Vietnam (VN)"]];
+async function fetchRiot(params){
+  let res, j;
+  try{ res = await fetch("/api/profile?"+new URLSearchParams(params)); }
+  catch(e){ throw new Error("Impossible de joindre le serveur de l’app. La connexion au compte ne fonctionne que sur la version hébergée."); }
+  try{ j = await res.json(); }
+  catch(e){ throw new Error("Le serveur de l’app ne répond pas. La connexion au compte ne fonctionne que sur la version hébergée."); }
+  if(!res.ok) throw new Error(j.error || "Erreur du serveur.");
+  return j;
+}
+async function connectRiot(where, demo){
+  const st = where==="ob" ? V.ob.data : V.link;
+  if(!demo){
+    st.riotId = (document.getElementById(where+"-riot")||{}).value || st.riotId || "";
+    st.platform = (document.getElementById(where+"-platform")||{}).value || st.platform || "EUW1";
+    if(!/^.{3,16}#[A-Za-z0-9]{2,5}$/u.test(st.riotId.trim())){ st.err="Écris ton Riot ID complet, avec le #TAG (ex : Pseudo#EUW)."; return render(); }
+  }
+  st.loading=true; st.err=null; render();
+  try{
+    const data = await fetchRiot(demo?{demo:1}:{riotId:st.riotId.trim(), platform:st.platform});
+    st.riot=data; if(demo){ st.riotId=data.riotId; st.platform=data.platform; }
+    if(where==="ob"){ st.name=data.gameName; if(data.role) st.role=data.role; st.exp="ranked"; st.rank=data.rank?data.rank.tierFr:"Non classé"; delete st.tier; }
+  }catch(e){ st.err=e.message; }
+  st.loading=false; render();
+}
+function linkRiot(data, meta, reseedAll){
+  S.riot = {data, riotId:meta.riotId||data.riotId, platform:meta.platform||data.platform, demo:!!data.demo};
+  for(const c of CATS.map(x=>x.id)){
+    const cur = S.rank && S.rank[c];
+    if(reseedAll || !cur || !cur.n){ if(!S.rank) S.rank={}; S.rank[c]={r:(data.seed||{})[c] ?? SEED[S.profile?S.profile.tier:1], n:0, peak:0}; }
+  }
+  if(S.profile && data.role && (!S.profile.role || S.profile.role==="Je ne sais pas encore")) S.profile.role=data.role;
+  save();
+}
+async function refreshRiot(){
+  if(!S.riot) return;
+  toast("Analyse de tes dernières parties…");
+  try{
+    const data = await fetchRiot(S.riot.demo?{demo:1}:{riotId:S.riot.riotId, platform:S.riot.platform, refresh:1});
+    S.riot.data=data; save(); toast("Analyse mise à jour."); render();
+  }catch(e){ toast(e.message); }
+}
+function focusCats(){ const w=(S.riot&&S.riot.data.weights)||{}; const top=Object.entries(w).filter(([,v])=>v>1.2).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([c])=>c); return top.length?top:["macro"]; }
+function ago(iso){ const m=Math.round((Date.now()-new Date(iso))/60000); if(m<2) return "à l’instant"; if(m<60) return `il y a ${m} min`; const h=Math.round(m/60); if(h<24) return `il y a ${h} h`; return `il y a ${Math.round(h/24)} j`; }
+function riotHead(r){
+  const rk = r.rank ? `${r.rank.tierFr}${r.rank.division?" "+r.rank.division:""} · ${r.rank.lp} LP` : "Non classé";
+  return `<div class="acct">
+    <div><div class="row" style="gap:8px"><b style="font-size:17px">${esc(r.riotId)}</b>${r.demo?`<span class="pill">Démo</span>`:""}</div>
+      <span class="muted">${esc(rk)}${r.rank?` (${esc(r.rank.queue)})`:""}${r.role?" · "+esc(r.role):""}${r.winrate!=null?` · ${Math.round(r.winrate*100)} % de victoires sur ${r.games} parties`:""}</span></div>
+    ${r.champions&&r.champions.length?`<div class="chips">${r.champions.slice(0,4).map(c=>`<span class="chip">${esc(c.name)} <span class="num muted">${c.games}</span></span>`).join("")}</div>`:""}
+  </div>`;
+}
+function insightRow(i){ return `<div class="ins ${i.kind}"><span class="tag">${i.kind==="weak"?"À travailler":"Point fort"}</span><div><b>${esc(i.title)}</b><p>${esc(i.detail)} <span class="faint">→ ${esc(catOf(i.cat).name)}</span></p></div></div>`; }
+function riotSection(){
+  if(!S.riot) return `<div class="section"><div class="card row" style="justify-content:space-between"><p>Connecte ton compte League pour des séances basées sur tes vraies parties.</p><button class="btn ghost small" data-a="link-riot">Connecter</button></div></div>`;
+  const r=S.riot.data;
+  const mus=(r.matchups||[]).map(m=>({kind:"weak",cat:"mu",title:`Matchup difficile : ${m.champ} contre ${m.vs}`,detail:`${m.losses} défaite${m.losses>1?"s":""} sur ${m.games} partie${m.games>1?"s":""}.`}));
+  const list=r.insights.filter(i=>i.kind==="weak").slice(0,4).concat(mus.slice(0,1), r.insights.filter(i=>i.kind==="strong").slice(0,2));
+  return `<div class="section"><div class="section-h"><h2>Ton analyse</h2><span class="muted">${r.games} parties · ${ago(r.fetchedAt)}</span></div>
+    <div class="card stack">${riotHead(r)}
+      <div class="insights">${list.length?list.map(insightRow).join(""):`<p class="muted">Rien de marquant : tes indicateurs sont dans les repères de ton rang.</p>`}</div>
+      <div class="row"><button class="btn ghost small" data-a="riot-refresh">Actualiser l’analyse</button></div>
+    </div></div>`;
+}
+function acctForm(st, where){
+  if(st.riot) return `<div class="card stack rise">${riotHead(st.riot)}
+      <div class="insights">${st.riot.insights.slice(0,4).map(insightRow).join("")||`<p class="muted">Rien de marquant dans tes parties récentes.</p>`}</div>
+      <p class="muted" style="font-size:13px">Tes rangs de départ par thème sont calculés à partir de ton rang et de ces indicateurs. <button class="link" data-a="riot-change" data-v="${where}">Changer de compte</button></p></div>`;
+  if(st.loading) return `<div class="card row"><span class="spin" aria-hidden="true"></span><p>Analyse de tes parties… jusqu’à 30 secondes.</p></div>`;
+  return `<div class="stack">
+    <label class="eyebrow" for="${where}-riot">Riot ID</label>
+    <input class="input" id="${where}-riot" placeholder="Pseudo#TAG" value="${esc(st.riotId||"")}" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <label class="eyebrow" for="${where}-platform">Région</label>
+    <select class="input" id="${where}-platform">${REGIONS.map(([k,l])=>`<option value="${k}" ${(st.platform||"EUW1")===k?"selected":""}>${l}</option>`).join("")}</select>
+    ${st.err?`<p class="err" role="alert">${esc(st.err)}</p>`:""}
+    <div class="row"><button class="btn" data-a="riot-connect" data-v="${where}">Analyser mes parties</button><button class="btn ghost" data-a="riot-demo" data-v="${where}">Profil de démonstration</button></div>
+    ${where==="ob"?`<p class="muted"><button class="link" data-a="ob-skipacct">Continuer sans compte</button> : un petit test remplacera l’analyse.</p>`:""}
+  </div>`;
+}
+function renderLink(){
+  const st=V.link||(V.link={});
+  $app.innerHTML = nav("profile")+`<div class="wrap"><div class="section" style="margin-top:26px">
+    <h2 style="font-size:26px">Connecter mon compte League</h2>
+    <p class="muted" style="max-width:60ch">L’app lit tes 20 dernières parties. Les thèmes où tu n’as pas encore répondu reçoivent un rang de départ basé sur tes stats ; les autres gardent le leur.</p>
+    ${acctForm(st,"link")}
+    <div class="row">${st.riot?`<button class="btn" data-a="link-save">Lier ce compte</button>`:""}<button class="btn ghost" data-a="home">Annuler</button></div>
+  </div></div>`;
+  const inp=document.getElementById("link-riot"); if(inp) inp.addEventListener("keydown",e=>{ if(e.key==="Enter") connectRiot("link",false); });
+}
+
+/* ============================================================
+   DONNÉES D’EXEMPLE (en attendant la vraie connexion Riot)
+   Même forme que la réponse du serveur (lib/riot.js › analyze),
+   générée à partir du nom : un même nom donne toujours le même profil.
+   ============================================================ */
+const USE_RIOT_API = false; // passer à true une fois l’app déployée avec une clé Riot
+const BENCH = {
+  csm:[4.5,5.0,5.5,6.0,6.5,7.0,7.3,7.8,8.0,8.3], vpmSup:[1.2,1.4,1.6,1.8,2.0,2.2,2.4,2.6,2.7,2.8], vpm:[.40,.50,.55,.60,.70,.80,.90,1.0,1.05,1.1],
+  cwSup:[1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.0,4.5,4.5], cw:[.3,.5,.7,.9,1.1,1.3,1.5,1.7,1.8,2.0], deaths:[8,7.5,7,6.5,6,5.5,5,4.8,4.5,4.3],
+  early:[2.5,2.2,2.0,1.8,1.6,1.4,1.2,1.1,1.0,.9], kp:[.45,.47,.49,.51,.53,.55,.57,.58,.59,.60], objp:[.45,.48,.51,.54,.57,.60,.63,.66,.68,.70]
+};
+const METRIC_CATS = { csm:{eco:1,lane:.6}, vpm:{map:1,macro:.3}, cw:{map:.7,item:.2}, deaths:{mu:.6,lane:.5,macro:.4}, early:{lane:1,mu:.8}, kp:{macro:.7}, objp:{obj:1,macro:.6}, antiheal:{item:1,mu:.4} };
+const METRICS = [
+  {k:"csm", label:"CS par minute", cat:"eco", fmt:v=>v.toFixed(1).replace(".",",")},
+  {k:"vpm", label:"Score de vision par minute", cat:"map", fmt:v=>v.toFixed(2).replace(".",",")},
+  {k:"cw", label:"Balises de contrôle par partie", cat:"map", fmt:v=>v.toFixed(1).replace(".",",")},
+  {k:"deaths", label:"Morts par partie", cat:"mu", lower:true, fmt:v=>v.toFixed(1).replace(".",",")},
+  {k:"early", label:"Morts avant 14 min", cat:"lane", lower:true, fmt:v=>v.toFixed(1).replace(".",",")},
+  {k:"kp", label:"Participation aux kills", cat:"macro", fmt:v=>Math.round(v*100)+" %"},
+  {k:"objp", label:"Participation aux objectifs", cat:"obj", fmt:v=>Math.round(v*100)+" %"},
+  {k:"antiheal", label:"Anti-soin face aux soigneurs", cat:"item"}
+];
+const FAKE_CHAMPS = {Top:["Darius","Garen","Sett","Ornn","Fiora","Camille"],Jungle:["Lee Sin","Vi","Graves","Amumu","Kayn","Viego"],Mid:["Ahri","Orianna","Syndra","Yasuo","Viktor","Akali"],ADC:["Jinx","Caitlyn","Ezreal","Kai’Sa","Jhin","Ashe"],Support:["Thresh","Lulu","Nautilus","Leona","Nami","Karma"]};
+function hashStr(str){ let h=2166136261; for(const ch of str){ h^=ch.codePointAt(0); h=Math.imul(h,16777619); } return h>>>0; }
+function seeded(seed){ let x=(seed%2147483646)+1; return ()=>((x=x*16807%2147483647)-1)/2147483646; }
+function fakeProfile(riotId){
+  const [gameName, tag="EUW"] = riotId.split("#").map(x=>x.trim());
+  const rnd = seeded(hashStr(riotId.toLowerCase()));
+  const pickW = w => { let t=rnd()*w.reduce((a,b)=>a+b,0); for(let i=0;i<w.length;i++){ t-=w[i]; if(t<0) return i; } return w.length-1; };
+  const ti = pickW([8,18,22,20,14,9,6,3]);
+  const LAD = ["Fer","Bronze","Argent","Or","Platine","Émeraude","Diamant","Maître"];
+  const division = ti>=7 ? "" : ["IV","III","II","I"][Math.floor(rnd()*4)];
+  const lp = ti>=7 ? Math.floor(rnd()*250) : Math.floor(rnd()*100);
+  const role = ["Top","Jungle","Mid","ADC","Support"][Math.floor(rnd()*5)];
+  const sup = role==="Support", jgl = role==="Jungle";
+  const target = {
+    csm: BENCH.csm[ti]-(jgl?.8:0), vpm:(sup?BENCH.vpmSup:BENCH.vpm)[ti]+(jgl?.1:0), cw:(sup?BENCH.cwSup:BENCH.cw)[ti],
+    deaths: BENCH.deaths[ti]+(sup?.5:0), early: BENCH.early[ti], kp: BENCH.kp[ti]+(sup||jgl?.08:0), objp: BENCH.objp[ti]
+  };
+  const lower = {deaths:true, early:true};
+  const keys = Object.keys(target);
+  const factor = {}; keys.forEach(k=>factor[k]=0.68+rnd()*0.62);
+  // au moins deux vrais points faibles, pour que le profil soit parlant
+  const weak = keys.filter(k=>factor[k]<0.9 && !(k==="csm"&&sup));
+  for(const k of keys.filter(k=>!(k==="csm"&&sup)).sort(()=>rnd()-.5)){ if(weak.length>=2) break; if(!weak.includes(k)){ factor[k]=0.7+rnd()*0.12; weak.push(k); } }
+  const values = {}; keys.forEach(k=>values[k] = lower[k] ? target[k]/factor[k] : target[k]*factor[k]);
+  values.kp=Math.min(values.kp,.85); values.objp=Math.min(values.objp,.9);
+  const ahGames = 3+Math.floor(rnd()*6), ahMissing = Math.floor(ahGames*rnd());
+  const ratio = {}; keys.forEach(k=>{ if(k==="csm"&&sup) return; ratio[k] = lower[k] ? target[k]/values[k] : values[k]/target[k]; });
+  ratio.antiheal = (ahGames-ahMissing)/ahGames/0.5;
+  const cats = CATS.map(c=>c.id);
+  const weights = Object.fromEntries(cats.map(c=>[c,1])), score = Object.fromEntries(cats.map(c=>[c,0]));
+  for(const [k,r] of Object.entries(ratio)){ const d=Math.max(0,Math.min(1,1-r)), g=Math.max(0,Math.min(.5,r-1));
+    for(const [c,w] of Object.entries(METRIC_CATS[k])){ weights[c]+=2.5*d*w; score[c]+=(g-d*1.5)*w; } }
+  cats.forEach(c=>weights[c]=Math.round(Math.min(weights[c],4)*100)/100);
+  const base = ti>=7 ? 2800+Math.min(lp,299) : ti*400+["IV","III","II","I"].indexOf(division)*100+lp;
+  const seed = Object.fromEntries(cats.map(c=>[c, Math.max(0, Math.round(base+Math.max(-1,Math.min(.5,score[c]))*300))]));
+  const insights=[];
+  for(const m of METRICS){ const r=ratio[m.k]; if(r==null) continue;
+    const kind = r<0.9 ? "weak" : r>=1.15 ? "strong" : null; if(!kind) continue;
+    insights.push({key:m.k, kind, cat:m.cat, title:m.label, detail:"", score: kind==="weak"?1-r:r-1}); }
+  insights.sort((a,b)=>a.kind===b.kind? b.score-a.score : a.kind==="weak"?-1:1);
+  const pool = FAKE_CHAMPS[role].slice().sort(()=>rnd()-.5);
+  const split=[8,5,4,3], wins=Math.round(20*(0.42+rnd()*0.2));
+  const champions = pool.slice(0,4).map((n,i)=>({name:n, games:split[i], wins:Math.round(split[i]*(0.35+rnd()*0.35)), kda:1.6+rnd()*2}));
+  const others = FAKE_CHAMPS[role].filter(n=>n!==champions[0].name);
+  const matchups = [{champ:champions[0].name, vs:others[Math.floor(rnd()*others.length)], games:3, losses:2+Math.floor(rnd()*2)}];
+  return { riotId:`${gameName}#${tag}`, gameName, platform:"EUW1", level:60+Math.floor(rnd()*400), iconId:null,
+    rank:{queue:"Solo/Duo", tierIndex:ti, tierFr:LAD[ti], division, lp, wins:40+Math.floor(rnd()*80), losses:40+Math.floor(rnd()*80)},
+    games:20, winrate:wins/20, role, values, targets:target, antiheal:{games:ahGames, missing:ahMissing}, ratio,
+    insights, weights, seed, champions, matchups, fetchedAt:new Date().toISOString(), demo:true };
+}
+function metricRatio(r, m){
+  if(r.ratio && r.ratio[m.k]!=null) return r.ratio[m.k];
+  if(m.k==="antiheal") return null;
+  const v=(r.values||{})[m.k], t=(r.targets||{})[m.k]; if(v==null||t==null) return null;
+  return m.lower ? t/Math.max(v,.1) : v/Math.max(t,.01);
+}
+function accountStrip(r){
+  const rk = r.rank ? `${r.rank.tierFr}${r.rank.division?" "+r.rank.division:""} · ${r.rank.lp} LP` : "Non classé";
+  const col = r.rank ? LADDER[Math.min(r.rank.tierIndex,9)][1] : "#5E6C86";
+  return `<div class="acctstrip">
+    <div class="acct-id"><span class="rankdot" style="background:${col}"></span><div><b>${esc(r.riotId)}</b><span class="muted">${esc(rk)}${r.role?" · "+esc(r.role):""} · ${Math.round((r.winrate||0)*100)} % de victoires sur ${r.games} parties</span></div></div>
+    <div class="chips">${(r.champions||[]).slice(0,4).map(c=>`<span class="chip">${esc(c.name)} <span class="num muted">${c.games}</span></span>`).join("")}${r.demo?`<span class="pill">Données d’exemple</span>`:""}</div>
+  </div>`;
+}
+function overview(r){
+  const tiles = METRICS.map(m=>{
+    const sup = r.role==="Support";
+    if(m.k==="csm" && sup) return `<div class="mtile na"><span class="mlabel">${m.label}</span><b class="mval">—</b><span class="mref">Pas concerné en support</span></div>`;
+    let val, ref;
+    if(m.k==="antiheal"){ const a=r.antiheal||{games:0,missing:0}; val=`${a.games-a.missing}/${a.games}`; ref=`parties avec anti-soin, repère : au moins la moitié`; }
+    else { const v=(r.values||{})[m.k], t=(r.targets||{})[m.k]; if(v==null) return ""; val=m.fmt(v); ref=`repère ${m.lower?"sous ":""}${m.fmt(t)}`; }
+    const ra = metricRatio(r,m), st = ra==null ? "ok" : ra<0.9 ? "weak" : ra>=1.15 ? "strong" : "ok";
+    const lab = {weak:"À travailler", ok:"Dans la moyenne", strong:"Point fort"}[st];
+    return `<button class="mtile ${st}" data-a="cat" data-v="${m.cat}" aria-label="${esc(m.label)} : ${esc(val)}, ${lab}. Travailler ${esc(catOf(m.cat).name)}">
+      <span class="mlabel">${m.label}</span><b class="mval num">${val}</b><span class="mref">${ref}</span>
+      <span class="mfoot"><span class="mstate">${lab}</span><span class="faint">${esc(catOf(m.cat).name)} →</span></span></button>`;
+  }).join("");
+  const mu = (r.matchups||[])[0];
+  return `<div class="section"><div class="section-h"><h2>Vue générale</h2><span class="muted">${r.games} dernières parties · repères du rang ${r.rank?esc(r.rank.tierFr):""}</span></div>
+    <div class="mgrid">${tiles}</div>
+    ${mu?`<p class="muted" style="font-size:13.5px">Matchup le plus difficile : <b style="color:var(--text)">${esc(mu.champ)} contre ${esc(mu.vs)}</b>, ${mu.losses} défaites sur ${mu.games}. <button class="link" data-a="cat" data-v="mu">Travailler les matchups</button></p>`:""}
+  </div>`;
+}
+
+/* ============================================================
+   RENDU & ACTIONS
+   ============================================================ */
+function render(){
+  if(S.profile) document.documentElement.style.setProperty("--tier", T().color);
+  switch(V.screen){
+    case "ob": return renderOb();
+    case "home": return renderHome();
+    case "quiz": return renderQuiz();
+    case "results": return renderResults();
+    case "lesson": return renderLesson();
+    case "scenlist": return renderScenList();
+    case "scen": return renderScen();
+    case "gloss": return renderGloss();
+    case "lessons": return renderLessons();
+    case "profile": return renderProfile();
+    case "link": return renderLink();
+  }
+}
+function act(a, v, el){
+  const d = V.ob.data;
+  switch(a){
+    case "ob-set": d[el.dataset.k] = el.dataset.k==="tier" ? +v : v;
+      if(el.dataset.k==="exp"){ delete d.rank; delete d.test; delete d.tier; }
+      if(el.dataset.k==="rank"){ delete d.tier; }
+      return render();
+    case "ob-next": { const steps=obSteps(); if(steps[V.ob.step]==="account" || steps[V.ob.step]==="result") return finishOb(); V.ob.step=Math.min(V.ob.step+1, obSteps().length-1); return render(); }
+    case "ob-back": { const steps=obSteps(); if(steps[V.ob.step]==="result"){ delete d.tier; } if(steps[V.ob.step]==="test" && d.test && d.test.i>0 && d.test.i<d.test.items.length){ d.test=null; } V.ob.step=Math.max(0,V.ob.step-1); return render(); }
+    case "test-ans": { const t=d.test, q=qById(t.items[t.i]); t.answers.push(+v===0); t.i++; t.order=null; delete d.tier; return render(); }
+    case "home": return go("home");
+    case "scenlist": return go("scenlist");
+    case "gloss": return go("gloss");
+    case "lessons": return go("lessons");
+    case "profile": V.confirmReset=false; return go("profile");
+    case "cat": if(!unlocked(v)){ toast("Valide d’abord l’étape précédente."); return; } return startQuiz(v,"learn");
+    case "mix": return startQuiz(null,"learn");
+    case "review": return startQuiz(null,"review");
+    case "lesson": return go("lesson",{lesson:{cat:v, then:null}});
+    case "lesson-go": S.lessons[V.lesson.cat]=true; save(); return go("quiz",{quiz:V.lesson.then});
+    case "pick": { const qz=V.quiz; if(qz.phase!=="ask") return; if(T().conf){ qz.pending=+v; render(); } else { clearInterval(tick); grade(qz,+v,"sure"); render(); } return; }
+    case "conf": { const qz=V.quiz; if(qz.pending==null) return; grade(qz,qz.pending,v); qz.pending=null; return render(); }
+    case "hint": V.quiz.hint=true; return render();
+    case "next": { const qz=V.quiz; qz.i++; qz.phase="ask"; qz.sel=null; qz.hint=false; qz.order=null; qz.t0=0; qz.pending=null; if(qz.i>=qz.items.length) return go("results"); return render(); }
+    case "quit": return go("home");
+    case "again": { const qz=V.quiz; return startQuiz(qz.cat, qz.mode==="review"?"learn":qz.mode); }
+    case "scen": return go("scen",{scen:{id:v, pick:null, order:null, t0:0}});
+    case "scen-pick": if(V.scen.pick==null) pickScen(+v); return;
+    case "scen-retry": return go("scen",{scen:{id:V.scen.id, pick:null, order:null, t0:0}});
+    case "scen-next": { const l=scenList(); const i=l.findIndex(s=>s.id===V.scen.id); const n=l[(i+1)%l.length]; return go("scen",{scen:{id:n.id,pick:null,order:null,t0:0}}); }
+    case "set-tier": S.profile.tier=+v; save(); toast(`Guidage : ${TIERS[+v].name}`); return render();
+    case "set-pace": S.profile.pace=+v; save(); return render();
+    case "ob-acct": d.acct=null; return render();
+    case "ob-skipacct": d.acct="skip"; d.riot=null; return render();
+    case "riot-connect": return connectRiot(v, false);
+    case "riot-demo": return connectRiot(v, true);
+    case "riot-change": { const st = v==="ob"?d:V.link; st.riot=null; st.err=null; return render(); }
+    case "link-riot": if(!USE_RIOT_API){ V.ob={step:1,data:{riotId:""}}; return go("ob"); } V.link={}; return go("link");
+    case "link-save": linkRiot(V.link.riot, {riotId:V.link.riotId, platform:V.link.platform}, false); toast("Compte lié. Tes séances sont maintenant ciblées."); return go("home");
+    case "riot-refresh": return refreshRiot();
+    case "riot-unlink": S.riot=null; save(); toast("Compte délié."); return render();
+    case "redo-ob": V.ob={step:0,data:{name:S.profile.name}}; return go("ob");
+    case "reset": V.confirmReset=true; return render();
+    case "reset-no": V.confirmReset=false; return render();
+    case "reset-yes": S=blank(); save(); V.confirmReset=false; V.ob={step:0,data:{}}; return go("ob");
+  }
+}
+document.addEventListener("click", e=>{ const b=e.target.closest("[data-a]"); if(!b || b.disabled) return; act(b.dataset.a, b.dataset.v, b); });
+document.addEventListener("keydown", e=>{
+  if(V.screen!=="quiz" || e.target.tagName==="INPUT") return;
+  const qz=V.quiz; if(!qz) return;
+  const k=e.key.toUpperCase(), idx="ABCD".indexOf(k);
+  if(qz.phase==="ask" && idx>=0 && qz.order && idx<qz.order.length){ act("pick", String(qz.order[idx])); }
+  else if(qz.phase==="ask" && qz.pending!=null && ["1","2","3"].includes(e.key)){ act("conf", ["sure","hesit","guess"][+e.key-1]); }
+});
+render();
+</script>
+
+</body>
+</html>
