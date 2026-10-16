@@ -538,7 +538,8 @@ function renderHome(){
   const streak = (S.lastDay===today() || S.lastDay===new Date(Date.now()-DAY).toISOString().slice(0,10)) ? S.streak : 0;
   const r = S.riot && S.riot.data;
   const prio = new Set(r ? focusCats() : []);
-  const order = t.path ? PATH : CATS.map(c=>c.id);
+  /* Thèmes prioritaires (points faibles) en premier, du plus urgent au moins urgent, puis les autres dans l’ordre habituel */
+  const base = t.path ? PATH : CATS.map(c=>c.id), order = [...prio, ...base.filter(c=>!prio.has(c))];
   const themeTile = c => { const cat=catOf(c), u=unlocked(c);
     return `<button class="tile theme${u?"":" locked"}" data-a="cat" data-v="${c}" style="--c:${catCol(c)}">
       <div class="theme-top">${badge(c,44)}<div><h3>${esc(cat.name)}</h3><span class="rk num">${esc(rankText(c))}</span></div>${emblem(c,34)}</div>${prio.has(c)?`<span class="prio" style="margin-left:0">Priorité</span>`:""}
