@@ -140,18 +140,19 @@ function renderOb(){
   const bar = `<div class="ob-steps" aria-hidden="true">${steps.map((s,i)=>`<i class="${i<=V.ob.step?"on":""}"></i>`).join("")}</div>`;
   let body="", canNext=true, nextLabel="Continuer", showBack = V.ob.step>0;
   if(key==="welcome"){
-    body = `<div class="eyebrow">Apprendre League of Legends par le rappel</div>
+    body = `<div class="ob-art">${riftArt()}</div>
+      <div class="eyebrow">Apprendre League of Legends par le rappel</div>
       <h1>Ce que tu retrouves de mémoire, tu le gardes.</h1>
       <p class="lead">Lire un guide ou regarder une vidéo encode l’information. Pour qu’elle tienne dans le temps, il faut aller la rechercher : c’est l’étape de récupération. Chaque question ici en est une.</p>
       <div class="loop">
-        <div><b>Encodage</b><p>Tu lis une fiche, tu vois une situation.</p></div>
-        <div><b>Stockage</b><p>L’information est en mémoire, fragile.</p></div>
-        <div><b>Récupération</b><p>Tu la retrouves sans aide. C’est ce qui l’ancre.</p></div>
+        <div><span class="lic">${icon("book",20)}</span><b>Encodage</b><p>Tu lis une fiche, tu vois une situation.</p></div>
+        <div><span class="lic">${icon("archive",20)}</span><b>Stockage</b><p>L’information est en mémoire, fragile.</p></div>
+        <div><span class="lic">${icon("recall",20)}</span><b>Récupération</b><p>Tu la retrouves sans aide. C’est ce qui l’ancre.</p></div>
       </div>
       <p class="muted">Quelques questions pour savoir quel contenu te proposer et combien te guider. Deux minutes.</p>`;
     nextLabel="Commencer";
   } else if(key==="account"){
-    body = `<div class="eyebrow">Ton compte</div><h1>Quel est ton nom d’invocateur ?</h1>
+    body = `<div class="ob-art" style="height:120px">${riftArt()}</div><div class="eyebrow">Ton compte</div><h1>Quel est ton nom d’invocateur ?</h1>
       <p class="lead">Ton Riot ID, avec le #TAG si tu le connais. L’app prépare un résumé de tes parties et tes rangs par thème.</p>
       <input class="input" id="ob-riot" maxlength="30" placeholder="Pseudo#EUW" value="${esc(d.riotId||"")}" autocomplete="off" autocapitalize="off" spellcheck="false">
       <p class="muted" style="font-size:13.5px">Pour l’instant, les statistiques sont des <b>données d’exemple</b> générées à partir de ton nom : la connexion aux vraies parties viendra ensuite.</p>`;
@@ -326,7 +327,7 @@ function renderQuiz(){
   }).join("");
   let below="";
   if(qz.phase==="ask"){
-    if(t.hint) below += qz.hint ? `<div class="hint"><b>Indice :</b> ${esc(q.h)}</div>` : `<div><button class="btn ghost small" data-a="hint">Voir un indice</button></div>`;
+    if(t.hint) below += qz.hint ? `<div class="hint">${icon("bulb",17)}<span><b>Indice :</b> ${esc(q.h)}</span></div>` : `<div><button class="btn ghost small" data-a="hint">${icon("bulb",15)}Voir un indice</button></div>`;
     if(t.conf && qz.pending!=null) below += `<div class="conf rise"><div class="eyebrow">Valider ta réponse · à quel point es-tu sûr·e ?</div>
       <div class="row"><button class="btn" data-a="conf" data-v="sure">Sûr·e</button><button class="btn ghost" data-a="conf" data-v="hesit">Hésitant·e</button><button class="btn ghost" data-a="conf" data-v="guess">Au hasard</button></div></div>`;
   } else {
@@ -338,14 +339,15 @@ function renderQuiz(){
     else if(!qz.ok && t.retry && !isRetry) meta="Elle revient en fin de séance.";
     if(qz.sel===-1) meta="Temps écoulé. "+meta;
     const x = t.full ? q.x : firstSentence(q.x);
-    below = `<div class="fb ${qz.ok?"good":"bad"} rise"><h3>${qz.ok?"Bien retrouvé":"Pas tout à fait"}</h3><p>${esc(x)}</p>${meta?`<p class="meta">${esc(meta)}</p>`:""}${qz.rk?`<div class="lpline">${emblem(q.c,26)}<span>${qz.rk.placing?`Placement ${qz.rk.n}/${PLACEMENTS} en ${esc(cat.name)}`:`<b class="${qz.rk.delta>=0?"up":"down"}">${qz.rk.delta>=0?"+":""}${qz.rk.delta} LP</b> · ${esc(cat.name)} · ${esc(rankText(q.c))}`}</span></div>`:""}</div>
+    below = `<div class="fb ${qz.ok?"good":"bad"} rise"><h3><span class="fbic">${icon(qz.ok?"check":"cross",16)}</span>${qz.ok?"Bien retrouvé":"Pas tout à fait"}</h3><p>${esc(x)}</p>${meta?`<p class="meta">${esc(meta)}</p>`:""}${qz.rk?`<div class="lpline">${emblem(q.c,26)}<span>${qz.rk.placing?`Placement ${qz.rk.n}/${PLACEMENTS} en ${esc(cat.name)}`:`<b class="${qz.rk.delta>=0?"up":"down"}">${qz.rk.delta>=0?"+":""}${qz.rk.delta} LP</b> · ${esc(cat.name)} · ${esc(rankText(q.c))}`}</span></div>`:""}</div>
       <div class="qfoot"><button class="btn" data-a="next" id="btn-next">${qz.i+1<qz.items.length?"Question suivante":"Voir le bilan"}</button></div>`;
   }
   const timer = (t.timer && qz.phase==="ask") ? `<div class="timer" id="timer"><i style="width:100%"></i></div>` : "";
   $app.innerHTML = `<div class="wrap">
     <div class="qhead"><button class="qx" data-a="quit" aria-label="Quitter la séance">✕</button><div class="bar"><i style="width:${prog}%"></i></div><span class="num muted">${qz.i+1}/${qz.items.length}</span></div>
     <div class="qcard rise">
-      <div class="qmeta"><span class="code">${cat.code}</span><span class="muted" style="font-size:13px">${cat.name}</span>${pips(q.d)}${isRetry?`<span class="pill">Deuxième essai</span>`:""}</div>
+      <span class="qwm" style="--c:${catCol(q.c)}">${icon(q.c,150)}</span>
+      <div class="qmeta">${badge(q.c,30)}<span style="font-size:14px;font-weight:600">${cat.name}</span>${pips(q.d)}${isRetry?`<span class="pill">Deuxième essai</span>`:""}</div>
       ${timer}
       <div class="qtext">${esc(q.q)}</div>
       <div class="opts">${opts}</div>
@@ -377,13 +379,13 @@ function renderResults(){
   const need = T().path && qz.cat && pct<.6 ? `<p class="muted">Atteins 60 % sur ce thème pour débloquer l’étape suivante.</p>` : "";
   $app.innerHTML = `<div class="wrap"><div class="stack rise" style="padding-top:30px">
     <div class="eyebrow">Bilan de séance${qz.cat?" · "+esc(catOf(qz.cat).name):""}</div>
-    <div class="row" style="align-items:flex-end;gap:16px"><div class="score">${Math.round(pct*100)}<span style="font-size:28px">%</span></div>
-      <p class="muted" style="padding-bottom:8px"><span class="num">${ok}</span> / <span class="num">${first.length}</span> au premier essai · <span class="num">+${qz.xp}</span> XP</p></div>
+    <div class="row" style="gap:18px">${scoreRing(pct)}
+      <p class="muted"><span class="num">${ok}</span> / <span class="num">${first.length}</span> au premier essai · <span class="num">+${qz.xp}</span> XP</p></div>
     <p style="font-size:17px">${msg}</p>${need}${unlockMsg}
     ${qz.lp?`<div class="card"><div class="eyebrow" style="margin-bottom:10px">Classement</div><div class="lpres">${Object.entries(qz.lp).map(([c,v])=>{const d=v.to-v.from, pl=v.n<PLACEMENTS, justPlaced=v.n>=PLACEMENTS&&v.n0<PLACEMENTS;
       return `<div>${emblem(c,40)}<div><b>${esc(catOf(c).name)}</b><span class="muted">${pl?`Placement ${v.n}/${PLACEMENTS}`:justPlaced?`Placé ${rankLabel(v.to)} · ${rankOf(v.to).lp} LP`:`${rankLabel(v.from)!==rankLabel(v.to)?esc(rankLabel(v.from))+" → ":""}${esc(rankLabel(v.to))} · ${rankOf(v.to).lp} LP`}</span></div>${pl||justPlaced?"":`<b class="${d>=0?"up":"down"} num">${d>=0?"+":""}${d} LP</b>`}</div>`;}).join("")}</div></div>`:""}
     <div class="card"><div class="eyebrow" style="margin-bottom:6px">Détail</div><div class="recap">
-      ${qz.results.map(r=>{const q=qById(r.id);return `<div><i style="background:${r.ok?"var(--good)":"var(--red)"}"></i><span>${esc(q.q)}${r.retry?` <span class="muted">(2e essai)</span>`:""}</span></div>`;}).join("")}
+      ${qz.results.map(r=>{const q=qById(r.id);return `<div>${icon(r.ok?"check":"cross",17,r.ok?"ok":"ko")}<span>${esc(q.q)}${r.retry?` <span class="muted">(2e essai)</span>`:""}</span></div>`;}).join("")}
     </div></div>
     <p class="muted"><span class="num">${tomorrow}</span> question${tomorrow>1?"s":""} à revoir d’ici demain. Revenir chaque jour, même 5 minutes, fait la différence.</p>
     <div class="row"><button class="btn" data-a="again">Nouvelle séance</button><button class="btn ghost" data-a="home">Accueil</button></div>
@@ -397,9 +399,9 @@ function renderLesson(){
   const L=V.lesson, cat=catOf(L.cat);
   $app.innerHTML = `<div class="wrap"><div class="lesson rise">
     <div class="stage"><span class="${L.then?"on":""}">1 · Encodage</span><span>2 · Récupération</span></div>
-    <h1 style="font-size:30px;margin-top:14px">${esc(cat.name)}</h1>
+    <div class="lesson-h">${badge(L.cat,52)}<h1 style="font-size:30px">${esc(cat.name)}</h1></div>
     <p class="muted" style="margin-top:6px">Lis attentivement. Juste après, tu devras retrouver ces idées sans les avoir sous les yeux.</p>
-    <ul>${LESSONS[L.cat].map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+    <ul>${LESSONS[L.cat].map((x,i)=>`<li style="--c:${catCol(L.cat)}"><span class="n">${i+1}</span><span>${esc(x)}</span></li>`).join("")}</ul>
     <div class="row" style="margin-top:20px">${L.then?`<button class="btn" data-a="lesson-go">J’ai lu, je m’entraîne</button>`:`<button class="btn" data-a="cat" data-v="${L.cat}">M’entraîner sur ce thème</button>`}<button class="btn ghost" data-a="home">Accueil</button></div>
   </div></div>`;
 }
@@ -441,15 +443,43 @@ function miniMap(ms){
    MISES EN SITUATION
    ============================================================ */
 function scenList(){ const t=T(); return SCENARIOS.filter(s=>s.tier<=t.scenMax && (t.dmin<3 || s.tier>=2)); }
+/* Thème qui reçoit les LP : Macro pour les décisions de jeu, Objets pour les choix d’achat */
+const scenCat = s => s.cat || "macro";
+/* Tuile d’une situation, avec sa vignette */
+function scenTile(s, sub){
+  return `<button class="tile sc" data-a="scen" data-v="${s.id}">${scenThumb(s)}<div class="sc-body">
+    <div class="row"><span class="code">${icon(ROLE_IC[s.role]||"top",12)}${esc(s.role).toUpperCase()} · ${s.time}</span>${pips(s.tier)}</div>
+    <h3>${esc(s.t)}</h3><p>${sub}</p></div></button>`;
+}
 function renderScenList(){
   const list=scenList();
+  const tiles = l => l.map(s=>{const b=S.scen[s.id];return scenTile(s, b!=null?(b===2?"Décision optimale trouvée":"Déjà tenté · à retenter"):"Pas encore tenté");}).join("");
+  const game=list.filter(s=>!s.comp), buy=list.filter(s=>s.comp);
   $app.innerHTML = nav("scen")+`<div class="wrap"><div class="section" style="margin-top:26px">
     <div class="section-h"><h2 style="font-size:26px">Mises en situation</h2><span class="muted">${list.length} situations</span></div>
-    <p class="muted" style="max-width:60ch">Une carte, un contexte, une décision. Il n’y a pas toujours une seule bonne réponse : chaque option est expliquée.</p>
-    <div class="grid">${list.map(s=>{const b=S.scen[s.id];return `<button class="tile" data-a="scen" data-v="${s.id}">
-      <div class="row"><span class="code">${esc(s.role).toUpperCase()} · ${s.time}</span>${pips(s.tier)}</div>
-      <h3>${esc(s.t)}</h3><p>${b!=null?(b===2?"Décision optimale trouvée":"Déjà tenté · à retenter"):"Pas encore tenté"}</p></button>`;}).join("")}</div>
-  </div></div>`;
+    <p class="muted" style="max-width:60ch">Un contexte, une décision. Il n’y a pas toujours une seule bonne réponse : chaque option est expliquée.</p></div>
+    <div class="section"><div class="section-h"><h2>${icon("item",18)}Choix d’objets</h2><span class="muted">rang Objets</span></div>
+      <p class="muted" style="font-size:13.5px;margin-top:-4px">Lis la composition adverse, puis choisis ton prochain achat.</p>
+      <div class="grid">${tiles(buy)}</div></div>
+    <div class="section"><div class="section-h"><h2>${icon("macro",18)}Décisions de jeu</h2><span class="muted">rang Macro</span></div>
+      <div class="grid">${tiles(game)}</div></div>
+  </div>`;
+}
+/* Composition adverse : remplace la mini-carte dans les choix d’objets */
+const DMG = {AD:"Physique", AP:"Magique", MIX:"Mixte"};
+function compPanel(s, t){
+  const [champ, gold, items] = s.comp.me, foes = s.comp.foes;
+  const n = k => foes.filter(f=>f[2]===k).length;
+  const tally = t.look ? `<div class="tally">Dégâts adverses : <b class="num">${n("AD")}</b> physiques · <b class="num">${n("AP")}</b> magiques${n("MIX")?` · <b class="num">${n("MIX")}</b> mixte`:""}</div>` : "";
+  return `<div class="comp">
+    <div class="comp-me"><div class="row"><span class="code">${icon(ROLE_IC[s.role]||"top",13)}TOI</span><b>${esc(champ)}</b><span class="gold num">${icon("gold",15)} ${gold.toLocaleString("fr-FR")} or</span></div>
+      <p>${items.length?esc(items.join(" · ")):"Aucun objet"}</p></div>
+    <div class="comp-h">Équipe adverse</div>
+    ${foes.map(([r,c,d,tags,it])=>`<div class="foe"><span class="code">${icon(ROLE_IC[r]||"top",13)}${esc(r)}</span><div>
+      <div class="foe-n"><b>${esc(c)}</b><span class="dmg ${d.toLowerCase()}">${icon(d==="AP"?"ap":"ad",13)}${DMG[d]}</span></div>
+      ${tags.length?`<div class="tags">${tags.map(g=>`<span>${TRAIT_IC[g]?icon(TRAIT_IC[g],12):""}${esc(g)}</span>`).join("")}</div>`:""}
+      ${it?`<p>${esc(it.join(" · "))}</p>`:""}</div></div>`).join("")}
+    ${tally}</div>`;
 }
 function renderScen(){
   const sc=V.scen, s=SCENARIOS.find(x=>x.id===sc.id), t=T();
@@ -462,18 +492,18 @@ function renderScen(){
   }).join("");
   const timer = (t.scenTimer && !done) ? `<div class="timer" id="timer"><i style="width:100%"></i></div>` : "";
   $app.innerHTML = nav("scen")+`<div class="wrap">
-    <div class="qhead"><button class="qx" data-a="scenlist" aria-label="Retour aux situations">←</button><span class="eyebrow">${esc(s.role)} · ${s.time}</span></div>
+    <div class="qhead"><button class="qx" data-a="scenlist" aria-label="Retour aux situations">←</button><span class="eyebrow">${icon(ROLE_IC[s.role]||"top",14)} ${esc(s.role)} · ${s.time}</span></div>
     <h1 style="font-size:26px;margin-top:12px">${esc(s.t)}</h1>
     <div class="scn">
-      <div class="mapbox">${miniMap(s.m)}
-        <div class="legend"><span><i style="background:var(--gold)"></i>Toi</span><span><i style="background:var(--blue)"></i>Allié</span><span><i style="background:var(--red)"></i>Ennemi</span><span><i style="border:1px dashed var(--red)"></i>Position supposée</span></div></div>
+      ${s.comp?compPanel(s,t):`<div class="mapbox">${miniMap(s.m)}
+        <div class="legend"><span><i style="background:var(--gold)"></i>Toi</span><span><i style="background:var(--blue)"></i>Allié</span><span><i style="background:var(--red)"></i>Ennemi</span><span><i style="border:1px dashed var(--red)"></i>Position supposée</span></div></div>`}
       <div class="stack">
         ${timer}
         <p style="font-size:16px">${esc(s.ctx)}</p>
         ${t.look&&!done?`<div class="look"><b>À regarder avant de décider</b><ul>${s.look.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:""}
         <div class="qtext" style="font-size:20px">${esc(s.q)}</div>
         <div class="opts">${opts}</div>
-        ${done?`<div class="lpline">${emblem("macro",26)}<span>${sc.rk?(sc.rk.placing?`Placement ${sc.rk.n}/${PLACEMENTS} en Macro`:`<b class="${sc.rk.delta>=0?"up":"down"}">${sc.rk.delta>=0?"+":""}${sc.rk.delta} LP</b> · Macro · ${esc(rankText("macro"))}`):"Situation déjà jouée : pas de LP en jeu cette fois."}</span></div>`:""}
+        ${done?`<div class="lpline">${emblem(scenCat(s),26)}<span>${sc.rk?(sc.rk.placing?`Placement ${sc.rk.n}/${PLACEMENTS} en ${esc(catOf(scenCat(s)).name)}`:`<b class="${sc.rk.delta>=0?"up":"down"}">${sc.rk.delta>=0?"+":""}${sc.rk.delta} LP</b> · ${esc(catOf(scenCat(s)).name)} · ${esc(rankText(scenCat(s)))}`):"Situation déjà jouée : pas de LP en jeu cette fois."}</span></div>`:""}
         ${done?`<div class="row"><button class="btn" data-a="scen-next">Situation suivante</button><button class="btn ghost" data-a="scen-retry">Recommencer</button></div>`:""}
       </div></div></div>`;
   if(t.scenTimer && !done){
@@ -486,7 +516,7 @@ function renderScen(){
 }
 function pickScen(oi){
   const sc=V.scen, s=SCENARIOS.find(x=>x.id===sc.id), v=s.o[oi][1];
-  sc.rk = (S.scen[s.id]==null) ? updateRank("macro", SCEN_RATING[s.tier], [0,.5,1][v]) : null;
+  sc.rk = (S.scen[s.id]==null) ? updateRank(scenCat(s), SCEN_RATING[s.tier], [0,.5,1][v]) : null;
   if(sc.rk && sc.rk.note) setTimeout(()=>toast(sc.rk.note),50);
   sc.pick=oi; S.scen[s.id]=Math.max(S.scen[s.id]??-1, v); S.xp += v===2?20:v===1?8:3; touchDay(); save(); clearInterval(tick); render();
 }
@@ -496,10 +526,10 @@ function pickScen(oi){
    ============================================================ */
 function nav(cur){
   const t=T();
-  const items=[["home","Accueil"],["scenlist","Situations"],[t.lesson==="manual"?"lessons":"gloss", t.lesson==="manual"?"Fiches":"Lexique"],["profile","Profil"]];
+  const items=[["home","Accueil","home"],["scenlist","Situations","flag"],[t.lesson==="manual"?"lessons":"gloss", t.lesson==="manual"?"Fiches":"Lexique","book"],["profile","Profil","user"]];
   return `<header class="top"><div class="top-in">
     <div class="brand"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 L21 7 V17 L12 22 L3 17 V7 Z" fill="none" stroke="var(--gold)" stroke-width="1.8"/><path d="M12 7 A5 5 0 1 1 7.6 14.4" fill="none" stroke="var(--teal)" stroke-width="1.8" stroke-linecap="round"/><path d="M7 11.5 L7.6 14.6 L10.6 13.8" fill="none" stroke="var(--teal)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Rift Rappel</div>
-    <nav class="nav">${items.map(([k,l])=>`<button data-a="${k}" aria-current="${cur===k}">${l}</button>`).join("")}</nav>
+    <nav class="nav">${items.map(([k,l,ic])=>`<button data-a="${k}" aria-current="${cur===k}">${icon(ic,16)}<span>${l}</span></button>`).join("")}</nav>
   </div></header>`;
 }
 function renderHome(){
@@ -510,27 +540,28 @@ function renderHome(){
   const prio = new Set(r ? focusCats() : []);
   const order = t.path ? PATH : CATS.map(c=>c.id);
   const themeTile = c => { const cat=catOf(c), u=unlocked(c);
-    return `<button class="tile${u?"":" locked"}" data-a="cat" data-v="${c}">
-      <div class="tile-rank">${emblem(c,42)}<div><h3>${esc(cat.name)}</h3><span class="rk num">${esc(rankText(c))}</span></div>${prio.has(c)?`<span class="prio">Priorité</span>`:""}</div>
+    return `<button class="tile theme${u?"":" locked"}" data-a="cat" data-v="${c}" style="--c:${catCol(c)}">
+      <div class="theme-top">${badge(c,44)}<div><h3>${esc(cat.name)}</h3><span class="rk num">${esc(rankText(c))}</span></div>${emblem(c,34)}</div>${prio.has(c)?`<span class="prio" style="margin-left:0">Priorité</span>`:""}
       <p>${u?esc(cat.blurb):"Verrouillé : valide d’abord le thème précédent."}</p>${rankBar(c)}</button>`; };
-  const scen = scenList().slice(0,3);
+  const sl = scenList(), scen = [...sl.filter(s=>!s.comp).slice(0,2), ...sl.filter(s=>s.comp).slice(0,1)];
   $app.innerHTML = nav("home")+`<div class="wrap">
-    <div class="hello"><div><div class="eyebrow">Salut ${esc(p.name)}</div><h1>Que veux-tu travailler ?</h1></div><span class="pill tier">${t.name} · ${t.range}</span></div>
+    <div class="banner">${riftArt()}<div class="eyebrow">Salut ${esc(p.name)}</div><h1>Que veux-tu travailler ?</h1>
+      <div class="minis"><span class="pill tier">${t.name} · ${t.range}</span><span class="mini fire">${icon("flame",14)}<span class="num">${streak}</span> j</span><span class="mini">${icon("star",14)}<span class="num">${S.xp}</span> XP</span>${due?`<span class="mini">${icon("review",14)}<span class="num">${due}</span> à revoir</span>`:""}</div></div>
     ${r?accountStrip(r):""}
     ${r?overview(r):""}
-    <div class="section"><div class="section-h"><h2>Tes thèmes</h2>${r?`<button class="btn small" data-a="mix">Séance ciblée</button>`:`<button class="btn small" data-a="mix">Séance mixte</button>`}</div>
+    <div class="section"><div class="section-h"><h2>${icon("star",18)}Tes thèmes</h2>${r?`<button class="btn small" data-a="mix">Séance ciblée</button>`:`<button class="btn small" data-a="mix">Séance mixte</button>`}</div>
       <p class="muted" style="font-size:13.5px;margin-top:-4px">Choisis un thème. Chacun a son rang, de Fer à Challenger : 5 questions de placement, puis des LP à chaque réponse.${r?" Les thèmes marqués « Priorité » correspondent à tes points faibles.":""}</p>
       <div class="grid">${order.map(themeTile).join("")}</div></div>
-    <div class="section"><div class="section-h"><h2>Mises en situation</h2><button class="link" data-a="scenlist">Tout voir</button></div>
-      <div class="grid">${scen.map(s=>`<button class="tile" data-a="scen" data-v="${s.id}"><div class="row"><span class="code">${esc(s.role).toUpperCase()} · ${s.time}</span>${pips(s.tier)}</div><h3>${esc(s.t)}</h3><p>${esc(s.ctx.slice(0,90))}…</p></button>`).join("")}</div></div>
-    <div class="section"><div class="section-h"><h2>Ta régularité</h2></div>
+    <div class="section"><div class="section-h"><h2>${icon("flag",18)}Mises en situation</h2><button class="link" data-a="scenlist">Tout voir</button></div>
+      <div class="grid">${scen.map(s=>scenTile(s, esc(s.ctx.slice(0,80))+"…")).join("")}</div></div>
+    <div class="section"><div class="section-h"><h2>${icon("flame",18)}Ta régularité</h2></div>
       <div class="stats" style="margin-top:0">
-        <div class="stat"><b class="num">${streak}</b><span>jour${streak>1?"s":""} de suite</span></div>
-        <div class="stat"><b class="num">${Math.min(daily,goal)}/${goal}</b><span>objectif du jour</span></div>
-        <div class="stat"><b class="num">${S.xp}</b><span>XP</span></div>
+        <div class="stat fire">${icon("flame",18)}<b class="num">${streak}</b><span>jour${streak>1?"s":""} de suite</span></div>
+        <div class="stat goal">${icon("target",18)}<b class="num">${Math.min(daily,goal)}/${goal}</b><span>objectif du jour</span></div>
+        <div class="stat xp">${icon("star",18)}<b class="num">${S.xp}</b><span>XP</span></div>
       </div>
       <div class="card row" style="justify-content:space-between"><p>${due?`<b class="num">${due}</b> question${due>1?"s":""} à retrouver aujourd’hui : c’est le bon moment, juste avant l’oubli.`:"Aucune révision due. Les questions reviendront juste avant que tu les oublies."}</p>
-      <button class="btn ${due?"":"ghost"} small" data-a="review" ${due?"":"disabled"}>Réviser</button></div></div>
+      <button class="btn ${due?"":"ghost"} small" data-a="review" ${due?"":"disabled"}>${icon("review",15)}Réviser</button></div></div>
     <div class="why"><b>Pourquoi ça marche.</b> Une bonne réponse sûre fait revenir la question 1, 2, 4, 8 puis 16 jours plus tard. Une erreur la remet au début. Répondre « au hasard » compte comme une réponse à revoir.</div>
     <p class="legal">Rift Rappel n’est pas approuvé par Riot Games et ne reflète pas les opinions de Riot Games ni de quiconque officiellement impliqué dans la production ou la gestion des propriétés de Riot Games. Riot Games et toutes les propriétés associées sont des marques ou des marques déposées de Riot Games, Inc.</p>
   </div>`;
@@ -542,17 +573,17 @@ function renderHome(){
 function renderGloss(){
   $app.innerHTML = nav("gloss")+`<div class="wrap"><div class="section" style="margin-top:26px"><h2 style="font-size:26px">Lexique</h2>
     <p class="muted">Les mots qu’on entend en partie. Garde-les en tête, ils reviennent dans les questions.</p>
-    <div class="gloss">${GLOSSARY.map(g=>`<div><b>${esc(g[0])}</b><span>${esc(g[1])}</span></div>`).join("")}</div>
+    <div class="gloss">${GLOSSARY.map(g=>`<div><b>${icon(GLOSS_IC[g[0]]||"voc",16)}${esc(g[0])}</b><span>${esc(g[1])}</span></div>`).join("")}</div>
     <div class="section-h" style="margin-top:14px"><h2>Fiches par thème</h2></div>
-    <div class="grid">${PATH.map(c=>`<button class="tile" data-a="lesson" data-v="${c}"><div class="row"><span class="code">${catOf(c).code}</span></div><h3>${esc(catOf(c).name)}</h3></button>`).join("")}</div>
+    <div class="grid">${PATH.map(c=>`<button class="tile" data-a="lesson" data-v="${c}"><div class="row">${badge(c,36)}</div><h3>${esc(catOf(c).name)}</h3></button>`).join("")}</div>
   </div></div>`;
 }
 function renderLessons(){
   $app.innerHTML = nav("lessons")+`<div class="wrap"><div class="section" style="margin-top:26px"><h2 style="font-size:26px">Fiches</h2>
     <p class="muted">Des rappels courts, à consulter si tu en ressens le besoin. Le cœur de l’entraînement reste la récupération.</p>
-    <div class="grid">${PATH.map(c=>`<button class="tile" data-a="lesson" data-v="${c}"><div class="row"><span class="code">${catOf(c).code}</span></div><h3>${esc(catOf(c).name)}</h3><p>${esc(catOf(c).blurb)}</p></button>`).join("")}</div>
+    <div class="grid">${PATH.map(c=>`<button class="tile" data-a="lesson" data-v="${c}"><div class="row">${badge(c,36)}</div><h3>${esc(catOf(c).name)}</h3><p>${esc(catOf(c).blurb)}</p></button>`).join("")}</div>
     <div class="section-h" style="margin-top:14px"><h2>Lexique</h2></div>
-    <div class="gloss">${GLOSSARY.map(g=>`<div><b>${esc(g[0])}</b><span>${esc(g[1])}</span></div>`).join("")}</div>
+    <div class="gloss">${GLOSSARY.map(g=>`<div><b>${icon(GLOSS_IC[g[0]]||"voc",16)}${esc(g[0])}</b><span>${esc(g[1])}</span></div>`).join("")}</div>
   </div></div>`;
 }
 function overall(){ const pl=PATH.filter(placed); if(pl.length<3) return `<span class="muted">Rang global après 3 thèmes placés (${pl.length}/3)</span>`; const avg=Math.round(pl.reduce((s,c)=>s+catR(c).r,0)/pl.length); return `<span class="pill" style="color:${LADDER[rankOf(avg).i][1]};border-color:currentColor">Global : ${esc(rankLabel(avg))}</span>`; }
@@ -759,18 +790,18 @@ function accountStrip(r){
 function overview(r){
   const tiles = METRICS.map(m=>{
     const sup = r.role==="Support";
-    if(m.k==="csm" && sup) return `<div class="mtile na"><span class="mlabel">${m.label}</span><b class="mval">—</b><span class="mref">Pas concerné en support</span></div>`;
+    if(m.k==="csm" && sup) return `<div class="mtile na"><span class="mlabel">${icon(METRIC_IC[m.k],15)}${m.label}</span><b class="mval">—</b><span class="mref">Pas concerné en support</span></div>`;
     let val, ref;
     if(m.k==="antiheal"){ const a=r.antiheal||{games:0,missing:0}; val=`${a.games-a.missing}/${a.games}`; ref=`parties avec anti-soin, repère : au moins la moitié`; }
     else { const v=(r.values||{})[m.k], t=(r.targets||{})[m.k]; if(v==null) return ""; val=m.fmt(v); ref=`repère ${m.lower?"sous ":""}${m.fmt(t)}`; }
     const ra = metricRatio(r,m), st = ra==null ? "ok" : ra<0.9 ? "weak" : ra>=1.15 ? "strong" : "ok";
     const lab = {weak:"À travailler", ok:"Dans la moyenne", strong:"Point fort"}[st];
     return `<button class="mtile ${st}" data-a="cat" data-v="${m.cat}" aria-label="${esc(m.label)} : ${esc(val)}, ${lab}. Travailler ${esc(catOf(m.cat).name)}">
-      <span class="mlabel">${m.label}</span><b class="mval num">${val}</b><span class="mref">${ref}</span>
+      <span class="mlabel">${icon(METRIC_IC[m.k],15)}${m.label}</span><b class="mval num">${val}</b><span class="mref">${ref}</span>
       <span class="mfoot"><span class="mstate">${lab}</span><span class="faint">${esc(catOf(m.cat).name)} →</span></span></button>`;
   }).join("");
   const mu = (r.matchups||[])[0];
-  return `<div class="section"><div class="section-h"><h2>Vue générale</h2><span class="muted">${r.games} dernières parties · repères du rang ${r.rank?esc(r.rank.tierFr):""}</span></div>
+  return `<div class="section"><div class="section-h"><h2>${icon("eye",18)}Vue générale</h2><span class="muted">${r.games} dernières parties · repères du rang ${r.rank?esc(r.rank.tierFr):""}</span></div>
     <div class="mgrid">${tiles}</div>
     ${mu?`<p class="muted" style="font-size:13.5px">Matchup le plus difficile : <b style="color:var(--text)">${esc(mu.champ)} contre ${esc(mu.vs)}</b>, ${mu.losses} défaites sur ${mu.games}. <button class="link" data-a="cat" data-v="mu">Travailler les matchups</button></p>`:""}
   </div>`;
@@ -824,7 +855,7 @@ function act(a, v, el){
     case "scen": return go("scen",{scen:{id:v, pick:null, order:null, t0:0}});
     case "scen-pick": if(V.scen.pick==null) pickScen(+v); return;
     case "scen-retry": return go("scen",{scen:{id:V.scen.id, pick:null, order:null, t0:0}});
-    case "scen-next": { const l=scenList(); const i=l.findIndex(s=>s.id===V.scen.id); const n=l[(i+1)%l.length]; return go("scen",{scen:{id:n.id,pick:null,order:null,t0:0}}); }
+    case "scen-next": { const cur=SCENARIOS.find(s=>s.id===V.scen.id), l=scenList().filter(s=>!s.comp===!cur.comp); const i=l.findIndex(s=>s.id===V.scen.id); const n=l[(i+1)%l.length]; return go("scen",{scen:{id:n.id,pick:null,order:null,t0:0}}); }
     case "set-tier": S.profile.tier=+v; save(); toast(`Guidage : ${TIERS[+v].name}`); return render();
     case "set-pace": S.profile.pace=+v; save(); return render();
     case "ob-acct": d.acct=null; return render();

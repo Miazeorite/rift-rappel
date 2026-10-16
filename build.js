@@ -10,6 +10,7 @@ const html = `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0A101B">
+<meta name="robots" content="noindex, nofollow">
 <meta name="description" content="Apprendre League of Legends par la récupération en mémoire.">
 ${title}
 <style>body{margin:0}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}img{max-width:100%}</style>
@@ -17,6 +18,7 @@ ${title}
 <body>
 ${rest}
 ${src("data.js")}
+${src("icons.js")}
 ${src("app.js")}
 </body>
 </html>

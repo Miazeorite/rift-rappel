@@ -4,7 +4,8 @@ Application pour apprendre League of Legends par la **récupération en mémoire
 on lit (encodage), on répond sans aide (récupération), et les questions reviennent
 juste avant l’oubli (répétition espacée).
 
-- 120 questions et 11 mises en situation sur mini-carte, réparties en 10 thèmes.
+- 125 questions, 11 mises en situation sur mini-carte et 7 choix d’objets
+  (lire la compo adverse, choisir son achat), répartis en 10 thèmes.
 - Un **rang par thème**, de Fer à Challenger, avec placements et LP.
 - Quatre niveaux de guidage, du nouveau joueur (Recrue) au Challenger (Élite).
 - On entre son nom d’invocateur et on arrive sur l’**accueil** : une vue générale

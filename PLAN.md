@@ -4,8 +4,9 @@ Les cases sont cochées sur preuve (test qui passe ou essai réel).
 
 ## Fait
 
-- [x] 120 questions fines sur 10 thèmes, 4 niveaux de difficulté (`CONTENU.md`).
+- [x] 125 questions fines sur 10 thèmes, 4 niveaux de difficulté (`CONTENU.md`).
 - [x] 11 mises en situation sur mini-carte, trois options défendables chacune.
+- [x] 7 choix d’objets : lire la compo adverse, choisir son prochain achat (rang Objets).
 - [x] Répétition espacée, jugement de confiance, erreurs rejouées.
 - [x] Quatre profils de guidage, de Recrue à Élite.
 - [x] Un rang par thème (Fer → Challenger, placements, LP, record), rang global.
@@ -19,7 +20,9 @@ Les cases sont cochées sur preuve (test qui passe ou essai réel).
 
 ## À faire
 
-- [ ] **Publier le dépôt sur GitHub** (GitHub Desktop › Publish repository).
+- [x] Dépôt publié sur GitHub (public) : github.com/Miazeorite/rift-rappel.
+- [x] GitHub Pages activé (main, / root) : le site est sur
+  https://miazeorite.github.io/rift-rappel/ , non référencé par Google (`noindex`).
 - [ ] **Brancher les vraies stats.** Mettre en ligne sur Vercel avec une clé Riot,
   puis passer `USE_RIOT_API` à `true` dans `src/app.js` et remettre l’écran de
   connexion (`acctForm`) à l’étape du nom. Le code des appels Riot n’a jamais
@@ -35,4 +38,5 @@ Les cases sont cochées sur preuve (test qui passe ou essai réel).
 ## Où voir l’app
 
 - Version de test : l’artefact claude.ai « Rift Rappel » (privé, compte de Marie).
-- Version en ligne : pas encore (Vercel, voir `COLLABORATION.md`).
+- Version en ligne : https://miazeorite.github.io/rift-rappel/ (GitHub Pages, accessible
+  à qui a le lien, pas référencée par Google). Les vraies stats Riot demanderont Vercel.

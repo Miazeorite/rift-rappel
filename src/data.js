@@ -99,6 +99,11 @@ Q("item",3,"Tu es ADC, deux tanks ennemis empilent l’armure. Quel objet en pri
 Q("item",3,"Que fait le passif du Voile de la banshee ?",["Un bouclier qui bloque la prochaine compétence ennemie","Un bouclier contre la magie quand tu passes bas","Une réduction de durée des contrôles","Une résistance magique qui grandit en combat"],"Le bouclier « quand tu passes bas », c’est la Gueule de Malmortius.","Un sort bloqué.");
 Q("item",3,"Le Visage spirituel augmente…",["Les soins et boucliers que tu reçois","Les soins que tu donnes à tes alliés","Ta résistance magique selon tes PV manquants","Ta régénération de mana en combat"],"Excellent sur les champions qui se soignent eux-mêmes, ou avec un support enchanteur.","Reçus.");
 Q("item",3,"L’Armure de ronces applique des blessures graves quand…",["Un ennemi te frappe d’une attaque de base, ou quand tu l’immobilises","Tu frappes un ennemi avec une attaque de base","Un ennemi te touche avec un sort","Tu passes sous la moitié de tes PV"],"Elle punit surtout les champions qui se soignent en frappant.","Quand on te frappe.");
+Q("item",2,"L’Appel de l’exécuteur évolue en…",["Rappel mortel","Morellonomicon","Armure de ronces","Couperet noir"],"Rappel mortel : l’anti-soin des tireurs. Le Morellonomicon est celui des mages, l’Armure de ronces celui des tanks.","Un objet de tireur.");
+Q("item",2,"Le Bâton du vide est surtout fort contre…",["Des cibles avec beaucoup de résistance magique","Des cibles avec peu de résistance magique","Des champions qui se soignent beaucoup","Des champions qui ont des boucliers"],"Sa pénétration est en pourcentage : plus la cible est résistante, plus elle rapporte. Contre une cible fragile, la pénétration fixe vaut mieux.","Pourcentage.");
+Q("item",2,"Que fait l’Ange gardien ?",["Il te ramène à la vie une fois après une mort","Il te donne un bouclier quand tu passes bas","Il te rend invulnérable deux secondes et demie","Il bloque la prochaine compétence ennemie"],"La résurrection a un temps de recharge. L’invulnérabilité, c’est le Sablier de Zhonya ; bloquer un sort, le Voile de la banshee.","Une seconde vie.");
+Q("item",3,"Malzahar te bloque avec son ultime. Qu’est-ce qui t’en libère ?",["Une purification comme le Cimeterre mercuriel","La ténacité des Sandales de mercure","La résistance magique du Voile de la banshee","Le passif de l’Armure de ronces"],"La ténacité ne raccourcit pas les suppressions : seule une purification les arrête.","Suppression.");
+Q("item",3,"Contre Master Yi et Jinx, pourquoi le Cœur gelé plaît aux tanks ?",["Il réduit la vitesse d’attaque des ennemis proches","Il renvoie des dégâts à chaque attaque reçue","Il donne un bouclier contre les coups critiques","Il ralentit chaque ennemi que tu frappes"],"Renvoyer des dégâts, c’est l’Armure de ronces. Le Cœur gelé casse le rythme des champions qui frappent vite.","Leur rythme.");
 Q("item",4,"Tu es mage face à Zed et Talon. Premier objet défensif le plus rentable ?",["Sablier de Zhonya","Voile de la banshee","Morellonomicon","Cœur gelé"],"Deux assassins AD : armure et stase. La banshee protège surtout contre la magie.","Leurs dégâts sont physiques.");
 Q("item",4,"Pourquoi acheter la Larme de la déesse tôt quand on la prend ?",["Elle se charge avec le temps et les sorts : plus tôt, plus vite complète","Son prix augmente après 10 minutes","Elle donne un bouclier dès l’achat","Elle réduit le coût en mana de tes sorts"],"Les objets à charges récompensent l’achat précoce.","Elle se remplit.");
 
@@ -176,7 +181,7 @@ const LESSONS = {
   map:["3 lanes (top, mid, bot), une jungle entre elles, coupée par une rivière.","Un buisson cache ceux qui sont dedans : sans vision, tu ne vois pas qui s’y trouve.","Chaque équipe a 11 tourelles et 3 inhibiteurs. Une tourelle tire sur un champion qui attaque un de ses alliés.","Buff bleu : mana et accélération de compétence. Buff rouge : attaques qui brûlent et ralentissent."],
   lane:["Top : lane isolée, beaucoup de 1v1. Mid : lane courte, beaucoup de roams.","Bot : ADC (farm) + support (protection, vision). Le support laisse les sbires à l’ADC.","Le jungler parcourt la jungle et aide les lanes (gank).","Près de ta tourelle, tu es à l’abri. Loin d’elle, tu es une cible de gank."],
   champ:["Q, W, E : sorts de base. R : ultime, disponible au niveau 6.","Beaucoup de champions ont un passif qui change leur façon de jouer (accumuler, se réinitialiser…).","Certains sorts sont des contres directs : le Mur de vent de Yasuo bloque les projectiles.","Les projections en l’air ne peuvent pas être purgées : ce sont les contrôles les plus sûrs."],
-  item:["Les bottes augmentent la vitesse, puis ajoutent un effet selon ta paire (armure, résistance magique…).","Contre des soins, achète de l’anti-soin : Morellonomicon (mage), Appel de l’exécuteur (AD), Armure de ronces (tank).","Le Sablier de Zhonya te met en stase : invulnérable, mais immobile.","L’objet de support génère de l’or et, amélioré, des balises."],
+  item:["Avant d’acheter, lis la compo adverse : qui fait le plus de dégâts (physiques ou magiques), qui se soigne, qui contrôle, qui tue en un combo.","Les bottes augmentent la vitesse, puis ajoutent un effet selon ta paire (armure, résistance magique…).","Contre des soins, achète de l’anti-soin : Morellonomicon (mage), Appel de l’exécuteur (AD), Armure de ronces (tank).","Le Sablier de Zhonya te met en stase : invulnérable, mais immobile.","L’objet de support génère de l’or et, amélioré, des balises."],
   eco:["Seul le dernier coup sur un sbire donne son or.","Un kill vaut 300 or de base ; tuer un joueur en série donne une prime.","Les plaques des tourelles extérieures donnent de l’or jusqu’à 14 minutes.","Mourir coûte aussi du temps : sbires, XP et objectifs perdus."],
   obj:["Pour gagner : détruire le Nexus adverse.","4 dragons pour une même équipe = âme du dragon. Le Dragon ancestral exécute les ennemis bas.","Nashor : sbires renforcés et rappel accéléré pour assiéger.","Héraut et larves : outils pour détruire les tourelles. Le jungler sécurise avec Châtiment."],
   rune:["5 arbres : Précision, Domination, Sorcellerie, Volonté, Inspiration.","Arbre principal : 1 rune clé + 3 runes. Arbre secondaire : 2 runes. Plus 3 fragments de stats.","Conquérant : combats longs. Électrocution : burst. Comète : poke. Poigne : échanges courts.","Gardien protège un allié ; Répercussion récompense les tanks qui engagent."],
@@ -277,7 +282,73 @@ const SCENARIOS = [
    q:"Que fais-tu ?",
    o:[["Tu recules sans mourir en gardant ces 2 ennemis occupés, et tu pings le mid pour jouer le 4 contre 3",2,"Tu as réussi le travail du split : attirer plus d’un joueur. Ton équipe joue en surnombre ailleurs. Ne pas mourir est la clé."],
       ["Tu te téléportes au mid pour un 4 contre 3 immédiat",1,"Possible si le combat démarre, mais tu libères les 2 ennemis qui rejoignent le mid en quelques secondes."],
-      ["Tu tiens la vague sous ta tourelle en combattant les 2 ennemis",0,"À 1 contre 2, même sous tourelle, tu risques de mourir, ce qui annule tout l’intérêt de la formation."]] }
+      ["Tu tiens la vague sous ta tourelle en combattant les 2 ennemis",0,"À 1 contre 2, même sous tourelle, tu risques de mourir, ce qui annule tout l’intérêt de la formation."]] },
+
+ /* ---------- CHOIX D’OBJETS : cat "item", comp à la place de la mini-carte ----------
+    comp.me : [champion, or, objets] ; comp.foes : [rôle, champion, AD | AP | MIX, traits, objets] */
+ { id:"a1", cat:"item", t:"Ils se soignent", tier:1, role:"ADC", time:"9:30",
+   comp:{ me:["Caitlyn",1300,["Bottes"]], foes:[
+     ["TOP","Aatrox","AD",["Soins","Combat long"]],["JGL","Vi","AD",["Contrôles"]],["MID","Vladimir","AP",["Soins"]],["ADC","Ezreal","AD",["Poke"]],["SUP","Soraka","AP",["Soins"]]] },
+   ctx:"Premier retour en base. Trois ennemis se soignent : Aatrox en frappant, Vladimir avec ses sorts, Soraka en soignant ses alliés.",
+   look:["Combien d’ennemis se soignent ?","Tes dégâts sont-ils physiques ou magiques ?"],
+   q:"Que fais-tu de tes 1 300 or ?",
+   o:[["Appel de l’exécuteur, puis tu reprends ton objet principal",2,"Trois sources de soins : l’anti-soin compte dès maintenant. L’Appel de l’exécuteur est la version physique, peu chère, et il évoluera en Rappel mortel."],
+      ["Ton premier objet d’abord, l’anti-soin viendra en troisième",1,"Ton objet principal augmente tes dégâts, mais pendant 15 minutes chaque combat contre Aatrox ou Soraka se perd à cause de leurs soins."],
+      ["Orbe de l’oubli, pour couper les soins de Soraka",0,"C’est l’anti-soin des mages : il donne de la puissance magique, inutile pour Caitlyn. L’équivalent physique est l’Appel de l’exécuteur."]] },
+ { id:"a2", cat:"item", t:"Une équipe magique", tier:1, role:"Top", time:"7:00",
+   comp:{ me:["Darius",1100,["Bottes"]], foes:[
+     ["TOP","Kennen","AP",["Contrôles"]],["JGL","Amumu","AP",["Tank","Contrôles"]],["MID","Syndra","AP",["Burst","Contrôles"]],["ADC","Jinx","AD",["Attaques rapides"]],["SUP","Leona","AP",["Tank","Contrôles"]]] },
+   ctx:"Tu rentres en base. Kennen te harcèle depuis le début, et toute leur équipe aligne les étourdissements.",
+   look:["Combien d’ennemis font des dégâts magiques ?","Combien ont des contrôles ?"],
+   q:"Quelles bottes ?",
+   o:[["Sandales de mercure maintenant",2,"Quatre ennemis sur cinq font des dégâts magiques, et presque tous ont des contrôles : résistance magique et ténacité, c’est exactement la réponse."],
+      ["Rien en bottes, tout dans ton premier objet",1,"Ton objet t’aide contre Kennen, mais tu restes plus longtemps sous chaque étourdissement, et ils en ont quatre."],
+      ["Bottes d’acier renforcées maintenant",0,"Elles réduisent les dégâts des attaques de base : seule Jinx en dépend. Contre Kennen et Syndra, elles ne servent à rien."]] },
+ { id:"a3", cat:"item", t:"Trois qui frappent vite", tier:2, role:"Top", time:"18:00",
+   comp:{ me:["Sion",2600,["Bottes d’acier renforcées","Égide de feu solaire"]], foes:[
+     ["TOP","Jax","AD",["Attaques rapides","Combat long"]],["JGL","Master Yi","AD",["Attaques rapides"]],["MID","Ahri","AP",["Burst"]],["ADC","Jinx","AD",["Attaques rapides"]],["SUP","Lulu","AP",["Boucliers"]]] },
+   ctx:"Tu es le tank de ton équipe. En face, trois champions tuent avec leurs attaques de base, et presque aucun ne se soigne.",
+   look:["Comment font-ils leurs dégâts : sorts ou attaques de base ?","Qui se soigne vraiment ?"],
+   q:"Ton prochain objet ?",
+   o:[["Cœur gelé",2,"De l’armure, et un passif qui réduit la vitesse d’attaque des ennemis proches : Jax, Master Yi et Jinx perdent une grosse part de leurs dégâts."],
+      ["Armure de ronces",1,"Bonne armure contre les attaques de base, mais son anti-soin sert peu ici et elle ne ralentit pas leurs attaques comme le Cœur gelé."],
+      ["Force de la nature",0,"De la résistance magique contre Ahri seule, alors que trois ennemis font des dégâts physiques."]] },
+ { id:"a4", cat:"item", t:"L’ultime qui bloque", tier:2, role:"ADC", time:"24:00",
+   comp:{ me:["Caitlyn",3000,["Bottes","Lame d’infini","Ouragan de Runaan"]], foes:[
+     ["TOP","Sion","AD",["Tank","Contrôles"]],["JGL","Warwick","AD",["Soins","Suppression"]],["MID","Malzahar","AP",["Suppression"]],["ADC","Ashe","AD",["Contrôles"]],["SUP","Rakan","AP",["Contrôles"]]] },
+   ctx:"Dans les deux derniers combats, tu t’es fait tuer sous l’ultime de Malzahar, puis sous celui de Warwick, sans pouvoir tirer.",
+   look:["Quels contrôles ont décidé ces combats ?","La ténacité réduit-elle ce type de contrôle ?"],
+   q:"Ton prochain objet ?",
+   o:[["Cimeterre mercuriel",2,"Il te libère de presque tous les contrôles, suppressions comprises : l’ultime de Malzahar ou de Warwick s’arrête dès que tu l’actives."],
+      ["Sandales de mercure à la place de tes bottes",1,"La ténacité raccourcit les étourdissements, mais pas les suppressions : contre Malzahar et Warwick, elle ne change rien."],
+      ["Un troisième objet de dégâts pour tuer avant",0,"Malzahar n’a qu’un sort à lancer pour te neutraliser : plus de dégâts ne servent à rien si tu ne peux pas tirer."]] },
+ { id:"a5", cat:"item", t:"Un mur de tanks", tier:2, role:"Mid", time:"26:00",
+   comp:{ me:["Orianna",3000,["Bottes","Tourment de Liandry","Sablier de Zhonya"]], foes:[
+     ["TOP","Malphite","AP",["Tank","Contrôles"]],["JGL","Sejuani","AP",["Tank","Contrôles"],["Force de la nature"]],["MID","Galio","AP",["Tank","Contrôles"]],["ADC","Kai’Sa","MIX",[]],["SUP","Braum","AP",["Tank","Contrôles"]]] },
+   ctx:"Quatre ennemis ont beaucoup de résistance magique. Tes sorts ne leur enlèvent presque plus rien.",
+   look:["Combien d’ennemis sont des tanks ?","Ont-ils peu ou beaucoup de résistance magique ?"],
+   q:"Ton prochain objet ?",
+   o:[["Bâton du vide",2,"Pénétration magique en pourcentage : plus la cible a de résistance magique, plus elle rapporte. C’est l’objet fait contre un mur de tanks."],
+      ["Voile de la banshee",1,"Il te protège de Galio et de Kai’Sa, mais il ne t’aide pas à entamer leurs tanks : le combat traîne et tu finis par le perdre."],
+      ["Morellonomicon",0,"De l’anti-soin, alors qu’aucun d’eux ne se soigne vraiment. Contre des tanks, c’est la pénétration qui compte."]] },
+ { id:"a6", cat:"item", t:"L’anti-soin, mais quand ?", tier:3, role:"Mid", time:"8:30",
+   comp:{ me:["Lux",1300,["Anneau de Doran","Bottes"]], foes:[
+     ["TOP","Darius","AD",["Soins","Combat long"]],["JGL","Lee Sin","AD",["Mobilité"]],["MID","Vladimir","AP",["Soins"]],["ADC","Ezreal","AD",["Poke"]],["SUP","Soraka","AP",["Soins"]]] },
+   ctx:"Vladimir regagne presque toute sa vie entre deux échanges, et Soraka soigne tout le bot.",
+   look:["Leurs soins comptent-ils maintenant ou plus tard ?","Quel est l’anti-soin le moins cher pour un mage ?"],
+   q:"Que fais-tu de tes 1 300 or ?",
+   o:[["Orbe de l’oubli maintenant, Morellonomicon plus tard",2,"Le composant suffit à couper les soins de Vladimir en lane, et il retarde à peine ton objet principal. Tu le finiras quand les combats d’équipe commenceront."],
+      ["Morellonomicon en premier objet complet",1,"L’anti-soin est là, mais tu retardes de plusieurs minutes l’objet qui fait tes dégâts : l’orbe seule suffisait pour l’instant."],
+      ["Ton objet principal d’abord, l’anti-soin au troisième",0,"Vladimir gagne ses échanges grâce à ses soins dès maintenant. Sans anti-soin, tu perds la lane avant que ton objet fasse la différence."]] },
+ { id:"a7", cat:"item", t:"Il perce ton armure", tier:4, role:"Jungle", time:"27:00",
+   comp:{ me:["Sejuani",2800,["Bottes d’acier renforcées","Égide de feu solaire","Cœur gelé"]], foes:[
+     ["TOP","Fiora","AD",["Soins","Combat long"]],["JGL","Lee Sin","AD",["Mobilité"]],["MID","Zed","AD",["Burst"]],["ADC","Jinx","AD",["Attaques rapides"],["Lame d’infini","Salutations de Lord Dominik","Ouragan de Runaan"]],["SUP","Nautilus","AP",["Tank","Contrôles"]]] },
+   ctx:"Tu as déjà trois objets d’armure. Jinx vient de finir les Salutations de Lord Dominik et te fait fondre dans les combats.",
+   look:["Que fait l’objet que Jinx vient d’acheter ?","Te manque-t-il plutôt de l’armure ou des PV ?"],
+   q:"Ton prochain objet ?",
+   o:[["Un objet surtout en PV : tu as déjà beaucoup d’armure",2,"Sa pénétration en pourcentage retire une part de ton armure, et l’armure ne vaut que s’il y a des PV derrière. Avec déjà trois objets d’armure, des PV te rendent plus solide qu’une quatrième pièce."],
+      ["Une quatrième pièce d’armure, ils sont quatre AD",1,"L’instinct est juste, ils font des dégâts physiques, mais Jinx ignore une partie de cette armure et chaque point rapporte de moins en moins face à tes PV."],
+      ["De la résistance magique contre Nautilus",0,"Nautilus est le seul à faire des dégâts magiques et ce n’est pas lui qui te tue : le problème, c’est Jinx."]] }
 ];
 
 /* ============================================================

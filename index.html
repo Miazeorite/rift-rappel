@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0A101B">
+<meta name="robots" content="noindex, nofollow">
 <meta name="description" content="Apprendre League of Legends par la récupération en mémoire.">
 <title>Rift Rappel</title>
 <style>body{margin:0}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}img{max-width:100%}</style>
@@ -21,6 +22,10 @@
   --gold:#D9B45B; --gold-ink:#1A1306; --teal:#43C6B4; --blue:#4DA3F0; --violet:#A08CF2;
   --red:#E4665F; --good:#4CC38A; --warn:#E3A948;
   --map:#0D1822; --map2:#12222E; --river:#1D4A62; --lane:#3B4B60;
+  /* une couleur par thème (icônes, pastilles) et par type de dégâts */
+  --c-voc:#5FA4F4; --c-map:#43C6B4; --c-lane:#7CCB6B; --c-champ:#EF6F64; --c-item:#E8955A;
+  --c-eco:#E8C552; --c-obj:#A08CF2; --c-rune:#5FD0E8; --c-mu:#EE7FAE; --c-macro:#9AA8FF;
+  --phys:#E8955A; --magic:#A08CF2;
   --tier:var(--teal);
   --r:10px;
   --display:"Chakra Petch", "Rajdhani", "Arial Narrow", system-ui, sans-serif;
@@ -32,6 +37,7 @@ body{font-family:var(--body);font-size:15px;line-height:1.5;
   background:
     radial-gradient(1200px 500px at 85% -10%, rgba(67,198,180,.08), transparent 60%),
     radial-gradient(900px 500px at -10% 110%, rgba(217,180,91,.06), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2756%27 height=%2748%27 viewBox=%270 0 56 48%27%3E%3Cpath d=%27M14 0l14 8v16l-14 8L0 24V8zM42 24l14 8v16M42 24L28 32v16%27 fill=%27none%27 stroke=%27%23ffffff%27 stroke-opacity=%27.025%27/%3E%3C/svg%3E"),
     var(--bg);
   min-height:100vh}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
@@ -104,7 +110,7 @@ p{margin:0}
 .loop div:nth-child(3){border-color:color-mix(in srgb,var(--gold) 55%,transparent)}
 .loop div:nth-child(3) b{color:var(--gold)}
 .loop p{font-size:14px;color:var(--muted)}
-@media (max-width:560px){.loop{grid-template-columns:1fr}}
+@media (max-width:560px){.loop{grid-template-columns:1fr}.loop div{display:grid;grid-template-columns:36px 1fr;column-gap:12px;row-gap:0}.loop .lic{grid-row:span 2}}
 .tiercard{border-radius:14px;padding:22px;border:1px solid color-mix(in srgb,var(--tier) 50%,transparent);background:linear-gradient(160deg,color-mix(in srgb,var(--tier) 14%,var(--panel)),var(--panel) 60%)}
 .tiercard h2{font-size:30px;color:var(--tier)}
 .checks{list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:9px}
@@ -196,6 +202,21 @@ p{margin:0}
 .legend i{width:9px;height:9px;border-radius:50%}
 .look{padding:12px 14px;border-radius:9px;border:1px solid color-mix(in srgb,var(--teal) 35%,transparent);background:color-mix(in srgb,var(--teal) 8%,var(--panel));font-size:14px}
 .look ul{margin:6px 0 0;padding-left:18px}
+/* choix d’objets : composition adverse */
+.comp{border-radius:12px;border:1px solid var(--line2);background:var(--panel);overflow:hidden}
+.comp-me{padding:12px 14px;border-left:3px solid var(--gold);background:var(--panel2)}
+.comp-me .row{gap:8px;align-items:center;flex-wrap:wrap}
+.comp-me b{font-family:var(--display);font-size:16px}
+.comp-me .gold{color:var(--gold);font-family:var(--display);font-weight:700;margin-left:auto}
+.comp-me p,.foe p{margin:4px 0 0;font-size:12.5px;color:var(--muted)}
+.comp-h{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red);padding:10px 14px 4px}
+.foe{display:grid;grid-template-columns:44px 1fr;gap:8px;padding:8px 14px;border-top:1px solid var(--line);align-items:start}
+.foe .code{text-align:center}
+.foe-n{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.dmg{font-size:12px;color:var(--muted)}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+.tags span{font-size:11.5px;padding:1px 7px;border-radius:999px;border:1px solid var(--line2);color:var(--text)}
+.tally{padding:9px 14px;border-top:1px solid var(--line);font-size:13px;color:var(--teal);background:color-mix(in srgb,var(--teal) 8%,var(--panel))}
 .verdict{font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:5px}
 .v2{background:color-mix(in srgb,var(--good) 22%,transparent);color:var(--good)}
 .v1{background:color-mix(in srgb,var(--warn) 22%,transparent);color:var(--warn)}
@@ -268,6 +289,99 @@ button.mtile:hover{border-color:var(--line2);background:var(--panel2)}
 .tile.locked{opacity:.5}
 @media (max-width:420px){.mgrid{grid-template-columns:1fr 1fr}.mval{font-size:22px}}
 .legal{margin-top:24px;font-size:11.5px;line-height:1.5;color:var(--faint);max-width:70ch}
+
+/* ---------- couche visuelle : icônes, pastilles, illustrations ---------- */
+.ic{flex:none;display:inline-block;vertical-align:middle}
+.code{display:inline-flex;align-items:center;gap:4px}
+.eyebrow .ic{vertical-align:-3px}
+.tbadge{--s:44px;width:var(--s);height:var(--s);flex:none;display:grid;place-items:center;border-radius:calc(var(--s) * .28);color:var(--c);
+  background:radial-gradient(circle at 30% 25%,color-mix(in srgb,var(--c) 34%,transparent),color-mix(in srgb,var(--c) 10%,var(--panel)) 70%);
+  border:1px solid color-mix(in srgb,var(--c) 45%,transparent);box-shadow:0 0 18px -6px var(--c)}
+/* barre du haut */
+.nav button{display:inline-flex;align-items:center;gap:6px}
+.nav button .ic{opacity:.8}
+.nav button[aria-current="true"] .ic{color:var(--gold);opacity:1}
+@media (max-width:480px){.nav{width:100%;justify-content:space-between;margin-left:0}.nav button{flex-direction:column;gap:2px;font-size:11.5px;padding:5px 6px;flex:1}}
+/* bannière d’accueil */
+.banner{position:relative;overflow:hidden;margin-top:18px;border-radius:16px;border:1px solid var(--line2);padding:20px;min-height:240px;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;
+  background:linear-gradient(160deg,var(--panel2),var(--bg2))}
+.banner .riftart{position:absolute;left:0;top:0;width:100%;height:62%;opacity:.95}
+.banner::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,color-mix(in srgb,var(--bg2) 92%,transparent) 0%,color-mix(in srgb,var(--bg2) 40%,transparent) 55%,transparent 100%);pointer-events:none}
+.banner>*:not(.riftart){position:relative;z-index:1}
+.banner h1{font-size:clamp(24px,6vw,32px)}
+.banner .row{gap:8px}
+.minis{display:flex;gap:6px;flex-wrap:wrap}
+.mini{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:999px;font-size:12.5px;font-weight:700;font-family:var(--display);background:color-mix(in srgb,var(--bg) 70%,transparent);border:1px solid var(--line2)}
+.mini .ic{color:var(--gold)}
+.mini.fire .ic{color:var(--c-item)}
+/* tuiles de thème */
+.tile.theme{position:relative;overflow:hidden;--c:var(--line2)}
+.tile.theme::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--c);opacity:.85}
+.tile.theme::after{content:"";position:absolute;width:140px;height:140px;right:-50px;top:-60px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--c) 22%,transparent),transparent 70%);pointer-events:none}
+.tile.theme:hover{border-color:color-mix(in srgb,var(--c) 55%,transparent)}
+.theme-top{display:flex;gap:12px;align-items:center;width:100%}
+.theme-top>div{flex:1;min-width:0}
+.theme-top .emb{margin-left:auto}
+/* vignettes des situations */
+.tile.sc{display:grid;grid-template-columns:76px 1fr;gap:12px;align-items:start}
+.tile.sc .row{grid-column:2}
+.thumb{width:76px;height:76px;border-radius:10px;overflow:hidden;border:1px solid var(--line2);background:var(--map);grid-row:span 3}
+.thumb svg{display:block;width:100%;height:100%}
+.comp-thumb{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:8px;place-items:center;background:linear-gradient(160deg,var(--panel2),var(--map))}
+.comp-thumb .dot{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;color:#0A101B}
+.dot.ad{background:var(--phys)} .dot.ap{background:var(--magic)} .dot.mix{background:linear-gradient(135deg,var(--phys) 50%,var(--magic) 50%)}
+.sc-body{display:flex;flex-direction:column;gap:6px;min-width:0}
+.sc-body .row{justify-content:space-between}
+/* composition adverse */
+.foe .code,.comp-me .code{display:inline-flex;align-items:center;justify-content:center;gap:4px}
+.foe .code .ic{color:var(--text)}
+.dmg{display:inline-flex;align-items:center;gap:3px}
+.dmg.ad{color:var(--phys)} .dmg.ap{color:var(--magic)} .dmg.mix{color:var(--text)}
+.tags span{display:inline-flex;align-items:center;gap:4px}
+.tags .ic{color:var(--muted)}
+/* question */
+.qcard{position:relative}
+.qwm{position:absolute;right:-10px;top:-14px;color:var(--c);opacity:.07;pointer-events:none}
+.qmeta .tbadge{margin-right:2px}
+.fb h3{display:flex;align-items:center;gap:8px}
+.fb .fbic{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex:none}
+.fb.good .fbic{background:color-mix(in srgb,var(--good) 22%,transparent);color:var(--good)}
+.fb.bad .fbic{background:color-mix(in srgb,var(--red) 22%,transparent);color:var(--red)}
+.hint{display:flex;gap:8px;align-items:flex-start}
+.hint .ic{color:var(--teal);margin-top:1px}
+/* bilan */
+.ring{position:relative;width:120px;height:120px;flex:none}
+.ring svg{width:100%;height:100%;display:block}
+.ring circle{transition:stroke-dashoffset .8s ease-out}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--display);font-size:34px;font-weight:700}
+.ring small{font-size:16px;margin-left:1px}
+.recap div{grid-template-columns:20px 1fr}
+.recap .ic.ok{color:var(--good)} .recap .ic.ko{color:var(--red)}
+/* fiche */
+.lesson-h{display:flex;gap:14px;align-items:center;margin-top:14px}
+.lesson li{display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start}
+.lesson li .n{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:14px;color:var(--c);background:color-mix(in srgb,var(--c) 14%,transparent);border:1px solid color-mix(in srgb,var(--c) 40%,transparent)}
+/* accueil : bienvenue */
+.ob-art{position:relative;height:150px;border-radius:16px;overflow:hidden;border:1px solid var(--line2);background:linear-gradient(160deg,var(--panel2),var(--bg2))}
+.ob-art .riftart{width:100%;height:100%}
+.loop div{display:flex;flex-direction:column;gap:6px;position:relative}
+.loop .lic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:var(--panel2);color:var(--muted)}
+.loop div:nth-child(3) .lic{color:var(--gold);background:color-mix(in srgb,var(--gold) 14%,transparent)}
+.choice.withic{flex-direction:row;align-items:center;gap:12px}
+.choice.withic .cic{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--panel2);color:var(--muted);flex:none}
+.choice.withic[aria-pressed="true"] .cic{color:var(--gold);background:color-mix(in srgb,var(--gold) 14%,transparent)}
+.choice.withic>div{display:flex;flex-direction:column;gap:2px}
+/* régularité, stats */
+.stat{display:flex;flex-direction:column;gap:2px;position:relative}
+.stat .ic{position:absolute;right:10px;top:10px;opacity:.85}
+.stat.fire .ic{color:var(--c-item)} .stat.goal .ic{color:var(--teal)} .stat.xp .ic{color:var(--gold)}
+.mlabel{display:flex;align-items:center;gap:6px}
+.mlabel .ic{color:var(--muted)}
+.mtile.weak .mlabel .ic{color:var(--red)} .mtile.strong .mlabel .ic{color:var(--good)}
+.section-h h2{display:flex;align-items:center;gap:8px}
+.section-h h2 .ic{color:var(--gold)}
+.gloss b{display:flex;align-items:center;gap:7px}
+.gloss b .ic{color:var(--c-voc)}
 </style>
 <div id="app"></div>
 
@@ -372,6 +486,11 @@ Q("item",3,"Tu es ADC, deux tanks ennemis empilent l’armure. Quel objet en pri
 Q("item",3,"Que fait le passif du Voile de la banshee ?",["Un bouclier qui bloque la prochaine compétence ennemie","Un bouclier contre la magie quand tu passes bas","Une réduction de durée des contrôles","Une résistance magique qui grandit en combat"],"Le bouclier « quand tu passes bas », c’est la Gueule de Malmortius.","Un sort bloqué.");
 Q("item",3,"Le Visage spirituel augmente…",["Les soins et boucliers que tu reçois","Les soins que tu donnes à tes alliés","Ta résistance magique selon tes PV manquants","Ta régénération de mana en combat"],"Excellent sur les champions qui se soignent eux-mêmes, ou avec un support enchanteur.","Reçus.");
 Q("item",3,"L’Armure de ronces applique des blessures graves quand…",["Un ennemi te frappe d’une attaque de base, ou quand tu l’immobilises","Tu frappes un ennemi avec une attaque de base","Un ennemi te touche avec un sort","Tu passes sous la moitié de tes PV"],"Elle punit surtout les champions qui se soignent en frappant.","Quand on te frappe.");
+Q("item",2,"L’Appel de l’exécuteur évolue en…",["Rappel mortel","Morellonomicon","Armure de ronces","Couperet noir"],"Rappel mortel : l’anti-soin des tireurs. Le Morellonomicon est celui des mages, l’Armure de ronces celui des tanks.","Un objet de tireur.");
+Q("item",2,"Le Bâton du vide est surtout fort contre…",["Des cibles avec beaucoup de résistance magique","Des cibles avec peu de résistance magique","Des champions qui se soignent beaucoup","Des champions qui ont des boucliers"],"Sa pénétration est en pourcentage : plus la cible est résistante, plus elle rapporte. Contre une cible fragile, la pénétration fixe vaut mieux.","Pourcentage.");
+Q("item",2,"Que fait l’Ange gardien ?",["Il te ramène à la vie une fois après une mort","Il te donne un bouclier quand tu passes bas","Il te rend invulnérable deux secondes et demie","Il bloque la prochaine compétence ennemie"],"La résurrection a un temps de recharge. L’invulnérabilité, c’est le Sablier de Zhonya ; bloquer un sort, le Voile de la banshee.","Une seconde vie.");
+Q("item",3,"Malzahar te bloque avec son ultime. Qu’est-ce qui t’en libère ?",["Une purification comme le Cimeterre mercuriel","La ténacité des Sandales de mercure","La résistance magique du Voile de la banshee","Le passif de l’Armure de ronces"],"La ténacité ne raccourcit pas les suppressions : seule une purification les arrête.","Suppression.");
+Q("item",3,"Contre Master Yi et Jinx, pourquoi le Cœur gelé plaît aux tanks ?",["Il réduit la vitesse d’attaque des ennemis proches","Il renvoie des dégâts à chaque attaque reçue","Il donne un bouclier contre les coups critiques","Il ralentit chaque ennemi que tu frappes"],"Renvoyer des dégâts, c’est l’Armure de ronces. Le Cœur gelé casse le rythme des champions qui frappent vite.","Leur rythme.");
 Q("item",4,"Tu es mage face à Zed et Talon. Premier objet défensif le plus rentable ?",["Sablier de Zhonya","Voile de la banshee","Morellonomicon","Cœur gelé"],"Deux assassins AD : armure et stase. La banshee protège surtout contre la magie.","Leurs dégâts sont physiques.");
 Q("item",4,"Pourquoi acheter la Larme de la déesse tôt quand on la prend ?",["Elle se charge avec le temps et les sorts : plus tôt, plus vite complète","Son prix augmente après 10 minutes","Elle donne un bouclier dès l’achat","Elle réduit le coût en mana de tes sorts"],"Les objets à charges récompensent l’achat précoce.","Elle se remplit.");
 
@@ -449,7 +568,7 @@ const LESSONS = {
   map:["3 lanes (top, mid, bot), une jungle entre elles, coupée par une rivière.","Un buisson cache ceux qui sont dedans : sans vision, tu ne vois pas qui s’y trouve.","Chaque équipe a 11 tourelles et 3 inhibiteurs. Une tourelle tire sur un champion qui attaque un de ses alliés.","Buff bleu : mana et accélération de compétence. Buff rouge : attaques qui brûlent et ralentissent."],
   lane:["Top : lane isolée, beaucoup de 1v1. Mid : lane courte, beaucoup de roams.","Bot : ADC (farm) + support (protection, vision). Le support laisse les sbires à l’ADC.","Le jungler parcourt la jungle et aide les lanes (gank).","Près de ta tourelle, tu es à l’abri. Loin d’elle, tu es une cible de gank."],
   champ:["Q, W, E : sorts de base. R : ultime, disponible au niveau 6.","Beaucoup de champions ont un passif qui change leur façon de jouer (accumuler, se réinitialiser…).","Certains sorts sont des contres directs : le Mur de vent de Yasuo bloque les projectiles.","Les projections en l’air ne peuvent pas être purgées : ce sont les contrôles les plus sûrs."],
-  item:["Les bottes augmentent la vitesse, puis ajoutent un effet selon ta paire (armure, résistance magique…).","Contre des soins, achète de l’anti-soin : Morellonomicon (mage), Appel de l’exécuteur (AD), Armure de ronces (tank).","Le Sablier de Zhonya te met en stase : invulnérable, mais immobile.","L’objet de support génère de l’or et, amélioré, des balises."],
+  item:["Avant d’acheter, lis la compo adverse : qui fait le plus de dégâts (physiques ou magiques), qui se soigne, qui contrôle, qui tue en un combo.","Les bottes augmentent la vitesse, puis ajoutent un effet selon ta paire (armure, résistance magique…).","Contre des soins, achète de l’anti-soin : Morellonomicon (mage), Appel de l’exécuteur (AD), Armure de ronces (tank).","Le Sablier de Zhonya te met en stase : invulnérable, mais immobile.","L’objet de support génère de l’or et, amélioré, des balises."],
   eco:["Seul le dernier coup sur un sbire donne son or.","Un kill vaut 300 or de base ; tuer un joueur en série donne une prime.","Les plaques des tourelles extérieures donnent de l’or jusqu’à 14 minutes.","Mourir coûte aussi du temps : sbires, XP et objectifs perdus."],
   obj:["Pour gagner : détruire le Nexus adverse.","4 dragons pour une même équipe = âme du dragon. Le Dragon ancestral exécute les ennemis bas.","Nashor : sbires renforcés et rappel accéléré pour assiéger.","Héraut et larves : outils pour détruire les tourelles. Le jungler sécurise avec Châtiment."],
   rune:["5 arbres : Précision, Domination, Sorcellerie, Volonté, Inspiration.","Arbre principal : 1 rune clé + 3 runes. Arbre secondaire : 2 runes. Plus 3 fragments de stats.","Conquérant : combats longs. Électrocution : burst. Comète : poke. Poigne : échanges courts.","Gardien protège un allié ; Répercussion récompense les tanks qui engagent."],
@@ -550,7 +669,73 @@ const SCENARIOS = [
    q:"Que fais-tu ?",
    o:[["Tu recules sans mourir en gardant ces 2 ennemis occupés, et tu pings le mid pour jouer le 4 contre 3",2,"Tu as réussi le travail du split : attirer plus d’un joueur. Ton équipe joue en surnombre ailleurs. Ne pas mourir est la clé."],
       ["Tu te téléportes au mid pour un 4 contre 3 immédiat",1,"Possible si le combat démarre, mais tu libères les 2 ennemis qui rejoignent le mid en quelques secondes."],
-      ["Tu tiens la vague sous ta tourelle en combattant les 2 ennemis",0,"À 1 contre 2, même sous tourelle, tu risques de mourir, ce qui annule tout l’intérêt de la formation."]] }
+      ["Tu tiens la vague sous ta tourelle en combattant les 2 ennemis",0,"À 1 contre 2, même sous tourelle, tu risques de mourir, ce qui annule tout l’intérêt de la formation."]] },
+
+ /* ---------- CHOIX D’OBJETS : cat "item", comp à la place de la mini-carte ----------
+    comp.me : [champion, or, objets] ; comp.foes : [rôle, champion, AD | AP | MIX, traits, objets] */
+ { id:"a1", cat:"item", t:"Ils se soignent", tier:1, role:"ADC", time:"9:30",
+   comp:{ me:["Caitlyn",1300,["Bottes"]], foes:[
+     ["TOP","Aatrox","AD",["Soins","Combat long"]],["JGL","Vi","AD",["Contrôles"]],["MID","Vladimir","AP",["Soins"]],["ADC","Ezreal","AD",["Poke"]],["SUP","Soraka","AP",["Soins"]]] },
+   ctx:"Premier retour en base. Trois ennemis se soignent : Aatrox en frappant, Vladimir avec ses sorts, Soraka en soignant ses alliés.",
+   look:["Combien d’ennemis se soignent ?","Tes dégâts sont-ils physiques ou magiques ?"],
+   q:"Que fais-tu de tes 1 300 or ?",
+   o:[["Appel de l’exécuteur, puis tu reprends ton objet principal",2,"Trois sources de soins : l’anti-soin compte dès maintenant. L’Appel de l’exécuteur est la version physique, peu chère, et il évoluera en Rappel mortel."],
+      ["Ton premier objet d’abord, l’anti-soin viendra en troisième",1,"Ton objet principal augmente tes dégâts, mais pendant 15 minutes chaque combat contre Aatrox ou Soraka se perd à cause de leurs soins."],
+      ["Orbe de l’oubli, pour couper les soins de Soraka",0,"C’est l’anti-soin des mages : il donne de la puissance magique, inutile pour Caitlyn. L’équivalent physique est l’Appel de l’exécuteur."]] },
+ { id:"a2", cat:"item", t:"Une équipe magique", tier:1, role:"Top", time:"7:00",
+   comp:{ me:["Darius",1100,["Bottes"]], foes:[
+     ["TOP","Kennen","AP",["Contrôles"]],["JGL","Amumu","AP",["Tank","Contrôles"]],["MID","Syndra","AP",["Burst","Contrôles"]],["ADC","Jinx","AD",["Attaques rapides"]],["SUP","Leona","AP",["Tank","Contrôles"]]] },
+   ctx:"Tu rentres en base. Kennen te harcèle depuis le début, et toute leur équipe aligne les étourdissements.",
+   look:["Combien d’ennemis font des dégâts magiques ?","Combien ont des contrôles ?"],
+   q:"Quelles bottes ?",
+   o:[["Sandales de mercure maintenant",2,"Quatre ennemis sur cinq font des dégâts magiques, et presque tous ont des contrôles : résistance magique et ténacité, c’est exactement la réponse."],
+      ["Rien en bottes, tout dans ton premier objet",1,"Ton objet t’aide contre Kennen, mais tu restes plus longtemps sous chaque étourdissement, et ils en ont quatre."],
+      ["Bottes d’acier renforcées maintenant",0,"Elles réduisent les dégâts des attaques de base : seule Jinx en dépend. Contre Kennen et Syndra, elles ne servent à rien."]] },
+ { id:"a3", cat:"item", t:"Trois qui frappent vite", tier:2, role:"Top", time:"18:00",
+   comp:{ me:["Sion",2600,["Bottes d’acier renforcées","Égide de feu solaire"]], foes:[
+     ["TOP","Jax","AD",["Attaques rapides","Combat long"]],["JGL","Master Yi","AD",["Attaques rapides"]],["MID","Ahri","AP",["Burst"]],["ADC","Jinx","AD",["Attaques rapides"]],["SUP","Lulu","AP",["Boucliers"]]] },
+   ctx:"Tu es le tank de ton équipe. En face, trois champions tuent avec leurs attaques de base, et presque aucun ne se soigne.",
+   look:["Comment font-ils leurs dégâts : sorts ou attaques de base ?","Qui se soigne vraiment ?"],
+   q:"Ton prochain objet ?",
+   o:[["Cœur gelé",2,"De l’armure, et un passif qui réduit la vitesse d’attaque des ennemis proches : Jax, Master Yi et Jinx perdent une grosse part de leurs dégâts."],
+      ["Armure de ronces",1,"Bonne armure contre les attaques de base, mais son anti-soin sert peu ici et elle ne ralentit pas leurs attaques comme le Cœur gelé."],
+      ["Force de la nature",0,"De la résistance magique contre Ahri seule, alors que trois ennemis font des dégâts physiques."]] },
+ { id:"a4", cat:"item", t:"L’ultime qui bloque", tier:2, role:"ADC", time:"24:00",
+   comp:{ me:["Caitlyn",3000,["Bottes","Lame d’infini","Ouragan de Runaan"]], foes:[
+     ["TOP","Sion","AD",["Tank","Contrôles"]],["JGL","Warwick","AD",["Soins","Suppression"]],["MID","Malzahar","AP",["Suppression"]],["ADC","Ashe","AD",["Contrôles"]],["SUP","Rakan","AP",["Contrôles"]]] },
+   ctx:"Dans les deux derniers combats, tu t’es fait tuer sous l’ultime de Malzahar, puis sous celui de Warwick, sans pouvoir tirer.",
+   look:["Quels contrôles ont décidé ces combats ?","La ténacité réduit-elle ce type de contrôle ?"],
+   q:"Ton prochain objet ?",
+   o:[["Cimeterre mercuriel",2,"Il te libère de presque tous les contrôles, suppressions comprises : l’ultime de Malzahar ou de Warwick s’arrête dès que tu l’actives."],
+      ["Sandales de mercure à la place de tes bottes",1,"La ténacité raccourcit les étourdissements, mais pas les suppressions : contre Malzahar et Warwick, elle ne change rien."],
+      ["Un troisième objet de dégâts pour tuer avant",0,"Malzahar n’a qu’un sort à lancer pour te neutraliser : plus de dégâts ne servent à rien si tu ne peux pas tirer."]] },
+ { id:"a5", cat:"item", t:"Un mur de tanks", tier:2, role:"Mid", time:"26:00",
+   comp:{ me:["Orianna",3000,["Bottes","Tourment de Liandry","Sablier de Zhonya"]], foes:[
+     ["TOP","Malphite","AP",["Tank","Contrôles"]],["JGL","Sejuani","AP",["Tank","Contrôles"],["Force de la nature"]],["MID","Galio","AP",["Tank","Contrôles"]],["ADC","Kai’Sa","MIX",[]],["SUP","Braum","AP",["Tank","Contrôles"]]] },
+   ctx:"Quatre ennemis ont beaucoup de résistance magique. Tes sorts ne leur enlèvent presque plus rien.",
+   look:["Combien d’ennemis sont des tanks ?","Ont-ils peu ou beaucoup de résistance magique ?"],
+   q:"Ton prochain objet ?",
+   o:[["Bâton du vide",2,"Pénétration magique en pourcentage : plus la cible a de résistance magique, plus elle rapporte. C’est l’objet fait contre un mur de tanks."],
+      ["Voile de la banshee",1,"Il te protège de Galio et de Kai’Sa, mais il ne t’aide pas à entamer leurs tanks : le combat traîne et tu finis par le perdre."],
+      ["Morellonomicon",0,"De l’anti-soin, alors qu’aucun d’eux ne se soigne vraiment. Contre des tanks, c’est la pénétration qui compte."]] },
+ { id:"a6", cat:"item", t:"L’anti-soin, mais quand ?", tier:3, role:"Mid", time:"8:30",
+   comp:{ me:["Lux",1300,["Anneau de Doran","Bottes"]], foes:[
+     ["TOP","Darius","AD",["Soins","Combat long"]],["JGL","Lee Sin","AD",["Mobilité"]],["MID","Vladimir","AP",["Soins"]],["ADC","Ezreal","AD",["Poke"]],["SUP","Soraka","AP",["Soins"]]] },
+   ctx:"Vladimir regagne presque toute sa vie entre deux échanges, et Soraka soigne tout le bot.",
+   look:["Leurs soins comptent-ils maintenant ou plus tard ?","Quel est l’anti-soin le moins cher pour un mage ?"],
+   q:"Que fais-tu de tes 1 300 or ?",
+   o:[["Orbe de l’oubli maintenant, Morellonomicon plus tard",2,"Le composant suffit à couper les soins de Vladimir en lane, et il retarde à peine ton objet principal. Tu le finiras quand les combats d’équipe commenceront."],
+      ["Morellonomicon en premier objet complet",1,"L’anti-soin est là, mais tu retardes de plusieurs minutes l’objet qui fait tes dégâts : l’orbe seule suffisait pour l’instant."],
+      ["Ton objet principal d’abord, l’anti-soin au troisième",0,"Vladimir gagne ses échanges grâce à ses soins dès maintenant. Sans anti-soin, tu perds la lane avant que ton objet fasse la différence."]] },
+ { id:"a7", cat:"item", t:"Il perce ton armure", tier:4, role:"Jungle", time:"27:00",
+   comp:{ me:["Sejuani",2800,["Bottes d’acier renforcées","Égide de feu solaire","Cœur gelé"]], foes:[
+     ["TOP","Fiora","AD",["Soins","Combat long"]],["JGL","Lee Sin","AD",["Mobilité"]],["MID","Zed","AD",["Burst"]],["ADC","Jinx","AD",["Attaques rapides"],["Lame d’infini","Salutations de Lord Dominik","Ouragan de Runaan"]],["SUP","Nautilus","AP",["Tank","Contrôles"]]] },
+   ctx:"Tu as déjà trois objets d’armure. Jinx vient de finir les Salutations de Lord Dominik et te fait fondre dans les combats.",
+   look:["Que fait l’objet que Jinx vient d’acheter ?","Te manque-t-il plutôt de l’armure ou des PV ?"],
+   q:"Ton prochain objet ?",
+   o:[["Un objet surtout en PV : tu as déjà beaucoup d’armure",2,"Sa pénétration en pourcentage retire une part de ton armure, et l’armure ne vaut que s’il y a des PV derrière. Avec déjà trois objets d’armure, des PV te rendent plus solide qu’une quatrième pièce."],
+      ["Une quatrième pièce d’armure, ils sont quatre AD",1,"L’instinct est juste, ils font des dégâts physiques, mais Jinx ignore une partie de cette armure et chaque point rapporte de moins en moins face à tes PV."],
+      ["De la résistance magique contre Nautilus",0,"Nautilus est le seul à faire des dégâts magiques et ce n’est pas lui qui te tue : le problème, c’est Jinx."]] }
 ];
 
 /* ============================================================
@@ -582,6 +767,120 @@ const GLOSSARY = [
  ["Tank","Champion résistant qui encaisse et engage."],
  ["Ward","Balise qui donne de la vision."]
 ];
+</script>
+
+<script>
+/* ============================================================
+   ICÔNES & ILLUSTRATIONS — dessinées pour l’app (pas de visuel Riot, pas d’émoji)
+   Trait 24×24, couleur héritée (currentColor). Couleurs de thème : --c-<id> dans :root.
+   ============================================================ */
+const ICONS = {
+  /* thèmes */
+  voc:'<path d="M4 5h16v11H10l-6 4z"/><path d="M8 9h8M8 12.5h5"/>',
+  map:'<path d="M3 6.5l6-2.5 6 2.5 6-2.5v13.5l-6 2.5-6-2.5-6 2.5z"/><path d="M9 4v13.5M15 6.5V20"/>',
+  lane:'<path d="M5 19V5h14"/><path d="M5 19L19 5"/><path d="M5 19h14V5"/>',
+  champ:'<path d="M4 18h16l1-10-5 4-4-7-4 7-5-4z"/><path d="M4 21h16"/>',
+  item:'<path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/>',
+  eco:'<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>',
+  obj:'<path d="M2.5 12S6.5 5 12 5s9.5 7 9.5 7-4 7-9.5 7-9.5-7-9.5-7z"/><path d="M12 7.5c-1.3 2.5-1.3 6.5 0 9 1.3-2.5 1.3-6.5 0-9z"/>',
+  rune:'<path d="M12 2.5l8 4.5v10l-8 4.5-8-4.5V7z"/><path d="M12 7.5v9M9 10.5l3-3 3 3"/>',
+  mu:'<path d="M5 5l9.5 9.5M19 5l-9.5 9.5"/><path d="M12.5 16.5l4-4M11.5 16.5l-4-4"/><path d="M15.5 15.5L19 19M8.5 15.5L5 19"/>',
+  macro:'<circle cx="5" cy="18" r="2.2"/><circle cx="12" cy="6" r="2.2"/><circle cx="19" cy="18" r="2.2"/><path d="M6.2 16l4.6-8M13.2 8l4.6 8M7.2 18h9.6"/>',
+  /* rôles */
+  top:'<path d="M5 19V5h14" stroke-width="2.6"/><path d="M5 19L19 5M19 5v14H5" opacity=".3"/>',
+  jgl:'<path d="M5 19C5 10.5 10.5 5 19 5c0 8.5-5.5 14-14 14z"/><path d="M5 19l8.5-8.5"/>',
+  mid:'<path d="M5 19L19 5" stroke-width="2.6"/><path d="M5 19V5h14M19 5v14H5" opacity=".3"/>',
+  adc:'<path d="M5 19h14V5" stroke-width="2.6"/><path d="M5 19V5h14M5 19L19 5" opacity=".3"/>',
+  sup:'<path d="M12 21s-7-3.8-7-10V5.5L12 3l7 2.5V11c0 6.2-7 10-7 10z"/><path d="M12 8.5v6M9 11.5h6"/>',
+  /* traits */
+  heal:'<path d="M12 20s-8-4.6-8-10.4A4.4 4.4 0 0 1 12 7a4.4 4.4 0 0 1 8 2.6C20 15.4 12 20 12 20z"/>',
+  chain:'<rect x="2.5" y="9" width="11" height="6" rx="3"/><rect x="10.5" y="9" width="11" height="6" rx="3"/>',
+  lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  bolt:'<path d="M13 2.5L4.5 14H11l-1 7.5L19.5 10H13z"/>',
+  tank:'<path d="M5 21V9l2-2 2 2 3-3 3 3 2-2 2 2v12z"/><path d="M10 21v-4h4v4"/>',
+  fast:'<path d="M5 6l6 6-6 6M13 6l6 6-6 6"/>',
+  long:'<path d="M6 3h12M6 21h12M7.5 3c0 5 4.5 6 4.5 9s-4.5 4-4.5 9M16.5 3c0 5-4.5 6-4.5 9s4.5 4 4.5 9"/>',
+  poke:'<circle cx="12" cy="12" r="7"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/>',
+  shield:'<circle cx="12" cy="12" r="8.5"/><path d="M8 10a4.5 4.5 0 0 1 4-3"/>',
+  dash:'<path d="M3 8h10.5a3 3 0 1 0-3-3M3 16h14a3 3 0 1 1-3 3M3 12h7"/>',
+  /* types de dégâts */
+  ad:'<path d="M19.5 4.5L9 15M19.5 4.5H15M19.5 4.5V9"/><path d="M6.5 12.5l5 5M4.5 19.5l3.5-3.5"/>',
+  ap:'<path d="M12 3l2 6.2 6.2 2-6.2 2L12 19.5l-2-6.3-6.2-2 6.2-2z"/><path d="M19 3.5v3M17.5 5h3"/>',
+  /* interface */
+  home:'<path d="M4 11l8-7 8 7v9h-5.5v-6h-5v6H4z"/>',
+  flag:'<path d="M5 21V4M5 4h12l-2.5 4L17 12H5"/>',
+  book:'<path d="M5 4.5h11a3 3 0 0 1 3 3V20H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>',
+  flame:'<path d="M12 21.5c4 0 7-2.9 7-6.8 0-5-5-7-5-12.2-3 2-4 5-4 7-1-1-2-2-2-3.8-2 2-3 5-3 9 0 3.9 3 6.8 7 6.8z"/>',
+  target:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/>',
+  star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',
+  check:'<path d="M5 12.5l4.5 4.5L19 7"/>',
+  cross:'<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',
+  review:'<path d="M20 11.5a8 8 0 1 0-2.3 5.6"/><path d="M20 4.5v7h-7"/>',
+  bulb:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',
+  archive:'<rect x="3" y="4" width="18" height="5" rx="1.2"/><path d="M5 9v11h14V9M10 13h4"/>',
+  recall:'<path d="M12 21V9M7 14l5-5 5 5"/><path d="M5 4h14"/>',
+  eye:'<path d="M2.5 12S6.5 5 12 5s9.5 7 9.5 7-4 7-9.5 7-9.5-7-9.5-7z"/><circle cx="12" cy="12" r="3"/>',
+  ward:'<path d="M12 2.5l5 7.5-5 11.5L7 10z"/><path d="M12 10v4"/>',
+  skull:'<path d="M12 3a8 8 0 0 0-5 14.2V21h10v-3.8A8 8 0 0 0 12 3z"/><circle cx="9" cy="11.5" r="1.7"/><circle cx="15" cy="11.5" r="1.7"/><path d="M10.5 21v-2.5M13.5 21v-2.5"/>',
+  clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  noheal:'<path d="M12 20s-8-4.6-8-10.4A4.4 4.4 0 0 1 12 7a4.4 4.4 0 0 1 8 2.6C20 15.4 12 20 12 20z"/><path d="M4 4l16 16"/>',
+  gold:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7v10M9.5 9.5h4a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3h4"/>',
+  arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>'
+};
+const icon = (name, size, cls) => `<svg class="ic${cls?" "+cls:""}" width="${size||20}" height="${size||20}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]||""}</svg>`;
+
+/* Couleur d’un thème, et pastille carrée avec son icône */
+const catCol = id => `var(--c-${id})`;
+const badge = (id, size) => `<span class="tbadge" style="--c:${catCol(id)};--s:${size||44}px">${icon(id, Math.round((size||44)*.5))}</span>`;
+
+/* Rôles : noms longs (profil, situations) et codes courts (compos) */
+const ROLE_IC = {Top:"top", Jungle:"jgl", Mid:"mid", ADC:"adc", Support:"sup", TOP:"top", JGL:"jgl", MID:"mid", SUP:"sup"};
+const TRAIT_IC = {"Soins":"heal", "Contrôles":"chain", "Suppression":"lock", "Burst":"bolt", "Tank":"tank", "Attaques rapides":"fast",
+  "Combat long":"long", "Poke":"poke", "Boucliers":"shield", "Mobilité":"dash"};
+const METRIC_IC = {csm:"eco", vpm:"eye", cw:"ward", deaths:"skull", early:"clock", kp:"mu", objp:"obj", antiheal:"noheal"};
+
+/* Lexique : une icône par mot */
+const GLOSS_IC = {"ADC":"adc","Aggro":"target","All-in":"bolt","Back / Recall":"home","Bush":"jgl","CC":"chain","CS":"eco","Dive":"tank","Facecheck":"eye","Farm":"eco","Freeze":"long","Gank":"jgl","Kite":"dash","Last hit":"gold","Peel":"sup","Poke":"poke","Prio":"flag","Roam":"mid","Scaling":"star","Shutdown":"gold","Smite":"obj","Split push":"top","Tank":"tank","Ward":"ward"};
+
+/* Illustration de la Faille : rivière, trois lanes, tourelles, lueurs. Décorative. */
+function riftArt(){
+  const tw=[[18,92],[18,62],[48,98],[60,86],[52,112],[86,112]];
+  const towers = tw.map(([x,y])=>`<rect x="${x-2}" y="${y-2}" width="4" height="4" transform="rotate(45 ${x} ${y})" style="fill:var(--blue)"/><rect x="${200-x-2}" y="${120-y+0-2}" width="4" height="4" transform="rotate(45 ${200-x} ${120-y})" style="fill:var(--red)"/>`).join("");
+  const sparks = [[150,30,1.4],[120,18,1],[172,62,1.2],[96,40,.9],[60,30,1.1],[140,90,1],[30,20,.8],[182,96,.9]]
+    .map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" style="fill:var(--gold)" opacity=".7"/>`).join("");
+  return `<svg class="riftart" viewBox="0 0 200 120" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <radialGradient id="ra-glow" cx="50%" cy="50%" r="50%"><stop offset="0" style="stop-color:var(--teal);stop-opacity:.45"/><stop offset="1" style="stop-color:var(--teal);stop-opacity:0"/></radialGradient>
+      <linearGradient id="ra-river" x1="0" y1="1" x2="1" y2="0"><stop offset="0" style="stop-color:var(--blue);stop-opacity:.05"/><stop offset=".5" style="stop-color:var(--teal);stop-opacity:.5"/><stop offset="1" style="stop-color:var(--violet);stop-opacity:.05"/></linearGradient>
+    </defs>
+    <path d="M-10 70 C 50 80, 70 40, 110 50 S 170 20, 210 10" style="stroke:url(#ra-river)" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <g fill="none" style="stroke:var(--line2)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 116 L14 8 L190 8"/><path d="M18 112 L186 10"/><path d="M14 116 L196 116 L196 12"/>
+    </g>
+    <circle cx="100" cy="62" r="34" style="fill:url(#ra-glow)"/>
+    <path d="M100 46 L114 54 V70 L100 78 L86 70 V54Z" fill="none" style="stroke:var(--gold)" stroke-width="1.6"/>
+    <path d="M100 54 A8 8 0 1 1 93 66" fill="none" style="stroke:var(--teal)" stroke-width="1.6" stroke-linecap="round"/>
+    <circle cx="70" cy="74" r="5" fill="none" style="stroke:var(--violet)" stroke-width="1.2" opacity=".8"/>
+    <circle cx="132" cy="44" r="5" fill="none" style="stroke:var(--violet)" stroke-width="1.2" opacity=".8"/>
+    ${towers}${sparks}
+    <circle cx="10" cy="112" r="14" style="fill:var(--blue)" opacity=".25"/><circle cx="192" cy="8" r="14" style="fill:var(--red)" opacity=".25"/>
+  </svg>`;
+}
+
+/* Anneau de score (bilan de séance) */
+function scoreRing(pct){
+  const r=46, c=2*Math.PI*r, col = pct>=.85?"var(--good)":pct>=.6?"var(--gold)":"var(--red)";
+  return `<div class="ring"><svg viewBox="0 0 110 110" aria-hidden="true"><circle cx="55" cy="55" r="${r}" fill="none" style="stroke:var(--panel2)" stroke-width="9"/>
+    <circle cx="55" cy="55" r="${r}" fill="none" style="stroke:${col}" stroke-width="9" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-pct)}" transform="rotate(-90 55 55)"/></svg>
+    <b class="num"><span>${Math.round(pct*100)}<small>%</small></span></b></div>`;
+}
+
+/* Vignette d’une mise en situation : mini-carte réduite, ou les cinq ennemis colorés par type de dégâts */
+function scenThumb(s){
+  if(s.comp) return `<div class="thumb comp-thumb">${s.comp.foes.map(f=>`<span class="dot ${f[2].toLowerCase()}" title="${esc(f[1])}">${icon(ROLE_IC[f[0]]||"top",12)}</span>`).join("")}</div>`;
+  return `<div class="thumb">${miniMap(s.m)}</div>`;
+}
 </script>
 
 <script>
@@ -726,18 +1025,19 @@ function renderOb(){
   const bar = `<div class="ob-steps" aria-hidden="true">${steps.map((s,i)=>`<i class="${i<=V.ob.step?"on":""}"></i>`).join("")}</div>`;
   let body="", canNext=true, nextLabel="Continuer", showBack = V.ob.step>0;
   if(key==="welcome"){
-    body = `<div class="eyebrow">Apprendre League of Legends par le rappel</div>
+    body = `<div class="ob-art">${riftArt()}</div>
+      <div class="eyebrow">Apprendre League of Legends par le rappel</div>
       <h1>Ce que tu retrouves de mémoire, tu le gardes.</h1>
       <p class="lead">Lire un guide ou regarder une vidéo encode l’information. Pour qu’elle tienne dans le temps, il faut aller la rechercher : c’est l’étape de récupération. Chaque question ici en est une.</p>
       <div class="loop">
-        <div><b>Encodage</b><p>Tu lis une fiche, tu vois une situation.</p></div>
-        <div><b>Stockage</b><p>L’information est en mémoire, fragile.</p></div>
-        <div><b>Récupération</b><p>Tu la retrouves sans aide. C’est ce qui l’ancre.</p></div>
+        <div><span class="lic">${icon("book",20)}</span><b>Encodage</b><p>Tu lis une fiche, tu vois une situation.</p></div>
+        <div><span class="lic">${icon("archive",20)}</span><b>Stockage</b><p>L’information est en mémoire, fragile.</p></div>
+        <div><span class="lic">${icon("recall",20)}</span><b>Récupération</b><p>Tu la retrouves sans aide. C’est ce qui l’ancre.</p></div>
       </div>
       <p class="muted">Quelques questions pour savoir quel contenu te proposer et combien te guider. Deux minutes.</p>`;
     nextLabel="Commencer";
   } else if(key==="account"){
-    body = `<div class="eyebrow">Ton compte</div><h1>Quel est ton nom d’invocateur ?</h1>
+    body = `<div class="ob-art" style="height:120px">${riftArt()}</div><div class="eyebrow">Ton compte</div><h1>Quel est ton nom d’invocateur ?</h1>
       <p class="lead">Ton Riot ID, avec le #TAG si tu le connais. L’app prépare un résumé de tes parties et tes rangs par thème.</p>
       <input class="input" id="ob-riot" maxlength="30" placeholder="Pseudo#EUW" value="${esc(d.riotId||"")}" autocomplete="off" autocapitalize="off" spellcheck="false">
       <p class="muted" style="font-size:13.5px">Pour l’instant, les statistiques sont des <b>données d’exemple</b> générées à partir de ton nom : la connexion aux vraies parties viendra ensuite.</p>`;
@@ -912,7 +1212,7 @@ function renderQuiz(){
   }).join("");
   let below="";
   if(qz.phase==="ask"){
-    if(t.hint) below += qz.hint ? `<div class="hint"><b>Indice :</b> ${esc(q.h)}</div>` : `<div><button class="btn ghost small" data-a="hint">Voir un indice</button></div>`;
+    if(t.hint) below += qz.hint ? `<div class="hint">${icon("bulb",17)}<span><b>Indice :</b> ${esc(q.h)}</span></div>` : `<div><button class="btn ghost small" data-a="hint">${icon("bulb",15)}Voir un indice</button></div>`;
     if(t.conf && qz.pending!=null) below += `<div class="conf rise"><div class="eyebrow">Valider ta réponse · à quel point es-tu sûr·e ?</div>
       <div class="row"><button class="btn" data-a="conf" data-v="sure">Sûr·e</button><button class="btn ghost" data-a="conf" data-v="hesit">Hésitant·e</button><button class="btn ghost" data-a="conf" data-v="guess">Au hasard</button></div></div>`;
   } else {
@@ -924,14 +1224,15 @@ function renderQuiz(){
     else if(!qz.ok && t.retry && !isRetry) meta="Elle revient en fin de séance.";
     if(qz.sel===-1) meta="Temps écoulé. "+meta;
     const x = t.full ? q.x : firstSentence(q.x);
-    below = `<div class="fb ${qz.ok?"good":"bad"} rise"><h3>${qz.ok?"Bien retrouvé":"Pas tout à fait"}</h3><p>${esc(x)}</p>${meta?`<p class="meta">${esc(meta)}</p>`:""}${qz.rk?`<div class="lpline">${emblem(q.c,26)}<span>${qz.rk.placing?`Placement ${qz.rk.n}/${PLACEMENTS} en ${esc(cat.name)}`:`<b class="${qz.rk.delta>=0?"up":"down"}">${qz.rk.delta>=0?"+":""}${qz.rk.delta} LP</b> · ${esc(cat.name)} · ${esc(rankText(q.c))}`}</span></div>`:""}</div>
+    below = `<div class="fb ${qz.ok?"good":"bad"} rise"><h3><span class="fbic">${icon(qz.ok?"check":"cross",16)}</span>${qz.ok?"Bien retrouvé":"Pas tout à fait"}</h3><p>${esc(x)}</p>${meta?`<p class="meta">${esc(meta)}</p>`:""}${qz.rk?`<div class="lpline">${emblem(q.c,26)}<span>${qz.rk.placing?`Placement ${qz.rk.n}/${PLACEMENTS} en ${esc(cat.name)}`:`<b class="${qz.rk.delta>=0?"up":"down"}">${qz.rk.delta>=0?"+":""}${qz.rk.delta} LP</b> · ${esc(cat.name)} · ${esc(rankText(q.c))}`}</span></div>`:""}</div>
       <div class="qfoot"><button class="btn" data-a="next" id="btn-next">${qz.i+1<qz.items.length?"Question suivante":"Voir le bilan"}</button></div>`;
   }
   const timer = (t.timer && qz.phase==="ask") ? `<div class="timer" id="timer"><i style="width:100%"></i></div>` : "";
   $app.innerHTML = `<div class="wrap">
     <div class="qhead"><button class="qx" data-a="quit" aria-label="Quitter la séance">✕</button><div class="bar"><i style="width:${prog}%"></i></div><span class="num muted">${qz.i+1}/${qz.items.length}</span></div>
     <div class="qcard rise">
-      <div class="qmeta"><span class="code">${cat.code}</span><span class="muted" style="font-size:13px">${cat.name}</span>${pips(q.d)}${isRetry?`<span class="pill">Deuxième essai</span>`:""}</div>
+      <span class="qwm" style="--c:${catCol(q.c)}">${icon(q.c,150)}</span>
+      <div class="qmeta">${badge(q.c,30)}<span style="font-size:14px;font-weight:600">${cat.name}</span>${pips(q.d)}${isRetry?`<span class="pill">Deuxième essai</span>`:""}</div>
       ${timer}
       <div class="qtext">${esc(q.q)}</div>
       <div class="opts">${opts}</div>
@@ -963,13 +1264,13 @@ function renderResults(){
   const need = T().path && qz.cat && pct<.6 ? `<p class="muted">Atteins 60 % sur ce thème pour débloquer l’étape suivante.</p>` : "";
   $app.innerHTML = `<div class="wrap"><div class="stack rise" style="padding-top:30px">
     <div class="eyebrow">Bilan de séance${qz.cat?" · "+esc(catOf(qz.cat).name):""}</div>
-    <div class="row" style="align-items:flex-end;gap:16px"><div class="score">${Math.round(pct*100)}<span style="font-size:28px">%</span></div>
-      <p class="muted" style="padding-bottom:8px"><span class="num">${ok}</span> / <span class="num">${first.length}</span> au premier essai · <span class="num">+${qz.xp}</span> XP</p></div>
+    <div class="row" style="gap:18px">${scoreRing(pct)}
+      <p class="muted"><span class="num">${ok}</span> / <span class="num">${first.length}</span> au premier essai · <span class="num">+${qz.xp}</span> XP</p></div>
     <p style="font-size:17px">${msg}</p>${need}${unlockMsg}
     ${qz.lp?`<div class="card"><div class="eyebrow" style="margin-bottom:10px">Classement</div><div class="lpres">${Object.entries(qz.lp).map(([c,v])=>{const d=v.to-v.from, pl=v.n<PLACEMENTS, justPlaced=v.n>=PLACEMENTS&&v.n0<PLACEMENTS;
       return `<div>${emblem(c,40)}<div><b>${esc(catOf(c).name)}</b><span class="muted">${pl?`Placement ${v.n}/${PLACEMENTS}`:justPlaced?`Placé ${rankLabel(v.to)} · ${rankOf(v.to).lp} LP`:`${rankLabel(v.from)!==rankLabel(v.to)?esc(rankLabel(v.from))+" → ":""}${esc(rankLabel(v.to))} · ${rankOf(v.to).lp} LP`}</span></div>${pl||justPlaced?"":`<b class="${d>=0?"up":"down"} num">${d>=0?"+":""}${d} LP</b>`}</div>`;}).join("")}</div></div>`:""}
     <div class="card"><div class="eyebrow" style="margin-bottom:6px">Détail</div><div class="recap">
-      ${qz.results.map(r=>{const q=qById(r.id);return `<div><i style="background:${r.ok?"var(--good)":"var(--red)"}"></i><span>${esc(q.q)}${r.retry?` <span class="muted">(2e essai)</span>`:""}</span></div>`;}).join("")}
+      ${qz.results.map(r=>{const q=qById(r.id);return `<div>${icon(r.ok?"check":"cross",17,r.ok?"ok":"ko")}<span>${esc(q.q)}${r.retry?` <span class="muted">(2e essai)</span>`:""}</span></div>`;}).join("")}
     </div></div>
     <p class="muted"><span class="num">${tomorrow}</span> question${tomorrow>1?"s":""} à revoir d’ici demain. Revenir chaque jour, même 5 minutes, fait la différence.</p>
     <div class="row"><button class="btn" data-a="again">Nouvelle séance</button><button class="btn ghost" data-a="home">Accueil</button></div>
@@ -983,9 +1284,9 @@ function renderLesson(){
   const L=V.lesson, cat=catOf(L.cat);
   $app.innerHTML = `<div class="wrap"><div class="lesson rise">
     <div class="stage"><span class="${L.then?"on":""}">1 · Encodage</span><span>2 · Récupération</span></div>
-    <h1 style="font-size:30px;margin-top:14px">${esc(cat.name)}</h1>
+    <div class="lesson-h">${badge(L.cat,52)}<h1 style="font-size:30px">${esc(cat.name)}</h1></div>
     <p class="muted" style="margin-top:6px">Lis attentivement. Juste après, tu devras retrouver ces idées sans les avoir sous les yeux.</p>
-    <ul>${LESSONS[L.cat].map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+    <ul>${LESSONS[L.cat].map((x,i)=>`<li style="--c:${catCol(L.cat)}"><span class="n">${i+1}</span><span>${esc(x)}</span></li>`).join("")}</ul>
     <div class="row" style="margin-top:20px">${L.then?`<button class="btn" data-a="lesson-go">J’ai lu, je m’entraîne</button>`:`<button class="btn" data-a="cat" data-v="${L.cat}">M’entraîner sur ce thème</button>`}<button class="btn ghost" data-a="home">Accueil</button></div>
   </div></div>`;
 }
@@ -1027,15 +1328,43 @@ function miniMap(ms){
    MISES EN SITUATION
    ============================================================ */
 function scenList(){ const t=T(); return SCENARIOS.filter(s=>s.tier<=t.scenMax && (t.dmin<3 || s.tier>=2)); }
+/* Thème qui reçoit les LP : Macro pour les décisions de jeu, Objets pour les choix d’achat */
+const scenCat = s => s.cat || "macro";
+/* Tuile d’une situation, avec sa vignette */
+function scenTile(s, sub){
+  return `<button class="tile sc" data-a="scen" data-v="${s.id}">${scenThumb(s)}<div class="sc-body">
+    <div class="row"><span class="code">${icon(ROLE_IC[s.role]||"top",12)}${esc(s.role).toUpperCase()} · ${s.time}</span>${pips(s.tier)}</div>
+    <h3>${esc(s.t)}</h3><p>${sub}</p></div></button>`;
+}
 function renderScenList(){
   const list=scenList();
+  const tiles = l => l.map(s=>{const b=S.scen[s.id];return scenTile(s, b!=null?(b===2?"Décision optimale trouvée":"Déjà tenté · à retenter"):"Pas encore tenté");}).join("");
+  const game=list.filter(s=>!s.comp), buy=list.filter(s=>s.comp);
   $app.innerHTML = nav("scen")+`<div class="wrap"><div class="section" style="margin-top:26px">
     <div class="section-h"><h2 style="font-size:26px">Mises en situation</h2><span class="muted">${list.length} situations</span></div>
-    <p class="muted" style="max-width:60ch">Une carte, un contexte, une décision. Il n’y a pas toujours une seule bonne réponse : chaque option est expliquée.</p>
-    <div class="grid">${list.map(s=>{const b=S.scen[s.id];return `<button class="tile" data-a="scen" data-v="${s.id}">
-      <div class="row"><span class="code">${esc(s.role).toUpperCase()} · ${s.time}</span>${pips(s.tier)}</div>
-      <h3>${esc(s.t)}</h3><p>${b!=null?(b===2?"Décision optimale trouvée":"Déjà tenté · à retenter"):"Pas encore tenté"}</p></button>`;}).join("")}</div>
-  </div></div>`;
+    <p class="muted" style="max-width:60ch">Un contexte, une décision. Il n’y a pas toujours une seule bonne réponse : chaque option est expliquée.</p></div>
+    <div class="section"><div class="section-h"><h2>${icon("item",18)}Choix d’objets</h2><span class="muted">rang Objets</span></div>
+      <p class="muted" style="font-size:13.5px;margin-top:-4px">Lis la composition adverse, puis choisis ton prochain achat.</p>
+      <div class="grid">${tiles(buy)}</div></div>
+    <div class="section"><div class="section-h"><h2>${icon("macro",18)}Décisions de jeu</h2><span class="muted">rang Macro</span></div>
+      <div class="grid">${tiles(game)}</div></div>
+  </div>`;
+}
+/* Composition adverse : remplace la mini-carte dans les choix d’objets */
+const DMG = {AD:"Physique", AP:"Magique", MIX:"Mixte"};
+function compPanel(s, t){
+  const [champ, gold, items] = s.comp.me, foes = s.comp.foes;
+  const n = k => foes.filter(f=>f[2]===k).length;
+  const tally = t.look ? `<div class="tally">Dégâts adverses : <b class="num">${n("AD")}</b> physiques · <b class="num">${n("AP")}</b> magiques${n("MIX")?` · <b class="num">${n("MIX")}</b> mixte`:""}</div>` : "";
+  return `<div class="comp">
+    <div class="comp-me"><div class="row"><span class="code">${icon(ROLE_IC[s.role]||"top",13)}TOI</span><b>${esc(champ)}</b><span class="gold num">${icon("gold",15)} ${gold.toLocaleString("fr-FR")} or</span></div>
+      <p>${items.length?esc(items.join(" · ")):"Aucun objet"}</p></div>
+    <div class="comp-h">Équipe adverse</div>
+    ${foes.map(([r,c,d,tags,it])=>`<div class="foe"><span class="code">${icon(ROLE_IC[r]||"top",13)}${esc(r)}</span><div>
+      <div class="foe-n"><b>${esc(c)}</b><span class="dmg ${d.toLowerCase()}">${icon(d==="AP"?"ap":"ad",13)}${DMG[d]}</span></div>
+      ${tags.length?`<div class="tags">${tags.map(g=>`<span>${TRAIT_IC[g]?icon(TRAIT_IC[g],12):""}${esc(g)}</span>`).join("")}</div>`:""}
+      ${it?`<p>${esc(it.join(" · "))}</p>`:""}</div></div>`).join("")}
+    ${tally}</div>`;
 }
 function renderScen(){
   const sc=V.scen, s=SCENARIOS.find(x=>x.id===sc.id), t=T();
@@ -1048,18 +1377,18 @@ function renderScen(){
   }).join("");
   const timer = (t.scenTimer && !done) ? `<div class="timer" id="timer"><i style="width:100%"></i></div>` : "";
   $app.innerHTML = nav("scen")+`<div class="wrap">
-    <div class="qhead"><button class="qx" data-a="scenlist" aria-label="Retour aux situations">←</button><span class="eyebrow">${esc(s.role)} · ${s.time}</span></div>
+    <div class="qhead"><button class="qx" data-a="scenlist" aria-label="Retour aux situations">←</button><span class="eyebrow">${icon(ROLE_IC[s.role]||"top",14)} ${esc(s.role)} · ${s.time}</span></div>
     <h1 style="font-size:26px;margin-top:12px">${esc(s.t)}</h1>
     <div class="scn">
-      <div class="mapbox">${miniMap(s.m)}
-        <div class="legend"><span><i style="background:var(--gold)"></i>Toi</span><span><i style="background:var(--blue)"></i>Allié</span><span><i style="background:var(--red)"></i>Ennemi</span><span><i style="border:1px dashed var(--red)"></i>Position supposée</span></div></div>
+      ${s.comp?compPanel(s,t):`<div class="mapbox">${miniMap(s.m)}
+        <div class="legend"><span><i style="background:var(--gold)"></i>Toi</span><span><i style="background:var(--blue)"></i>Allié</span><span><i style="background:var(--red)"></i>Ennemi</span><span><i style="border:1px dashed var(--red)"></i>Position supposée</span></div></div>`}
       <div class="stack">
         ${timer}
         <p style="font-size:16px">${esc(s.ctx)}</p>
         ${t.look&&!done?`<div class="look"><b>À regarder avant de décider</b><ul>${s.look.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:""}
         <div class="qtext" style="font-size:20px">${esc(s.q)}</div>
         <div class="opts">${opts}</div>
-        ${done?`<div class="lpline">${emblem("macro",26)}<span>${sc.rk?(sc.rk.placing?`Placement ${sc.rk.n}/${PLACEMENTS} en Macro`:`<b class="${sc.rk.delta>=0?"up":"down"}">${sc.rk.delta>=0?"+":""}${sc.rk.delta} LP</b> · Macro · ${esc(rankText("macro"))}`):"Situation déjà jouée : pas de LP en jeu cette fois."}</span></div>`:""}
+        ${done?`<div class="lpline">${emblem(scenCat(s),26)}<span>${sc.rk?(sc.rk.placing?`Placement ${sc.rk.n}/${PLACEMENTS} en ${esc(catOf(scenCat(s)).name)}`:`<b class="${sc.rk.delta>=0?"up":"down"}">${sc.rk.delta>=0?"+":""}${sc.rk.delta} LP</b> · ${esc(catOf(scenCat(s)).name)} · ${esc(rankText(scenCat(s)))}`):"Situation déjà jouée : pas de LP en jeu cette fois."}</span></div>`:""}
         ${done?`<div class="row"><button class="btn" data-a="scen-next">Situation suivante</button><button class="btn ghost" data-a="scen-retry">Recommencer</button></div>`:""}
       </div></div></div>`;
   if(t.scenTimer && !done){
@@ -1072,7 +1401,7 @@ function renderScen(){
 }
 function pickScen(oi){
   const sc=V.scen, s=SCENARIOS.find(x=>x.id===sc.id), v=s.o[oi][1];
-  sc.rk = (S.scen[s.id]==null) ? updateRank("macro", SCEN_RATING[s.tier], [0,.5,1][v]) : null;
+  sc.rk = (S.scen[s.id]==null) ? updateRank(scenCat(s), SCEN_RATING[s.tier], [0,.5,1][v]) : null;
   if(sc.rk && sc.rk.note) setTimeout(()=>toast(sc.rk.note),50);
   sc.pick=oi; S.scen[s.id]=Math.max(S.scen[s.id]??-1, v); S.xp += v===2?20:v===1?8:3; touchDay(); save(); clearInterval(tick); render();
 }
@@ -1082,10 +1411,10 @@ function pickScen(oi){
    ============================================================ */
 function nav(cur){
   const t=T();
-  const items=[["home","Accueil"],["scenlist","Situations"],[t.lesson==="manual"?"lessons":"gloss", t.lesson==="manual"?"Fiches":"Lexique"],["profile","Profil"]];
+  const items=[["home","Accueil","home"],["scenlist","Situations","flag"],[t.lesson==="manual"?"lessons":"gloss", t.lesson==="manual"?"Fiches":"Lexique","book"],["profile","Profil","user"]];
   return `<header class="top"><div class="top-in">
     <div class="brand"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 L21 7 V17 L12 22 L3 17 V7 Z" fill="none" stroke="var(--gold)" stroke-width="1.8"/><path d="M12 7 A5 5 0 1 1 7.6 14.4" fill="none" stroke="var(--teal)" stroke-width="1.8" stroke-linecap="round"/><path d="M7 11.5 L7.6 14.6 L10.6 13.8" fill="none" stroke="var(--teal)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Rift Rappel</div>
-    <nav class="nav">${items.map(([k,l])=>`<button data-a="${k}" aria-current="${cur===k}">${l}</button>`).join("")}</nav>
+    <nav class="nav">${items.map(([k,l,ic])=>`<button data-a="${k}" aria-current="${cur===k}">${icon(ic,16)}<span>${l}</span></button>`).join("")}</nav>
   </div></header>`;
 }
 function renderHome(){
@@ -1096,27 +1425,28 @@ function renderHome(){
   const prio = new Set(r ? focusCats() : []);
   const order = t.path ? PATH : CATS.map(c=>c.id);
   const themeTile = c => { const cat=catOf(c), u=unlocked(c);
-    return `<button class="tile${u?"":" locked"}" data-a="cat" data-v="${c}">
-      <div class="tile-rank">${emblem(c,42)}<div><h3>${esc(cat.name)}</h3><span class="rk num">${esc(rankText(c))}</span></div>${prio.has(c)?`<span class="prio">Priorité</span>`:""}</div>
+    return `<button class="tile theme${u?"":" locked"}" data-a="cat" data-v="${c}" style="--c:${catCol(c)}">
+      <div class="theme-top">${badge(c,44)}<div><h3>${esc(cat.name)}</h3><span class="rk num">${esc(rankText(c))}</span></div>${emblem(c,34)}</div>${prio.has(c)?`<span class="prio" style="margin-left:0">Priorité</span>`:""}
       <p>${u?esc(cat.blurb):"Verrouillé : valide d’abord le thème précédent."}</p>${rankBar(c)}</button>`; };
-  const scen = scenList().slice(0,3);
+  const sl = scenList(), scen = [...sl.filter(s=>!s.comp).slice(0,2), ...sl.filter(s=>s.comp).slice(0,1)];
   $app.innerHTML = nav("home")+`<div class="wrap">
-    <div class="hello"><div><div class="eyebrow">Salut ${esc(p.name)}</div><h1>Que veux-tu travailler ?</h1></div><span class="pill tier">${t.name} · ${t.range}</span></div>
+    <div class="banner">${riftArt()}<div class="eyebrow">Salut ${esc(p.name)}</div><h1>Que veux-tu travailler ?</h1>
+      <div class="minis"><span class="pill tier">${t.name} · ${t.range}</span><span class="mini fire">${icon("flame",14)}<span class="num">${streak}</span> j</span><span class="mini">${icon("star",14)}<span class="num">${S.xp}</span> XP</span>${due?`<span class="mini">${icon("review",14)}<span class="num">${due}</span> à revoir</span>`:""}</div></div>
     ${r?accountStrip(r):""}
     ${r?overview(r):""}
-    <div class="section"><div class="section-h"><h2>Tes thèmes</h2>${r?`<button class="btn small" data-a="mix">Séance ciblée</button>`:`<button class="btn small" data-a="mix">Séance mixte</button>`}</div>
+    <div class="section"><div class="section-h"><h2>${icon("star",18)}Tes thèmes</h2>${r?`<button class="btn small" data-a="mix">Séance ciblée</button>`:`<button class="btn small" data-a="mix">Séance mixte</button>`}</div>
       <p class="muted" style="font-size:13.5px;margin-top:-4px">Choisis un thème. Chacun a son rang, de Fer à Challenger : 5 questions de placement, puis des LP à chaque réponse.${r?" Les thèmes marqués « Priorité » correspondent à tes points faibles.":""}</p>
       <div class="grid">${order.map(themeTile).join("")}</div></div>
-    <div class="section"><div class="section-h"><h2>Mises en situation</h2><button class="link" data-a="scenlist">Tout voir</button></div>
-      <div class="grid">${scen.map(s=>`<button class="tile" data-a="scen" data-v="${s.id}"><div class="row"><span class="code">${esc(s.role).toUpperCase()} · ${s.time}</span>${pips(s.tier)}</div><h3>${esc(s.t)}</h3><p>${esc(s.ctx.slice(0,90))}…</p></button>`).join("")}</div></div>
-    <div class="section"><div class="section-h"><h2>Ta régularité</h2></div>
+    <div class="section"><div class="section-h"><h2>${icon("flag",18)}Mises en situation</h2><button class="link" data-a="scenlist">Tout voir</button></div>
+      <div class="grid">${scen.map(s=>scenTile(s, esc(s.ctx.slice(0,80))+"…")).join("")}</div></div>
+    <div class="section"><div class="section-h"><h2>${icon("flame",18)}Ta régularité</h2></div>
       <div class="stats" style="margin-top:0">
-        <div class="stat"><b class="num">${streak}</b><span>jour${streak>1?"s":""} de suite</span></div>
-        <div class="stat"><b class="num">${Math.min(daily,goal)}/${goal}</b><span>objectif du jour</span></div>
-        <div class="stat"><b class="num">${S.xp}</b><span>XP</span></div>
+        <div class="stat fire">${icon("flame",18)}<b class="num">${streak}</b><span>jour${streak>1?"s":""} de suite</span></div>
+        <div class="stat goal">${icon("target",18)}<b class="num">${Math.min(daily,goal)}/${goal}</b><span>objectif du jour</span></div>
+        <div class="stat xp">${icon("star",18)}<b class="num">${S.xp}</b><span>XP</span></div>
       </div>
       <div class="card row" style="justify-content:space-between"><p>${due?`<b class="num">${due}</b> question${due>1?"s":""} à retrouver aujourd’hui : c’est le bon moment, juste avant l’oubli.`:"Aucune révision due. Les questions reviendront juste avant que tu les oublies."}</p>
-      <button class="btn ${due?"":"ghost"} small" data-a="review" ${due?"":"disabled"}>Réviser</button></div></div>
+      <button class="btn ${due?"":"ghost"} small" data-a="review" ${due?"":"disabled"}>${icon("review",15)}Réviser</button></div></div>
     <div class="why"><b>Pourquoi ça marche.</b> Une bonne réponse sûre fait revenir la question 1, 2, 4, 8 puis 16 jours plus tard. Une erreur la remet au début. Répondre « au hasard » compte comme une réponse à revoir.</div>
     <p class="legal">Rift Rappel n’est pas approuvé par Riot Games et ne reflète pas les opinions de Riot Games ni de quiconque officiellement impliqué dans la production ou la gestion des propriétés de Riot Games. Riot Games et toutes les propriétés associées sont des marques ou des marques déposées de Riot Games, Inc.</p>
   </div>`;
@@ -1128,17 +1458,17 @@ function renderHome(){
 function renderGloss(){
   $app.innerHTML = nav("gloss")+`<div class="wrap"><div class="section" style="margin-top:26px"><h2 style="font-size:26px">Lexique</h2>
     <p class="muted">Les mots qu’on entend en partie. Garde-les en tête, ils reviennent dans les questions.</p>
-    <div class="gloss">${GLOSSARY.map(g=>`<div><b>${esc(g[0])}</b><span>${esc(g[1])}</span></div>`).join("")}</div>
+    <div class="gloss">${GLOSSARY.map(g=>`<div><b>${icon(GLOSS_IC[g[0]]||"voc",16)}${esc(g[0])}</b><span>${esc(g[1])}</span></div>`).join("")}</div>
     <div class="section-h" style="margin-top:14px"><h2>Fiches par thème</h2></div>
-    <div class="grid">${PATH.map(c=>`<button class="tile" data-a="lesson" data-v="${c}"><div class="row"><span class="code">${catOf(c).code}</span></div><h3>${esc(catOf(c).name)}</h3></button>`).join("")}</div>
+    <div class="grid">${PATH.map(c=>`<button class="tile" data-a="lesson" data-v="${c}"><div class="row">${badge(c,36)}</div><h3>${esc(catOf(c).name)}</h3></button>`).join("")}</div>
   </div></div>`;
 }
 function renderLessons(){
   $app.innerHTML = nav("lessons")+`<div class="wrap"><div class="section" style="margin-top:26px"><h2 style="font-size:26px">Fiches</h2>
     <p class="muted">Des rappels courts, à consulter si tu en ressens le besoin. Le cœur de l’entraînement reste la récupération.</p>
-    <div class="grid">${PATH.map(c=>`<button class="tile" data-a="lesson" data-v="${c}"><div class="row"><span class="code">${catOf(c).code}</span></div><h3>${esc(catOf(c).name)}</h3><p>${esc(catOf(c).blurb)}</p></button>`).join("")}</div>
+    <div class="grid">${PATH.map(c=>`<button class="tile" data-a="lesson" data-v="${c}"><div class="row">${badge(c,36)}</div><h3>${esc(catOf(c).name)}</h3><p>${esc(catOf(c).blurb)}</p></button>`).join("")}</div>
     <div class="section-h" style="margin-top:14px"><h2>Lexique</h2></div>
-    <div class="gloss">${GLOSSARY.map(g=>`<div><b>${esc(g[0])}</b><span>${esc(g[1])}</span></div>`).join("")}</div>
+    <div class="gloss">${GLOSSARY.map(g=>`<div><b>${icon(GLOSS_IC[g[0]]||"voc",16)}${esc(g[0])}</b><span>${esc(g[1])}</span></div>`).join("")}</div>
   </div></div>`;
 }
 function overall(){ const pl=PATH.filter(placed); if(pl.length<3) return `<span class="muted">Rang global après 3 thèmes placés (${pl.length}/3)</span>`; const avg=Math.round(pl.reduce((s,c)=>s+catR(c).r,0)/pl.length); return `<span class="pill" style="color:${LADDER[rankOf(avg).i][1]};border-color:currentColor">Global : ${esc(rankLabel(avg))}</span>`; }
@@ -1345,18 +1675,18 @@ function accountStrip(r){
 function overview(r){
   const tiles = METRICS.map(m=>{
     const sup = r.role==="Support";
-    if(m.k==="csm" && sup) return `<div class="mtile na"><span class="mlabel">${m.label}</span><b class="mval">—</b><span class="mref">Pas concerné en support</span></div>`;
+    if(m.k==="csm" && sup) return `<div class="mtile na"><span class="mlabel">${icon(METRIC_IC[m.k],15)}${m.label}</span><b class="mval">—</b><span class="mref">Pas concerné en support</span></div>`;
     let val, ref;
     if(m.k==="antiheal"){ const a=r.antiheal||{games:0,missing:0}; val=`${a.games-a.missing}/${a.games}`; ref=`parties avec anti-soin, repère : au moins la moitié`; }
     else { const v=(r.values||{})[m.k], t=(r.targets||{})[m.k]; if(v==null) return ""; val=m.fmt(v); ref=`repère ${m.lower?"sous ":""}${m.fmt(t)}`; }
     const ra = metricRatio(r,m), st = ra==null ? "ok" : ra<0.9 ? "weak" : ra>=1.15 ? "strong" : "ok";
     const lab = {weak:"À travailler", ok:"Dans la moyenne", strong:"Point fort"}[st];
     return `<button class="mtile ${st}" data-a="cat" data-v="${m.cat}" aria-label="${esc(m.label)} : ${esc(val)}, ${lab}. Travailler ${esc(catOf(m.cat).name)}">
-      <span class="mlabel">${m.label}</span><b class="mval num">${val}</b><span class="mref">${ref}</span>
+      <span class="mlabel">${icon(METRIC_IC[m.k],15)}${m.label}</span><b class="mval num">${val}</b><span class="mref">${ref}</span>
       <span class="mfoot"><span class="mstate">${lab}</span><span class="faint">${esc(catOf(m.cat).name)} →</span></span></button>`;
   }).join("");
   const mu = (r.matchups||[])[0];
-  return `<div class="section"><div class="section-h"><h2>Vue générale</h2><span class="muted">${r.games} dernières parties · repères du rang ${r.rank?esc(r.rank.tierFr):""}</span></div>
+  return `<div class="section"><div class="section-h"><h2>${icon("eye",18)}Vue générale</h2><span class="muted">${r.games} dernières parties · repères du rang ${r.rank?esc(r.rank.tierFr):""}</span></div>
     <div class="mgrid">${tiles}</div>
     ${mu?`<p class="muted" style="font-size:13.5px">Matchup le plus difficile : <b style="color:var(--text)">${esc(mu.champ)} contre ${esc(mu.vs)}</b>, ${mu.losses} défaites sur ${mu.games}. <button class="link" data-a="cat" data-v="mu">Travailler les matchups</button></p>`:""}
   </div>`;
@@ -1410,7 +1740,7 @@ function act(a, v, el){
     case "scen": return go("scen",{scen:{id:v, pick:null, order:null, t0:0}});
     case "scen-pick": if(V.scen.pick==null) pickScen(+v); return;
     case "scen-retry": return go("scen",{scen:{id:V.scen.id, pick:null, order:null, t0:0}});
-    case "scen-next": { const l=scenList(); const i=l.findIndex(s=>s.id===V.scen.id); const n=l[(i+1)%l.length]; return go("scen",{scen:{id:n.id,pick:null,order:null,t0:0}}); }
+    case "scen-next": { const cur=SCENARIOS.find(s=>s.id===V.scen.id), l=scenList().filter(s=>!s.comp===!cur.comp); const i=l.findIndex(s=>s.id===V.scen.id); const n=l[(i+1)%l.length]; return go("scen",{scen:{id:n.id,pick:null,order:null,t0:0}}); }
     case "set-tier": S.profile.tier=+v; save(); toast(`Guidage : ${TIERS[+v].name}`); return render();
     case "set-pace": S.profile.pace=+v; save(); return render();
     case "ob-acct": d.acct=null; return render();

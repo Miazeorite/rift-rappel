@@ -41,7 +41,24 @@ Couleurs des rangs (emblèmes, barres de LP) : `LADDER` dans `src/app.js`.
 - **Pips de difficulté** : quatre carrés, remplis en laiton.
 - **Verdicts** des mises en situation : Optimal (vert), Jouable (orange), À éviter (rouge).
 
-## 4. Règles
+## 4. Icônes et illustrations
+
+Toutes dessinées pour l’app, dans `src/icons.js` : trait fin 24×24, couleur héritée.
+
+- **Une couleur et une icône par thème** (`--c-voc` … `--c-macro` dans `:root`) :
+  pastille sur les tuiles, en tête de fiche, à côté de chaque question, et en
+  filigrane derrière la question.
+- **Rôles** (Top, Jungle, Mid, ADC, Support) : position schématique sur une carte
+  carrée, pas les icônes de Riot.
+- **Types de dégâts** : physique en orange (`--phys`, épée), magique en violet
+  (`--magic`, étoile). **Traits** des champions : une icône chacun (Soins, Contrôles…).
+- **Illustration de la Faille** (`riftArt`) : rivière, lanes, tourelles, lueurs. En
+  haut de l’accueil et de la bienvenue.
+- **Vignettes** des situations : mini-carte réduite, ou les cinq ennemis colorés par
+  type de dégâts. **Anneau** de score dans le bilan.
+- Fond de page : motif d’hexagones presque invisible.
+
+## 5. Règles
 
 - Pas d’émoji, pas de visuels ni de logos Riot, pas de splash arts.
 - Pas de champion dessiné : la mini-carte reste schématique (points et lettres).

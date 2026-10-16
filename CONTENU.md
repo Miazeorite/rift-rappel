@@ -11,15 +11,15 @@ Tout le contenu est dans `src/data.js`. Après une modification :
 | `map` | La carte | 1 | 6 | 4 | 1 | 12 |
 | `lane` | Lanes & rôles | 2 | 2 | 4 | 3 | 11 |
 | `champ` | Champions & sorts | 1 | 5 | 6 | 3 | 15 |
-| `item` | Objets | 1 | 5 | 6 | 2 | 14 |
+| `item` | Objets | 1 | 8 | 8 | 2 | 19 |
 | `eco` | Économie | 1 | 5 | 3 | 2 | 11 |
 | `obj` | Objectifs | 1 | 5 | 4 | 2 | 12 |
 | `rune` | Runes | 1 | 3 | 4 | 3 | 11 |
 | `mu` | Matchups | 1 | 3 | 4 | 3 | 11 |
 | `macro` | Macro | 0 | 2 | 4 | 5 | 11 |
-| | **Total** | 11 | 39 | 43 | 27 | **120** |
+| | **Total** | 11 | 42 | 45 | 27 | **125** |
 
-Tableau du 2 octobre 2026. Le mettre à jour quand on ajoute des questions.
+Tableau du 5 octobre 2026. Le mettre à jour quand on ajoute des questions.
 Le besoin le plus urgent : **des questions de niveau 4**, sinon les hauts rangs
 se gagnent en répétant les trois mêmes questions.
 
@@ -68,7 +68,7 @@ Ces questions sont justes à la rédaction mais à revérifier à chaque saison 
 plaques (5, chute à 14:00), premier sang (400 or), buff Nashor (3 min, rappel
 en 4 s), réapparition des inhibiteurs et des buffs (5 min), niveaux 2 en lane,
 séquences de last hit sous tourelle, CS à 10 min, rythme des sbires canons,
-effets des dragons, objet de support. Éviter d’en ajouter sans le signaler ici.
+effets des dragons, objet de support. Choix d’objets : noms français des objets, passif du Cœur gelé (vitesse d’attaque), Cimeterre mercuriel (purge les suppressions). Éviter d’en ajouter sans le signaler ici.
 
 ## Une mise en situation
 
@@ -81,5 +81,19 @@ Marqueurs (`m`) : `me` (toi), `ally`, `enemy`, `unk` (position supposée),
 `ward`, `obj`. Coordonnées de 0 à 100 : base bleue en bas à gauche, Nashor
 vers (32,30), dragon vers (68,70).
 
-Les mises en situation comptent pour le rang **Macro**, à la première tentative
+Les mises en situation comptent pour le rang **Macro** (ou **Objets** pour les choix
+d’objets), à la première tentative
 seulement.
+
+## Un choix d’objets
+
+Une mise en situation avec `cat:"item"` et `comp` à la place de `m` : l’app
+affiche la composition adverse au lieu de la mini-carte, et les LP vont au rang
+**Objets**. `comp.me` = `[champion, or, objets]`, `comp.foes` = cinq
+`[rôle, champion, "AD" | "AP" | "MIX", traits, objets (facultatif)]`. Traits
+courts : Soins, Contrôles, Suppression, Burst, Tank, Attaques rapides,
+Combat long, Poke, Boucliers, Mobilité.
+
+La question porte sur **le prochain achat**, et l’écart entre les options se lit
+dans la compo : type de dégâts, soins, contrôles, tanks, objets déjà achetés.
+Les Recrues et Apprentis voient en plus le décompte des dégâts adverses.

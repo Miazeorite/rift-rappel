@@ -58,9 +58,10 @@ chaînes affichées. Commentaires en français.
 
 | Fichier | Rôle |
 | --- | --- |
-| `src/data.js` | thèmes (`CATS`), parcours (`PATH`), questions (`Q`), fiches (`LESSONS`), mises en situation (`SCENARIOS`), lexique |
+| `src/data.js` | thèmes (`CATS`), parcours (`PATH`), questions (`Q`), fiches (`LESSONS`), mises en situation et choix d’objets (`SCENARIOS`), lexique |
 | `src/app.js` | toute l’app, par blocs : profils de guidage (`TIERS`), stockage, classement par thème, onboarding, séances, fiches, mini-carte, mises en situation, accueil, données d’exemple, compte Riot, actions |
 | `src/head.html` | titre, polices, styles (jetons de `DA.md`) |
+| `src/icons.js` | icônes (`ICONS`, `icon`, `badge`), illustration de la Faille, anneau de score, vignettes des situations |
 | `build.js` | assemble `src/` en `public/index.html` |
 | `api/profile.js` | fonction Vercel `GET /api/profile?riotId=…&platform=…` |
 | `lib/riot.js` | appels Riot (compte, rang, 20 parties, 10 timelines) et `analyze` |
@@ -70,7 +71,7 @@ chaînes affichées. Commentaires en français.
 | `test.js` | vérifications (analyse, erreurs, compilation de la page) |
 
 Pour que l’artefact claude.ai de test reste à jour : concaténer
-`src/head.html`, `src/data.js` et `src/app.js` (sans doctype) et republier.
+`src/head.html`, `src/data.js`, `src/icons.js` et `src/app.js` (sans doctype) et republier.
 
 ## Git
 

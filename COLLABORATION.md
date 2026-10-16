@@ -5,8 +5,11 @@
 1. Installer **GitHub Desktop** (déjà fait pour Mouette) et **Node.js** (version
    LTS, <https://nodejs.org>) pour pouvoir lancer l’app et les tests.
 2. Dans GitHub Desktop : `File` > `Add local repository…` > choisir
-   `Documents\GitHub\rift-rappel`. Le dépôt existe déjà avec un premier commit.
-3. Cliquer **Publish repository**. Laisser « Keep this code private » coché.
+   `Documents\GitHub\rift-rappel`. GitHub Desktop répond que ce n’est pas
+   encore un dépôt : cliquer **create a repository**, garder le nom
+   `rift-rappel`, `Create repository`. Le premier commit se fait tout seul.
+3. Fait le 4 octobre : le dépôt est publié en **public** sur le compte Miazeorite
+   (nécessaire pour le site gratuit GitHub Pages).
 
 Pour quelqu’un d’autre : `File` > `Clone repository` > choisir `rift-rappel`.
 
@@ -16,7 +19,8 @@ Pour quelqu’un d’autre : `File` > `Clone repository` > choisir `rift-rappel`
 s’il propose. Ça récupère le travail de l’autre.
 
 **Quand on a fini** : une phrase dans `Summary` (par exemple « 10 questions de
-niveau 4 en macro »), `Commit to main`, puis `Push origin`.
+niveau 4 en macro »), `Commit to main`, puis `Push origin`. Le site
+https://miazeorite.github.io/rift-rappel/ se met à jour une à deux minutes après.
 
 Si on oublie de pousser, l’autre ne voit rien. C’est la seule erreur qui coûte cher.
 
