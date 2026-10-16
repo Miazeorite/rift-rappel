@@ -323,7 +323,7 @@ function renderQuiz(){
     let cls="opt";
     if(qz.phase==="feedback"){ if(oi===0) cls+=" ok"; else if(oi===qz.sel) cls+=" ko"; }
     else if(qz.pending===oi) cls+=" sel";
-    return `<button class="${cls}" data-a="pick" data-v="${oi}" ${qz.phase==="feedback"?"disabled":""}><span class="k">${"ABCD"[k]}</span><span>${esc(q.o[oi])}</span></button>`;
+    return `<button class="${cls}" data-a="pick" data-v="${oi}" ${qz.phase==="feedback"?"disabled":""}><span class="k">${"ABCD"[k]}</span><span class="optt">${itemLead(q.o[oi])}<span>${esc(q.o[oi])}</span></span></button>`;
   }).join("");
   let below="";
   if(qz.phase==="ask"){
@@ -339,7 +339,7 @@ function renderQuiz(){
     else if(!qz.ok && t.retry && !isRetry) meta="Elle revient en fin de séance.";
     if(qz.sel===-1) meta="Temps écoulé. "+meta;
     const x = t.full ? q.x : firstSentence(q.x);
-    below = `<div class="fb ${qz.ok?"good":"bad"} rise"><h3><span class="fbic">${icon(qz.ok?"check":"cross",16)}</span>${qz.ok?"Bien retrouvé":"Pas tout à fait"}</h3><p>${esc(x)}</p>${meta?`<p class="meta">${esc(meta)}</p>`:""}${qz.rk?`<div class="lpline">${emblem(q.c,26)}<span>${qz.rk.placing?`Placement ${qz.rk.n}/${PLACEMENTS} en ${esc(cat.name)}`:`<b class="${qz.rk.delta>=0?"up":"down"}">${qz.rk.delta>=0?"+":""}${qz.rk.delta} LP</b> · ${esc(cat.name)} · ${esc(rankText(q.c))}`}</span></div>`:""}</div>
+    below = `<div class="fb ${qz.ok?"good":"bad"} rise"><h3><span class="fbic">${icon(qz.ok?"check":"cross",16)}</span>${qz.ok?"Bien retrouvé":"Pas tout à fait"}</h3><p>${esc(x)}</p>${itemStrip(x, [q.q,...q.o].flatMap(t=>itemsIn(t).map(i=>i.k)))}${meta?`<p class="meta">${esc(meta)}</p>`:""}${qz.rk?`<div class="lpline">${emblem(q.c,26)}<span>${qz.rk.placing?`Placement ${qz.rk.n}/${PLACEMENTS} en ${esc(cat.name)}`:`<b class="${qz.rk.delta>=0?"up":"down"}">${qz.rk.delta>=0?"+":""}${qz.rk.delta} LP</b> · ${esc(cat.name)} · ${esc(rankText(q.c))}`}</span></div>`:""}</div>
       <div class="qfoot"><button class="btn" data-a="next" id="btn-next">${qz.i+1<qz.items.length?"Question suivante":"Voir le bilan"}</button></div>`;
   }
   const timer = (t.timer && qz.phase==="ask") ? `<div class="timer" id="timer"><i style="width:100%"></i></div>` : "";
@@ -350,6 +350,7 @@ function renderQuiz(){
       <div class="qmeta">${badge(q.c,30)}<span style="font-size:14px;font-weight:600">${cat.name}</span>${pips(q.d)}${isRetry?`<span class="pill">Deuxième essai</span>`:""}</div>
       ${timer}
       <div class="qtext">${esc(q.q)}</div>
+      ${itemStrip(q.q)}
       <div class="opts">${opts}</div>
       ${below}
     </div></div>`;
@@ -401,7 +402,7 @@ function renderLesson(){
     <div class="stage"><span class="${L.then?"on":""}">1 · Encodage</span><span>2 · Récupération</span></div>
     <div class="lesson-h">${badge(L.cat,52)}<h1 style="font-size:30px">${esc(cat.name)}</h1></div>
     <p class="muted" style="margin-top:6px">Lis attentivement. Juste après, tu devras retrouver ces idées sans les avoir sous les yeux.</p>
-    <ul>${LESSONS[L.cat].map((x,i)=>`<li style="--c:${catCol(L.cat)}"><span class="n">${i+1}</span><span>${esc(x)}</span></li>`).join("")}</ul>
+    <ul>${LESSONS[L.cat].map((x,i)=>`<li style="--c:${catCol(L.cat)}"><span class="n">${i+1}</span><span>${esc(x)}${itemStrip(x)}</span></li>`).join("")}</ul>
     <div class="row" style="margin-top:20px">${L.then?`<button class="btn" data-a="lesson-go">J’ai lu, je m’entraîne</button>`:`<button class="btn" data-a="cat" data-v="${L.cat}">M’entraîner sur ce thème</button>`}<button class="btn ghost" data-a="home">Accueil</button></div>
   </div></div>`;
 }
@@ -473,12 +474,12 @@ function compPanel(s, t){
   const tally = t.look ? `<div class="tally">Dégâts adverses : <b class="num">${n("AD")}</b> physiques · <b class="num">${n("AP")}</b> magiques${n("MIX")?` · <b class="num">${n("MIX")}</b> mixte`:""}</div>` : "";
   return `<div class="comp">
     <div class="comp-me"><div class="row"><span class="code">${icon(ROLE_IC[s.role]||"top",13)}TOI</span><b>${esc(champ)}</b><span class="gold num">${icon("gold",15)} ${gold.toLocaleString("fr-FR")} or</span></div>
-      <p>${items.length?esc(items.join(" · ")):"Aucun objet"}</p></div>
+      <p>${items.length?items.map(itemTag).join(""):"Aucun objet"}</p></div>
     <div class="comp-h">Équipe adverse</div>
     ${foes.map(([r,c,d,tags,it])=>`<div class="foe"><span class="code">${icon(ROLE_IC[r]||"top",13)}${esc(r)}</span><div>
       <div class="foe-n"><b>${esc(c)}</b><span class="dmg ${d.toLowerCase()}">${icon(d==="AP"?"ap":"ad",13)}${DMG[d]}</span></div>
       ${tags.length?`<div class="tags">${tags.map(g=>`<span>${TRAIT_IC[g]?icon(TRAIT_IC[g],12):""}${esc(g)}</span>`).join("")}</div>`:""}
-      ${it?`<p>${esc(it.join(" · "))}</p>`:""}</div></div>`).join("")}
+      ${it?`<p>${it.map(itemTag).join("")}</p>`:""}</div></div>`).join("")}
     ${tally}</div>`;
 }
 function renderScen(){
@@ -488,7 +489,7 @@ function renderScen(){
   const opts = sc.order.map((oi,k)=>{
     const o=s.o[oi]; let cls="opt long";
     if(done){ cls += o[1]===2?" ok":(oi===sc.pick?" ko":""); }
-    return `<button class="${cls}" data-a="scen-pick" data-v="${oi}" ${done?"disabled":""}><span class="k">${"ABC"[k]}</span><span>${esc(o[0])}${done?`<div class="optx"><span class="verdict v${o[1]}">${["À éviter","Jouable","Optimal"][o[1]]}</span> ${esc(t.full?o[2]:firstSentence(o[2]))}</div>`:""}</span></button>`;
+    return `<button class="${cls}" data-a="scen-pick" data-v="${oi}" ${done?"disabled":""}><span class="k">${"ABC"[k]}</span><span><span class="optt">${itemLead(o[0])}<span>${esc(o[0])}</span></span>${done?`<div class="optx"><span class="verdict v${o[1]}">${["À éviter","Jouable","Optimal"][o[1]]}</span> ${esc(t.full?o[2]:firstSentence(o[2]))}</div>`:""}</span></button>`;
   }).join("");
   const timer = (t.scenTimer && !done) ? `<div class="timer" id="timer"><i style="width:100%"></i></div>` : "";
   $app.innerHTML = nav("scen")+`<div class="wrap">

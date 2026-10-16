@@ -60,7 +60,10 @@ Toutes dessinées pour l’app, dans `src/icons.js` : trait fin 24×24, couleur 
 
 ## 5. Règles
 
-- Pas d’émoji, pas de visuels ni de logos Riot, pas de splash arts.
+- Pas d’émoji, pas de logos Riot, pas de splash arts, pas de champion dessiné.
+  **Seule exception : les icônes officielles des objets** (Data Dragon), demandée par
+  Marie pour reconnaître les objets en boutique. Chargées depuis les serveurs de
+  Riot à l’ouverture, jamais copiées dans le dépôt (`loadItems` dans `src/icons.js`).
 - Pas de champion dessiné : la mini-carte reste schématique (points et lettres).
 - Mobile d’abord : tout doit tenir à 400 px de large, marge latérale de 16 px.
 - Une seule action principale (bouton laiton) par écran.

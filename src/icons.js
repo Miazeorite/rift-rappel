@@ -110,4 +110,49 @@ function scenThumb(s){
   if(s.comp) return `<div class="thumb comp-thumb">${s.comp.foes.map(f=>`<span class="dot ${f[2].toLowerCase()}" title="${esc(f[1])}">${icon(ROLE_IC[f[0]]||"top",12)}</span>`).join("")}</div>`;
   return `<div class="thumb">${miniMap(s.m)}</div>`;
 }
+
+/* ============================================================
+   IMAGES D’OBJETS — icônes officielles de Riot (Data Dragon), en français.
+   Chargées à l’ouverture, gardées 3 jours dans ce navigateur. Sans réseau : pas d’image, rien ne casse.
+   ============================================================ */
+const DD = "https://ddragon.leagueoflegends.com";
+const ITEM_KEY = "rift-rappel-items";
+const ITEM_SKIP = new Set(["bottes"]); // trop générique : « les bottes » désigne la catégorie
+let ITEMS = null; // {v, list:[{k, n, id}]}
+const normItem = t => String(t).toLowerCase().replace(/[’'`]/g,"'");
+async function loadItems(){
+  try{ const c=JSON.parse(localStorage.getItem(ITEM_KEY)||"null"); if(c && Date.now()-c.t < 3*864e5){ ITEMS=c; return; } }catch(e){}
+  try{
+    const v = (await (await fetch(DD+"/api/versions.json")).json())[0];
+    const data = (await (await fetch(`${DD}/cdn/${v}/data/fr_FR/item.json`)).json()).data;
+    const seen = new Set(), list = [];
+    for(const [id,it] of Object.entries(data)){
+      if(!it.maps || !it.maps["11"] || !it.gold || !it.gold.purchasable || /</.test(it.name)) continue;
+      const k = normItem(it.name); if(seen.has(k) || ITEM_SKIP.has(k) || k.length<5) continue;
+      seen.add(k); list.push({k, n:it.name, id});
+    }
+    ITEMS = {v, list, t:Date.now()};
+    try{ localStorage.setItem(ITEM_KEY, JSON.stringify(ITEMS)); }catch(e){}
+  }catch(e){ return; }
+  if(typeof V!=="undefined" && ["quiz","scen","lesson"].includes(V.screen)) render();
+}
+/* Objets cités dans un texte, dans l’ordre d’apparition, sans les noms inclus dans un nom plus long */
+function itemsIn(text){
+  if(!ITEMS || !text) return [];
+  const t = normItem(text);
+  const hits = ITEMS.list.map(x=>({x, i:t.indexOf(x.k)})).filter(h=>h.i>=0);
+  return hits.filter(h=>!hits.some(o=>o!==h && o.x.k.length>h.x.k.length && o.i<=h.i && o.i+o.x.k.length>=h.i+h.x.k.length))
+    .sort((a,b)=>a.i-b.i).map(h=>h.x);
+}
+const itemImg = (x, size) => `<img class="itm" src="${DD}/cdn/${ITEMS.v}/img/item/${x.id}.png" width="${size}" height="${size}" alt="" loading="lazy" title="${esc(x.n)}">`;
+/* Bandeau d’images avec leur nom, pour un texte donné (en excluant ceux déjà montrés) */
+function itemStrip(text, skip){
+  const l = itemsIn(text).filter(x=>!(skip||[]).includes(x.k)); if(!l.length) return "";
+  return `<div class="itms">${l.map(x=>`<span>${itemImg(x,40)}<b>${esc(x.n)}</b></span>`).join("")}</div>`;
+}
+/* Petites images devant un texte (une option de réponse) */
+const itemLead = (text, size) => itemsIn(text).map(x=>itemImg(x,size||30)).join("");
+/* Un objet dans une liste (composition) : image + nom */
+const itemTag = n => { const x=itemsIn(n)[0]; return `<span class="itag">${x?itemImg(x,22):""}${esc(n)}</span>`; };
+loadItems();
 </script>

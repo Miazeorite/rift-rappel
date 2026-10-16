@@ -382,6 +382,15 @@ button.mtile:hover{border-color:var(--line2);background:var(--panel2)}
 .section-h h2 .ic{color:var(--gold)}
 .gloss b{display:flex;align-items:center;gap:7px}
 .gloss b .ic{color:var(--c-voc)}
+/* images d’objets (Data Dragon) */
+.itm{flex:none;border-radius:6px;border:1px solid var(--line2);background:var(--panel2);display:block}
+.itms{display:flex;gap:8px;flex-wrap:wrap}
+.itms span{display:inline-flex;align-items:center;gap:8px;padding:4px 10px 4px 4px;border-radius:10px;background:var(--panel2);border:1px solid var(--line)}
+.itms b{font-size:13px;font-weight:600}
+.lesson .itms{margin-top:8px}
+.optt{display:flex;align-items:center;gap:10px}
+.itag{display:inline-flex;align-items:center;gap:5px;margin:4px 10px 0 0;color:var(--text)}
+.itag .itm{border-radius:4px}
 </style>
 <div id="app"></div>
 
@@ -474,23 +483,23 @@ Q("champ",4,"Quelle affirmation sur la ténacité est vraie ?",["Elle ne réduit
 Q("champ",4,"Zed t’a posé son ultime. Tu as un Sablier de Zhonya. Quand l’activer ?",["Juste avant l’explosion de la marque","Dès que la marque est posée","Juste après l’explosion de la marque","Dès que tu passes sous 50 % de PV"],"En stase pendant l’explosion, tu annules les dégâts accumulés. Trop tôt, la marque éclate après ta stase.","Le moment critique.");
 
 /* ---------- OBJETS ---------- */
-Q("item",1,"Les bottes d’acier renforcées sont faites contre…",["Les attaques de base","Les sorts magiques","Les contrôles","Les dégâts de tourelle"],"Elles réduisent les dégâts des attaques de base. Contre la magie et les contrôles : sandales de mercure.","Pense aux ADC.");
+Q("item",1,"Les Coques en acier sont faites contre…",["Les attaques de base","Les sorts magiques","Les contrôles","Les dégâts de tourelle"],"Elles réduisent les dégâts des attaques de base. Contre la magie et les contrôles : sandales de mercure.","Pense aux ADC.");
 Q("item",2,"Les sandales de mercure apportent…",["Résistance magique et ténacité","Armure et ténacité","Résistance magique et vitesse d’attaque","Ténacité et accélération de compétence"],"Utiles contre une équipe qui a beaucoup de magie ET de contrôles.","Magie + contrôles.");
-Q("item",2,"Quel composant d’anti-soin achète un champion AD ?",["Appel de l’exécuteur","Orbe de l’oubli","Gilet épineux","Épée longue"],"L’Orbe de l’oubli est l’équivalent mage, le Gilet épineux l’équivalent tank.","Physique.");
-Q("item",2,"Et quel composant d’anti-soin achète un mage ?",["Orbe de l’oubli","Appel de l’exécuteur","Gilet épineux","Tome d’amplification"],"Il évolue en Morellonomicon.","Magique.");
+Q("item",2,"Quel composant d’anti-soin achète un champion AD ?",["Marque du bourreau","Orbe de l’oubli","Armure roncière","Épée longue"],"L’Orbe de l’oubli est l’équivalent mage, l’Armure roncière l’équivalent tank.","Physique.");
+Q("item",2,"Et quel composant d’anti-soin achète un mage ?",["Orbe de l’oubli","Marque du bourreau","Armure roncière","Tome d’amplification"],"Il évolue en Morellonomicon.","Magique.");
 Q("item",2,"Pendant la stase du Sablier de Zhonya, tu…",["Es invulnérable et ne peux rien faire","Es invulnérable et peux te déplacer","Te soignes rapidement","Es invisible mais vulnérable aux sorts"],"Tu gagnes du temps, pas de la position : les ennemis peuvent t’attendre à la sortie.","Figé.");
 Q("item",2,"L’objet de support termine sa quête. Que se passe-t-il ?",["Il s’améliore et donne des charges de balises","Il se revend automatiquement contre de l’or","Il transfère son or à l’ADC","Il augmente l’or que le support gagne sur les sbires"],"C’est ce qui permet au support de tenir la vision de l’équipe.","Vision.");
 Q("item",3,"Contre des ennemis avec PEU de résistance magique, quelle pénétration rapporte le plus ?",["La pénétration fixe","La pénétration en pourcentage","Les deux se valent toujours","Aucune, mieux vaut de la puissance pure"],"La pénétration fixe retire la même valeur à tous : énorme sur une cible fragile. Le pourcentage devient meilleur contre les tanks.","Fixe vs %.");
 Q("item",3,"Pourquoi une réduction d’armure (Couperet noir) aide plus l’équipe qu’une pénétration ?",["Elle profite à tous les alliés qui frappent la cible","Elle retire aussi la résistance magique","Elle reste active toute la partie","Elle s’applique aussi aux tourelles"],"La pénétration ne sert qu’à toi. La réduction modifie la cible pour tout le monde.","Qui en profite ?");
-Q("item",3,"Tu es ADC, deux tanks ennemis empilent l’armure. Quel objet en priorité ?",["Salutations de Lord Dominik","Lame d’infini","Soif-de-sang","Canon ultrarapide"],"Pénétration d’armure en pourcentage : ce qui compte contre des cibles très résistantes.","Pénétration.");
+Q("item",3,"Tu es ADC, deux tanks ennemis empilent l’armure. Quel objet en priorité ?",["Salutations de Dominik","Lame d’infini","Soif-de-sang","Canon ultrarapide"],"Pénétration d’armure en pourcentage : ce qui compte contre des cibles très résistantes.","Pénétration.");
 Q("item",3,"Que fait le passif du Voile de la banshee ?",["Un bouclier qui bloque la prochaine compétence ennemie","Un bouclier contre la magie quand tu passes bas","Une réduction de durée des contrôles","Une résistance magique qui grandit en combat"],"Le bouclier « quand tu passes bas », c’est la Gueule de Malmortius.","Un sort bloqué.");
 Q("item",3,"Le Visage spirituel augmente…",["Les soins et boucliers que tu reçois","Les soins que tu donnes à tes alliés","Ta résistance magique selon tes PV manquants","Ta régénération de mana en combat"],"Excellent sur les champions qui se soignent eux-mêmes, ou avec un support enchanteur.","Reçus.");
-Q("item",3,"L’Armure de ronces applique des blessures graves quand…",["Un ennemi te frappe d’une attaque de base, ou quand tu l’immobilises","Tu frappes un ennemi avec une attaque de base","Un ennemi te touche avec un sort","Tu passes sous la moitié de tes PV"],"Elle punit surtout les champions qui se soignent en frappant.","Quand on te frappe.");
-Q("item",2,"L’Appel de l’exécuteur évolue en…",["Rappel mortel","Morellonomicon","Armure de ronces","Couperet noir"],"Rappel mortel : l’anti-soin des tireurs. Le Morellonomicon est celui des mages, l’Armure de ronces celui des tanks.","Un objet de tireur.");
+Q("item",3,"La Cotte épineuse applique des blessures graves quand…",["Un ennemi te frappe d’une attaque de base, ou quand tu l’immobilises","Tu frappes un ennemi avec une attaque de base","Un ennemi te touche avec un sort","Tu passes sous la moitié de tes PV"],"Elle punit surtout les champions qui se soignent en frappant.","Quand on te frappe.");
+Q("item",2,"La Marque du bourreau évolue en…",["Rappel mortel","Morellonomicon","Cotte épineuse","Couperet noir"],"Rappel mortel : l’anti-soin des tireurs. Le Morellonomicon est celui des mages, la Cotte épineuse celui des tanks.","Un objet de tireur.");
 Q("item",2,"Le Bâton du vide est surtout fort contre…",["Des cibles avec beaucoup de résistance magique","Des cibles avec peu de résistance magique","Des champions qui se soignent beaucoup","Des champions qui ont des boucliers"],"Sa pénétration est en pourcentage : plus la cible est résistante, plus elle rapporte. Contre une cible fragile, la pénétration fixe vaut mieux.","Pourcentage.");
 Q("item",2,"Que fait l’Ange gardien ?",["Il te ramène à la vie une fois après une mort","Il te donne un bouclier quand tu passes bas","Il te rend invulnérable deux secondes et demie","Il bloque la prochaine compétence ennemie"],"La résurrection a un temps de recharge. L’invulnérabilité, c’est le Sablier de Zhonya ; bloquer un sort, le Voile de la banshee.","Une seconde vie.");
-Q("item",3,"Malzahar te bloque avec son ultime. Qu’est-ce qui t’en libère ?",["Une purification comme le Cimeterre mercuriel","La ténacité des Sandales de mercure","La résistance magique du Voile de la banshee","Le passif de l’Armure de ronces"],"La ténacité ne raccourcit pas les suppressions : seule une purification les arrête.","Suppression.");
-Q("item",3,"Contre Master Yi et Jinx, pourquoi le Cœur gelé plaît aux tanks ?",["Il réduit la vitesse d’attaque des ennemis proches","Il renvoie des dégâts à chaque attaque reçue","Il donne un bouclier contre les coups critiques","Il ralentit chaque ennemi que tu frappes"],"Renvoyer des dégâts, c’est l’Armure de ronces. Le Cœur gelé casse le rythme des champions qui frappent vite.","Leur rythme.");
+Q("item",3,"Malzahar te bloque avec son ultime. Qu’est-ce qui t’en libère ?",["Une purification comme le Cimeterre mercuriel","La ténacité des Sandales de mercure","La résistance magique du Voile de la banshee","Le passif de la Cotte épineuse"],"La ténacité ne raccourcit pas les suppressions : seule une purification les arrête.","Suppression.");
+Q("item",3,"Contre Master Yi et Jinx, pourquoi le Cœur gelé plaît aux tanks ?",["Il réduit la vitesse d’attaque des ennemis proches","Il renvoie des dégâts à chaque attaque reçue","Il donne un bouclier contre les coups critiques","Il ralentit chaque ennemi que tu frappes"],"Renvoyer des dégâts, c’est la Cotte épineuse. Le Cœur gelé casse le rythme des champions qui frappent vite.","Leur rythme.");
 Q("item",4,"Tu es mage face à Zed et Talon. Premier objet défensif le plus rentable ?",["Sablier de Zhonya","Voile de la banshee","Morellonomicon","Cœur gelé"],"Deux assassins AD : armure et stase. La banshee protège surtout contre la magie.","Leurs dégâts sont physiques.");
 Q("item",4,"Pourquoi acheter la Larme de la déesse tôt quand on la prend ?",["Elle se charge avec le temps et les sorts : plus tôt, plus vite complète","Son prix augmente après 10 minutes","Elle donne un bouclier dès l’achat","Elle réduit le coût en mana de tes sorts"],"Les objets à charges récompensent l’achat précoce.","Elle se remplit.");
 
@@ -568,7 +577,7 @@ const LESSONS = {
   map:["3 lanes (top, mid, bot), une jungle entre elles, coupée par une rivière.","Un buisson cache ceux qui sont dedans : sans vision, tu ne vois pas qui s’y trouve.","Chaque équipe a 11 tourelles et 3 inhibiteurs. Une tourelle tire sur un champion qui attaque un de ses alliés.","Buff bleu : mana et accélération de compétence. Buff rouge : attaques qui brûlent et ralentissent."],
   lane:["Top : lane isolée, beaucoup de 1v1. Mid : lane courte, beaucoup de roams.","Bot : ADC (farm) + support (protection, vision). Le support laisse les sbires à l’ADC.","Le jungler parcourt la jungle et aide les lanes (gank).","Près de ta tourelle, tu es à l’abri. Loin d’elle, tu es une cible de gank."],
   champ:["Q, W, E : sorts de base. R : ultime, disponible au niveau 6.","Beaucoup de champions ont un passif qui change leur façon de jouer (accumuler, se réinitialiser…).","Certains sorts sont des contres directs : le Mur de vent de Yasuo bloque les projectiles.","Les projections en l’air ne peuvent pas être purgées : ce sont les contrôles les plus sûrs."],
-  item:["Avant d’acheter, lis la compo adverse : qui fait le plus de dégâts (physiques ou magiques), qui se soigne, qui contrôle, qui tue en un combo.","Les bottes augmentent la vitesse, puis ajoutent un effet selon ta paire (armure, résistance magique…).","Contre des soins, achète de l’anti-soin : Morellonomicon (mage), Appel de l’exécuteur (AD), Armure de ronces (tank).","Le Sablier de Zhonya te met en stase : invulnérable, mais immobile.","L’objet de support génère de l’or et, amélioré, des balises."],
+  item:["Avant d’acheter, lis la compo adverse : qui fait le plus de dégâts (physiques ou magiques), qui se soigne, qui contrôle, qui tue en un combo.","Les bottes augmentent la vitesse, puis ajoutent un effet selon ta paire (armure, résistance magique…).","Contre des soins, achète de l’anti-soin : Morellonomicon (mage), Marque du bourreau (AD), Cotte épineuse (tank).","Le Sablier de Zhonya te met en stase : invulnérable, mais immobile.","L’objet de support génère de l’or et, amélioré, des balises."],
   eco:["Seul le dernier coup sur un sbire donne son or.","Un kill vaut 300 or de base ; tuer un joueur en série donne une prime.","Les plaques des tourelles extérieures donnent de l’or jusqu’à 14 minutes.","Mourir coûte aussi du temps : sbires, XP et objectifs perdus."],
   obj:["Pour gagner : détruire le Nexus adverse.","4 dragons pour une même équipe = âme du dragon. Le Dragon ancestral exécute les ennemis bas.","Nashor : sbires renforcés et rappel accéléré pour assiéger.","Héraut et larves : outils pour détruire les tourelles. Le jungler sécurise avec Châtiment."],
   rune:["5 arbres : Précision, Domination, Sorcellerie, Volonté, Inspiration.","Arbre principal : 1 rune clé + 3 runes. Arbre secondaire : 2 runes. Plus 3 fragments de stats.","Conquérant : combats longs. Électrocution : burst. Comète : poke. Poigne : échanges courts.","Gardien protège un allié ; Répercussion récompense les tanks qui engagent."],
@@ -679,9 +688,9 @@ const SCENARIOS = [
    ctx:"Premier retour en base. Trois ennemis se soignent : Aatrox en frappant, Vladimir avec ses sorts, Soraka en soignant ses alliés.",
    look:["Combien d’ennemis se soignent ?","Tes dégâts sont-ils physiques ou magiques ?"],
    q:"Que fais-tu de tes 1 300 or ?",
-   o:[["Appel de l’exécuteur, puis tu reprends ton objet principal",2,"Trois sources de soins : l’anti-soin compte dès maintenant. L’Appel de l’exécuteur est la version physique, peu chère, et il évoluera en Rappel mortel."],
+   o:[["Marque du bourreau, puis tu reprends ton objet principal",2,"Trois sources de soins : l’anti-soin compte dès maintenant. La Marque du bourreau est la version physique, peu chère, et elle évoluera en Rappel mortel."],
       ["Ton premier objet d’abord, l’anti-soin viendra en troisième",1,"Ton objet principal augmente tes dégâts, mais pendant 15 minutes chaque combat contre Aatrox ou Soraka se perd à cause de leurs soins."],
-      ["Orbe de l’oubli, pour couper les soins de Soraka",0,"C’est l’anti-soin des mages : il donne de la puissance magique, inutile pour Caitlyn. L’équivalent physique est l’Appel de l’exécuteur."]] },
+      ["Orbe de l’oubli, pour couper les soins de Soraka",0,"C’est l’anti-soin des mages : il donne de la puissance magique, inutile pour Caitlyn. L’équivalent physique est la Marque du bourreau."]] },
  { id:"a2", cat:"item", t:"Une équipe magique", tier:1, role:"Top", time:"7:00",
    comp:{ me:["Darius",1100,["Bottes"]], foes:[
      ["TOP","Kennen","AP",["Contrôles"]],["JGL","Amumu","AP",["Tank","Contrôles"]],["MID","Syndra","AP",["Burst","Contrôles"]],["ADC","Jinx","AD",["Attaques rapides"]],["SUP","Leona","AP",["Tank","Contrôles"]]] },
@@ -690,15 +699,15 @@ const SCENARIOS = [
    q:"Quelles bottes ?",
    o:[["Sandales de mercure maintenant",2,"Quatre ennemis sur cinq font des dégâts magiques, et presque tous ont des contrôles : résistance magique et ténacité, c’est exactement la réponse."],
       ["Rien en bottes, tout dans ton premier objet",1,"Ton objet t’aide contre Kennen, mais tu restes plus longtemps sous chaque étourdissement, et ils en ont quatre."],
-      ["Bottes d’acier renforcées maintenant",0,"Elles réduisent les dégâts des attaques de base : seule Jinx en dépend. Contre Kennen et Syndra, elles ne servent à rien."]] },
+      ["Coques en acier maintenant",0,"Elles réduisent les dégâts des attaques de base : seule Jinx en dépend. Contre Kennen et Syndra, elles ne servent à rien."]] },
  { id:"a3", cat:"item", t:"Trois qui frappent vite", tier:2, role:"Top", time:"18:00",
-   comp:{ me:["Sion",2600,["Bottes d’acier renforcées","Égide de feu solaire"]], foes:[
+   comp:{ me:["Sion",2600,["Coques en acier","Égide solaire"]], foes:[
      ["TOP","Jax","AD",["Attaques rapides","Combat long"]],["JGL","Master Yi","AD",["Attaques rapides"]],["MID","Ahri","AP",["Burst"]],["ADC","Jinx","AD",["Attaques rapides"]],["SUP","Lulu","AP",["Boucliers"]]] },
    ctx:"Tu es le tank de ton équipe. En face, trois champions tuent avec leurs attaques de base, et presque aucun ne se soigne.",
    look:["Comment font-ils leurs dégâts : sorts ou attaques de base ?","Qui se soigne vraiment ?"],
    q:"Ton prochain objet ?",
    o:[["Cœur gelé",2,"De l’armure, et un passif qui réduit la vitesse d’attaque des ennemis proches : Jax, Master Yi et Jinx perdent une grosse part de leurs dégâts."],
-      ["Armure de ronces",1,"Bonne armure contre les attaques de base, mais son anti-soin sert peu ici et elle ne ralentit pas leurs attaques comme le Cœur gelé."],
+      ["Cotte épineuse",1,"Bonne armure contre les attaques de base, mais son anti-soin sert peu ici et elle ne ralentit pas leurs attaques comme le Cœur gelé."],
       ["Force de la nature",0,"De la résistance magique contre Ahri seule, alors que trois ennemis font des dégâts physiques."]] },
  { id:"a4", cat:"item", t:"L’ultime qui bloque", tier:2, role:"ADC", time:"24:00",
    comp:{ me:["Caitlyn",3000,["Bottes","Lame d’infini","Ouragan de Runaan"]], foes:[
@@ -728,9 +737,9 @@ const SCENARIOS = [
       ["Morellonomicon en premier objet complet",1,"L’anti-soin est là, mais tu retardes de plusieurs minutes l’objet qui fait tes dégâts : l’orbe seule suffisait pour l’instant."],
       ["Ton objet principal d’abord, l’anti-soin au troisième",0,"Vladimir gagne ses échanges grâce à ses soins dès maintenant. Sans anti-soin, tu perds la lane avant que ton objet fasse la différence."]] },
  { id:"a7", cat:"item", t:"Il perce ton armure", tier:4, role:"Jungle", time:"27:00",
-   comp:{ me:["Sejuani",2800,["Bottes d’acier renforcées","Égide de feu solaire","Cœur gelé"]], foes:[
-     ["TOP","Fiora","AD",["Soins","Combat long"]],["JGL","Lee Sin","AD",["Mobilité"]],["MID","Zed","AD",["Burst"]],["ADC","Jinx","AD",["Attaques rapides"],["Lame d’infini","Salutations de Lord Dominik","Ouragan de Runaan"]],["SUP","Nautilus","AP",["Tank","Contrôles"]]] },
-   ctx:"Tu as déjà trois objets d’armure. Jinx vient de finir les Salutations de Lord Dominik et te fait fondre dans les combats.",
+   comp:{ me:["Sejuani",2800,["Coques en acier","Égide solaire","Cœur gelé"]], foes:[
+     ["TOP","Fiora","AD",["Soins","Combat long"]],["JGL","Lee Sin","AD",["Mobilité"]],["MID","Zed","AD",["Burst"]],["ADC","Jinx","AD",["Attaques rapides"],["Lame d’infini","Salutations de Dominik","Ouragan de Runaan"]],["SUP","Nautilus","AP",["Tank","Contrôles"]]] },
+   ctx:"Tu as déjà trois objets d’armure. Jinx vient de finir les Salutations de Dominik et te fait fondre dans les combats.",
    look:["Que fait l’objet que Jinx vient d’acheter ?","Te manque-t-il plutôt de l’armure ou des PV ?"],
    q:"Ton prochain objet ?",
    o:[["Un objet surtout en PV : tu as déjà beaucoup d’armure",2,"Sa pénétration en pourcentage retire une part de ton armure, et l’armure ne vaut que s’il y a des PV derrière. Avec déjà trois objets d’armure, des PV te rendent plus solide qu’une quatrième pièce."],
@@ -881,6 +890,51 @@ function scenThumb(s){
   if(s.comp) return `<div class="thumb comp-thumb">${s.comp.foes.map(f=>`<span class="dot ${f[2].toLowerCase()}" title="${esc(f[1])}">${icon(ROLE_IC[f[0]]||"top",12)}</span>`).join("")}</div>`;
   return `<div class="thumb">${miniMap(s.m)}</div>`;
 }
+
+/* ============================================================
+   IMAGES D’OBJETS — icônes officielles de Riot (Data Dragon), en français.
+   Chargées à l’ouverture, gardées 3 jours dans ce navigateur. Sans réseau : pas d’image, rien ne casse.
+   ============================================================ */
+const DD = "https://ddragon.leagueoflegends.com";
+const ITEM_KEY = "rift-rappel-items";
+const ITEM_SKIP = new Set(["bottes"]); // trop générique : « les bottes » désigne la catégorie
+let ITEMS = null; // {v, list:[{k, n, id}]}
+const normItem = t => String(t).toLowerCase().replace(/[’'`]/g,"'");
+async function loadItems(){
+  try{ const c=JSON.parse(localStorage.getItem(ITEM_KEY)||"null"); if(c && Date.now()-c.t < 3*864e5){ ITEMS=c; return; } }catch(e){}
+  try{
+    const v = (await (await fetch(DD+"/api/versions.json")).json())[0];
+    const data = (await (await fetch(`${DD}/cdn/${v}/data/fr_FR/item.json`)).json()).data;
+    const seen = new Set(), list = [];
+    for(const [id,it] of Object.entries(data)){
+      if(!it.maps || !it.maps["11"] || !it.gold || !it.gold.purchasable || /</.test(it.name)) continue;
+      const k = normItem(it.name); if(seen.has(k) || ITEM_SKIP.has(k) || k.length<5) continue;
+      seen.add(k); list.push({k, n:it.name, id});
+    }
+    ITEMS = {v, list, t:Date.now()};
+    try{ localStorage.setItem(ITEM_KEY, JSON.stringify(ITEMS)); }catch(e){}
+  }catch(e){ return; }
+  if(typeof V!=="undefined" && ["quiz","scen","lesson"].includes(V.screen)) render();
+}
+/* Objets cités dans un texte, dans l’ordre d’apparition, sans les noms inclus dans un nom plus long */
+function itemsIn(text){
+  if(!ITEMS || !text) return [];
+  const t = normItem(text);
+  const hits = ITEMS.list.map(x=>({x, i:t.indexOf(x.k)})).filter(h=>h.i>=0);
+  return hits.filter(h=>!hits.some(o=>o!==h && o.x.k.length>h.x.k.length && o.i<=h.i && o.i+o.x.k.length>=h.i+h.x.k.length))
+    .sort((a,b)=>a.i-b.i).map(h=>h.x);
+}
+const itemImg = (x, size) => `<img class="itm" src="${DD}/cdn/${ITEMS.v}/img/item/${x.id}.png" width="${size}" height="${size}" alt="" loading="lazy" title="${esc(x.n)}">`;
+/* Bandeau d’images avec leur nom, pour un texte donné (en excluant ceux déjà montrés) */
+function itemStrip(text, skip){
+  const l = itemsIn(text).filter(x=>!(skip||[]).includes(x.k)); if(!l.length) return "";
+  return `<div class="itms">${l.map(x=>`<span>${itemImg(x,40)}<b>${esc(x.n)}</b></span>`).join("")}</div>`;
+}
+/* Petites images devant un texte (une option de réponse) */
+const itemLead = (text, size) => itemsIn(text).map(x=>itemImg(x,size||30)).join("");
+/* Un objet dans une liste (composition) : image + nom */
+const itemTag = n => { const x=itemsIn(n)[0]; return `<span class="itag">${x?itemImg(x,22):""}${esc(n)}</span>`; };
+loadItems();
 </script>
 
 <script>
@@ -1208,7 +1262,7 @@ function renderQuiz(){
     let cls="opt";
     if(qz.phase==="feedback"){ if(oi===0) cls+=" ok"; else if(oi===qz.sel) cls+=" ko"; }
     else if(qz.pending===oi) cls+=" sel";
-    return `<button class="${cls}" data-a="pick" data-v="${oi}" ${qz.phase==="feedback"?"disabled":""}><span class="k">${"ABCD"[k]}</span><span>${esc(q.o[oi])}</span></button>`;
+    return `<button class="${cls}" data-a="pick" data-v="${oi}" ${qz.phase==="feedback"?"disabled":""}><span class="k">${"ABCD"[k]}</span><span class="optt">${itemLead(q.o[oi])}<span>${esc(q.o[oi])}</span></span></button>`;
   }).join("");
   let below="";
   if(qz.phase==="ask"){
@@ -1224,7 +1278,7 @@ function renderQuiz(){
     else if(!qz.ok && t.retry && !isRetry) meta="Elle revient en fin de séance.";
     if(qz.sel===-1) meta="Temps écoulé. "+meta;
     const x = t.full ? q.x : firstSentence(q.x);
-    below = `<div class="fb ${qz.ok?"good":"bad"} rise"><h3><span class="fbic">${icon(qz.ok?"check":"cross",16)}</span>${qz.ok?"Bien retrouvé":"Pas tout à fait"}</h3><p>${esc(x)}</p>${meta?`<p class="meta">${esc(meta)}</p>`:""}${qz.rk?`<div class="lpline">${emblem(q.c,26)}<span>${qz.rk.placing?`Placement ${qz.rk.n}/${PLACEMENTS} en ${esc(cat.name)}`:`<b class="${qz.rk.delta>=0?"up":"down"}">${qz.rk.delta>=0?"+":""}${qz.rk.delta} LP</b> · ${esc(cat.name)} · ${esc(rankText(q.c))}`}</span></div>`:""}</div>
+    below = `<div class="fb ${qz.ok?"good":"bad"} rise"><h3><span class="fbic">${icon(qz.ok?"check":"cross",16)}</span>${qz.ok?"Bien retrouvé":"Pas tout à fait"}</h3><p>${esc(x)}</p>${itemStrip(x, [q.q,...q.o].flatMap(t=>itemsIn(t).map(i=>i.k)))}${meta?`<p class="meta">${esc(meta)}</p>`:""}${qz.rk?`<div class="lpline">${emblem(q.c,26)}<span>${qz.rk.placing?`Placement ${qz.rk.n}/${PLACEMENTS} en ${esc(cat.name)}`:`<b class="${qz.rk.delta>=0?"up":"down"}">${qz.rk.delta>=0?"+":""}${qz.rk.delta} LP</b> · ${esc(cat.name)} · ${esc(rankText(q.c))}`}</span></div>`:""}</div>
       <div class="qfoot"><button class="btn" data-a="next" id="btn-next">${qz.i+1<qz.items.length?"Question suivante":"Voir le bilan"}</button></div>`;
   }
   const timer = (t.timer && qz.phase==="ask") ? `<div class="timer" id="timer"><i style="width:100%"></i></div>` : "";
@@ -1235,6 +1289,7 @@ function renderQuiz(){
       <div class="qmeta">${badge(q.c,30)}<span style="font-size:14px;font-weight:600">${cat.name}</span>${pips(q.d)}${isRetry?`<span class="pill">Deuxième essai</span>`:""}</div>
       ${timer}
       <div class="qtext">${esc(q.q)}</div>
+      ${itemStrip(q.q)}
       <div class="opts">${opts}</div>
       ${below}
     </div></div>`;
@@ -1286,7 +1341,7 @@ function renderLesson(){
     <div class="stage"><span class="${L.then?"on":""}">1 · Encodage</span><span>2 · Récupération</span></div>
     <div class="lesson-h">${badge(L.cat,52)}<h1 style="font-size:30px">${esc(cat.name)}</h1></div>
     <p class="muted" style="margin-top:6px">Lis attentivement. Juste après, tu devras retrouver ces idées sans les avoir sous les yeux.</p>
-    <ul>${LESSONS[L.cat].map((x,i)=>`<li style="--c:${catCol(L.cat)}"><span class="n">${i+1}</span><span>${esc(x)}</span></li>`).join("")}</ul>
+    <ul>${LESSONS[L.cat].map((x,i)=>`<li style="--c:${catCol(L.cat)}"><span class="n">${i+1}</span><span>${esc(x)}${itemStrip(x)}</span></li>`).join("")}</ul>
     <div class="row" style="margin-top:20px">${L.then?`<button class="btn" data-a="lesson-go">J’ai lu, je m’entraîne</button>`:`<button class="btn" data-a="cat" data-v="${L.cat}">M’entraîner sur ce thème</button>`}<button class="btn ghost" data-a="home">Accueil</button></div>
   </div></div>`;
 }
@@ -1358,12 +1413,12 @@ function compPanel(s, t){
   const tally = t.look ? `<div class="tally">Dégâts adverses : <b class="num">${n("AD")}</b> physiques · <b class="num">${n("AP")}</b> magiques${n("MIX")?` · <b class="num">${n("MIX")}</b> mixte`:""}</div>` : "";
   return `<div class="comp">
     <div class="comp-me"><div class="row"><span class="code">${icon(ROLE_IC[s.role]||"top",13)}TOI</span><b>${esc(champ)}</b><span class="gold num">${icon("gold",15)} ${gold.toLocaleString("fr-FR")} or</span></div>
-      <p>${items.length?esc(items.join(" · ")):"Aucun objet"}</p></div>
+      <p>${items.length?items.map(itemTag).join(""):"Aucun objet"}</p></div>
     <div class="comp-h">Équipe adverse</div>
     ${foes.map(([r,c,d,tags,it])=>`<div class="foe"><span class="code">${icon(ROLE_IC[r]||"top",13)}${esc(r)}</span><div>
       <div class="foe-n"><b>${esc(c)}</b><span class="dmg ${d.toLowerCase()}">${icon(d==="AP"?"ap":"ad",13)}${DMG[d]}</span></div>
       ${tags.length?`<div class="tags">${tags.map(g=>`<span>${TRAIT_IC[g]?icon(TRAIT_IC[g],12):""}${esc(g)}</span>`).join("")}</div>`:""}
-      ${it?`<p>${esc(it.join(" · "))}</p>`:""}</div></div>`).join("")}
+      ${it?`<p>${it.map(itemTag).join("")}</p>`:""}</div></div>`).join("")}
     ${tally}</div>`;
 }
 function renderScen(){
@@ -1373,7 +1428,7 @@ function renderScen(){
   const opts = sc.order.map((oi,k)=>{
     const o=s.o[oi]; let cls="opt long";
     if(done){ cls += o[1]===2?" ok":(oi===sc.pick?" ko":""); }
-    return `<button class="${cls}" data-a="scen-pick" data-v="${oi}" ${done?"disabled":""}><span class="k">${"ABC"[k]}</span><span>${esc(o[0])}${done?`<div class="optx"><span class="verdict v${o[1]}">${["À éviter","Jouable","Optimal"][o[1]]}</span> ${esc(t.full?o[2]:firstSentence(o[2]))}</div>`:""}</span></button>`;
+    return `<button class="${cls}" data-a="scen-pick" data-v="${oi}" ${done?"disabled":""}><span class="k">${"ABC"[k]}</span><span><span class="optt">${itemLead(o[0])}<span>${esc(o[0])}</span></span>${done?`<div class="optx"><span class="verdict v${o[1]}">${["À éviter","Jouable","Optimal"][o[1]]}</span> ${esc(t.full?o[2]:firstSentence(o[2]))}</div>`:""}</span></button>`;
   }).join("");
   const timer = (t.scenTimer && !done) ? `<div class="timer" id="timer"><i style="width:100%"></i></div>` : "";
   $app.innerHTML = nav("scen")+`<div class="wrap">

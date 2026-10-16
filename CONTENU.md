@@ -68,7 +68,7 @@ Ces questions sont justes à la rédaction mais à revérifier à chaque saison 
 plaques (5, chute à 14:00), premier sang (400 or), buff Nashor (3 min, rappel
 en 4 s), réapparition des inhibiteurs et des buffs (5 min), niveaux 2 en lane,
 séquences de last hit sous tourelle, CS à 10 min, rythme des sbires canons,
-effets des dragons, objet de support. Choix d’objets : noms français des objets, passif du Cœur gelé (vitesse d’attaque), Cimeterre mercuriel (purge les suppressions). Éviter d’en ajouter sans le signaler ici.
+effets des dragons, objet de support. Choix d’objets : noms français des objets (vérifiés le 17 octobre 2026, patch 16.20 ; un nom faux = pas d’image), passif du Cœur gelé (vitesse d’attaque), Cimeterre mercuriel (purge les suppressions). Éviter d’en ajouter sans le signaler ici.
 
 ## Une mise en situation
 

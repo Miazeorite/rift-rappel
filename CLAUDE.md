@@ -41,7 +41,9 @@ tableau des thèmes de `CONTENU.md` quand on ajoute des questions.
 fines, rang par thème, accueil avant les questions, accueil complet).
 
 **Le style suit `DA.md`.** Couleurs uniquement via les jetons de `:root`, pas
-d’émoji, pas de visuel Riot, mobile d’abord (400 px).
+d’émoji, pas de visuel Riot sauf les icônes d’objets (Data Dragon, voir `DA.md`),
+mobile d’abord (400 px). Les noms d’objets doivent être les noms français exacts
+du jeu : sinon l’image n’apparaît pas.
 
 **La progression est dans `localStorage`** (clé `rift-rappel-v1`, objet `S`).
 Toute nouvelle donnée s’ajoute dans `blank()` pour que les anciennes
@@ -61,7 +63,7 @@ chaînes affichées. Commentaires en français.
 | `src/data.js` | thèmes (`CATS`), parcours (`PATH`), questions (`Q`), fiches (`LESSONS`), mises en situation et choix d’objets (`SCENARIOS`), lexique |
 | `src/app.js` | toute l’app, par blocs : profils de guidage (`TIERS`), stockage, classement par thème, onboarding, séances, fiches, mini-carte, mises en situation, accueil, données d’exemple, compte Riot, actions |
 | `src/head.html` | titre, polices, styles (jetons de `DA.md`) |
-| `src/icons.js` | icônes (`ICONS`, `icon`, `badge`), illustration de la Faille, anneau de score, vignettes des situations |
+| `src/icons.js` | icônes (`ICONS`, `icon`, `badge`), illustration de la Faille, anneau de score, vignettes des situations, images d’objets (`loadItems`, `itemsIn`) |
 | `build.js` | assemble `src/` en `public/index.html` |
 | `api/profile.js` | fonction Vercel `GET /api/profile?riotId=…&platform=…` |
 | `lib/riot.js` | appels Riot (compte, rang, 20 parties, 10 timelines) et `analyze` |
